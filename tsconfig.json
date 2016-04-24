@@ -1,0 +1,10 @@
+{
+    "compileOnSave": true,
+	"compilerOptions": {
+		"target": "ES5",
+		"module": "amd",
+		"sourceMap": true,
+        "watch": true,
+        "experimentalDecorators": true
+	}
+}
