@@ -11,14 +11,14 @@ var ECS;
      */
     var ComponentAbstractMesh = (function (_super) {
         __extends(ComponentAbstractMesh, _super);
-        function ComponentAbstractMesh(componentPosition, path, fileName, onsuccess, progressCallBack, onerror) {
+        function ComponentAbstractMesh(componentTransform, path, fileName, onsuccess, progressCallBack, onerror) {
             _super.call(this);
             this.meshState = ECS.MeshLoadState.Non;
             this.onsuccess = onsuccess;
             this.progressCallBack = onsuccess;
             this.onerror = onerror;
             this.setMeshReadyToLoad();
-            this.componentPosition = componentPosition;
+            this.componentTransform = componentTransform;
             this.path = path;
             this.fileName = fileName;
         }
@@ -27,7 +27,7 @@ var ECS;
         };
         Object.defineProperty(ComponentAbstractMesh.prototype, "positionComponent", {
             get: function () {
-                return this.componentPosition;
+                return this.componentTransform;
             },
             enumerable: true,
             configurable: true

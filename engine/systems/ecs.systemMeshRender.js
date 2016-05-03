@@ -45,9 +45,9 @@ var ECS;
                         case MeshLoadState.ReadyToLoad:
                             componentAbstractMesh_1.meshState = MeshLoadState.Loading;
                             // load mesh
-                            BABYLON.SceneLoader.ImportMesh("", componentAbstractMesh_1.path, componentAbstractMesh_1.fileName, scene, function (newMeshes) {
+                            BABYLON.SceneLoader.ImportMesh("", componentAbstractMesh_1.path, componentAbstractMesh_1.fileName, this_1.scene, function (newMeshes) {
+                                console.log("newMeshes.length: " + newMeshes.length);
                                 componentAbstractMesh_1.babylonMesh = newMeshes[0];
-                                console.log(newMeshes.length);
                                 componentAbstractMesh_1.meshState = MeshLoadState.Loaded;
                                 //console.log("[SystemMeshRender]mesh loaded");
                             });
@@ -81,6 +81,7 @@ var ECS;
         MeshLoadState[MeshLoadState["ReadyToLoad"] = 1] = "ReadyToLoad";
         MeshLoadState[MeshLoadState["Loading"] = 2] = "Loading";
         MeshLoadState[MeshLoadState["Loaded"] = 3] = "Loaded";
+        MeshLoadState[MeshLoadState["Clone"] = 4] = "Clone";
     })(ECS.MeshLoadState || (ECS.MeshLoadState = {}));
     var MeshLoadState = ECS.MeshLoadState;
 })(ECS || (ECS = {}));

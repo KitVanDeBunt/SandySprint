@@ -45,16 +45,16 @@ namespace ECS {
                         componentAbstractMesh.meshState = MeshLoadState.Loading;
                         
                         // load mesh
-                        BABYLON.SceneLoader.ImportMesh("", componentAbstractMesh.path, componentAbstractMesh.fileName, scene, function (newMeshes) {
+                        BABYLON.SceneLoader.ImportMesh("", componentAbstractMesh.path, componentAbstractMesh.fileName, this.scene, function (newMeshes) {
+                            console.log("newMeshes.length: "+newMeshes.length);
                             componentAbstractMesh.babylonMesh = newMeshes[0];
-                            console.log(newMeshes.length);
                             componentAbstractMesh.meshState = MeshLoadState.Loaded;
                             //console.log("[SystemMeshRender]mesh loaded");
-                        });
+                          });
                     break;
                         case MeshLoadState.Loaded:
-                        componentAbstractMesh.babylonMesh.setAbsolutePosition(componentPosition.getPosition);
-                        componentAbstractMesh.babylonMesh.scaling = componentPosition.getScale;
+                            componentAbstractMesh.babylonMesh.setAbsolutePosition(componentPosition.getPosition);
+                            componentAbstractMesh.babylonMesh.scaling = componentPosition.getScale;
                         //console.log("-:"+componentAbstractMesh.babylonMesh.scaling);
                         //componentAbstractMesh.babylonMesh.translate(new BABYLON.Vector3(1,0,0),3.5);
                     break;
@@ -76,6 +76,7 @@ namespace ECS {
         Non,
         ReadyToLoad,
         Loading,
-        Loaded
+        Loaded,
+        Clone
     }
 }
