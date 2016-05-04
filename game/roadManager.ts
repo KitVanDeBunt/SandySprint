@@ -7,7 +7,7 @@ class RoadManager {
     clonesCreated: boolean = false;
     roadMeshes: ECS.ComponentAbstractMesh[];
 
-    constructor(engine: ECS.Engine,cameraComponent: ComponentCamera) {
+    constructor(engine: ECS.Engine, scene: BABYLON.Scene, cameraComponent: ComponentCamera) {
 
         this.roadMeshes = [];
 
@@ -16,7 +16,7 @@ class RoadManager {
         let raodParts;
 
         let house: ECS.Entity = this.engine.createEntity();
-        let housePositionComponent = new ECS.ComponentTransform(new BABYLON.Vector3(5, 0, 5), new BABYLON.Vector3(0.2, 0.2, 0.2));
+        let housePositionComponent = new ECS.ComponentTransform(new BABYLON.Vector3(5, 0, 20), new BABYLON.Vector3(0.2, 0.2, 0.2));
         house.addComponent(housePositionComponent);
         house.addComponent(new ECS.ComponentAbstractMesh(housePositionComponent, "assets/models/", "house.babylon"));
 
@@ -26,6 +26,8 @@ class RoadManager {
             road.addComponent(roadPositionComponent);
             this.roadMeshes[i] = new ECS.ComponentAbstractMesh(roadPositionComponent, "assets/models/", "Road_02.babylon");
             road.addComponent(this.roadMeshes[i]);
+
+            road.addComponent(new ComponentStraightLane(this.roadMeshes[i], new BABYLON.Vector3(0, 0, i * 14), BABYLON.Vector3.Zero(), scene));
         }
     }
 

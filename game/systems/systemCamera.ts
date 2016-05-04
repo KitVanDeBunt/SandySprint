@@ -4,44 +4,34 @@
  */
 class SystemCamera extends ECS.System {
 
-    constructor() {
+    canvas: HTMLCanvasElement;
+
+    constructor(canvas: HTMLCanvasElement) {
         super();
-       
+
         // get needed component types
-        this.neededComponents[0] = new ECS.ComponentTransform(null,null).componentType();
-        this.neededComponents[1] = new ComponentCamera(null,null).componentType();
+        this.neededComponents[0] = new ECS.ComponentTransform(null, null).componentType();
+        this.neededComponents[1] = new ComponentCamera(null, null).componentType();
+        
+        this.canvas = canvas;
     }
 
     Update<T extends ECS.Entity>(entities: T[]) {
         for (let i = 0; i < entities.length; i++) {
-            let updateAbleEntity: boolean = true;
-            for (let j = 0; j < this.neededComponents.length; j++) {
-                let neededComponentFound: boolean = false;
-                for (let k = 0; k < entities[i].getComponentTypes.length; k++) {
-                    if (entities[i].getComponentTypes[k] == this.neededComponents[j]) {
-                        neededComponentFound = true;
-                        break;
-                    };
-                }
-                if (!neededComponentFound) {
-                    updateAbleEntity = false;
-                    break;
-                }
-            }
-            if (updateAbleEntity) {
+            if (this.checkCompatibleEntity(entities[i])) {
                 // update
-                let componentTransform : ECS.ComponentTransform = <ECS.ComponentTransform>entities[i].getComponent(this.neededComponents[0]);
+                let componentTransform: ECS.ComponentTransform = <ECS.ComponentTransform>entities[i].getComponent(this.neededComponents[0]);
                 let componentCamera: ComponentCamera = <ComponentCamera>entities[i].getComponent(this.neededComponents[1]);
-                
-                if(componentCamera.state == ComponentCameraState.None){
-                    let cam:BABYLON.FreeCamera = new BABYLON.FreeCamera("Camera", new BABYLON.Vector3(0, 20, -50), componentCamera.getScene);
+
+                if (componentCamera.state == ComponentCameraState.None) {
+                    let cam: BABYLON.FreeCamera = new BABYLON.FreeCamera("Camera", new BABYLON.Vector3(0, 0.5, -1.5), componentCamera.getScene);
+                    // attach the camera to the canvas
+                    cam.attachControl(this.canvas, false);
                     componentCamera.setCamera = cam;
-                    
-                    //componentCamera.getCamera. = new BABYLON.Vector3(0,0,-100);
+                    cam.cameraRotation = new BABYLON.Vector2(0.03, 0);
+                    //cam.position = new BABYLON.Vector3(0,0,0);
                     componentCamera.state = ComponentCameraState.Spawned;
-                    
                 }
-                
             }
         }
     }
@@ -51,6 +41,6 @@ class SystemCamera extends ECS.System {
     }
 
     newOfThis(): SystemCamera {
-        return new SystemCamera();
+        return new SystemCamera(this.canvas);
     }
 }

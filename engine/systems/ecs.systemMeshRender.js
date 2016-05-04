@@ -21,22 +21,7 @@ var ECS;
         };
         SystemMeshRender.prototype.Update = function (entities) {
             var _loop_1 = function() {
-                var updateAbleEntity = true;
-                for (j = 0; j < this_1.neededComponents.length; j++) {
-                    var neededComponentFound = false;
-                    for (k = 0; k < entities[i].getComponentTypes.length; k++) {
-                        if (entities[i].getComponentTypes[k] == this_1.neededComponents[j]) {
-                            neededComponentFound = true;
-                            break;
-                        }
-                        ;
-                    }
-                    if (!neededComponentFound) {
-                        updateAbleEntity = false;
-                        break;
-                    }
-                }
-                if (updateAbleEntity) {
+                if (this_1.checkCompatibleEntity(entities[i])) {
                     var componentAbstractMesh_1 = entities[i].getComponent(this_1.neededComponents[0]);
                     var componentPosition = entities[i].getComponent(this_1.neededComponents[1]);
                     //console.log("[SystemMeshRender]mesh pos:" + componentPosition.getPosition);
@@ -55,6 +40,7 @@ var ECS;
                         case MeshLoadState.Loaded:
                             componentAbstractMesh_1.babylonMesh.setAbsolutePosition(componentPosition.getPosition);
                             componentAbstractMesh_1.babylonMesh.scaling = componentPosition.getScale;
+                            componentAbstractMesh_1.executeRotateQueue();
                             //console.log("-:"+componentAbstractMesh.babylonMesh.scaling);
                             //componentAbstractMesh.babylonMesh.translate(new BABYLON.Vector3(1,0,0),3.5);
                             break;
@@ -62,7 +48,6 @@ var ECS;
                 }
             };
             var this_1 = this;
-            var j, k;
             for (var i = 0; i < entities.length; i++) {
                 _loop_1();
             }

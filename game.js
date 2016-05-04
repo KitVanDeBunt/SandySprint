@@ -34,24 +34,27 @@ var game = function () {
         ECSrenderSystem.initRendering(scene);
         ECSengine.addSystem(ECSrenderSystem);
         // add camera system
-        var cameraSystem = new SystemCamera();
+        var cameraSystem = new SystemCamera(canvas);
         ECSengine.addSystem(cameraSystem);
         // create player entity
         player = ECSengine.createEntity();
-        playerTranslateComponent = new ECS.ComponentTransform(BABYLON.Vector3.Zero(), new BABYLON.Vector3(0.01, 0.01, 0.01));
+        playerTranslateComponent = new ECS.ComponentTransform(BABYLON.Vector3.Zero(), new BABYLON.Vector3(0.004, 0.004, 0.004));
         player.addComponent(playerTranslateComponent);
-        player.addComponent(new ECS.ComponentAbstractMesh(playerTranslateComponent, "assets/models/", "Matthew_Full.babylon"));
+        var playerMeshComponent = new ECS.ComponentAbstractMesh(playerTranslateComponent, "assets/models/", "Matthew_Full.babylon");
+        player.addComponent(playerMeshComponent);
         playerTranslateComponent.setPosition = playerTranslateComponent.getPosition.add(new BABYLON.Vector3(0, 0, 5));
+        playerMeshComponent.meshRotate(new BABYLON.Vector3(1, 0, 0), Math.PI / 2);
+        playerMeshComponent.meshRotate(new BABYLON.Vector3(0, 0, 1), Math.PI);
         // create camera entity
         var cameraECS = ECSengine.createEntity();
-        cameraTranslateComponent = new ECS.ComponentTransform(BABYLON.Vector3.Zero(), new BABYLON.Vector3(0.01, 0.01, 0.01));
+        cameraTranslateComponent = new ECS.ComponentTransform(BABYLON.Vector3.Zero(), new BABYLON.Vector3(0.005, 0.005, 0.005));
         cameraTranslateComponent.setPosition = cameraTranslateComponent.getPosition.add(new BABYLON.Vector3(0, 0, 5));
         cameraECS.addComponent(cameraTranslateComponent);
         cameraECS.addComponent(new ComponentCamera(cameraTranslateComponent, scene));
         //playerTranslateComponent.setScale = new BABYLON.Vector3(0.1, 0.1, 0.1);
         console.log(playerTranslateComponent.getPosition);
         console.log("componentPosition instance type:" + playerTranslateComponent.componentType());
-        roadManager = new RoadManager(ECSengine, cameraComponent);
+        roadManager = new RoadManager(ECSengine, scene, cameraComponent);
         return scene;
     };
     scene = createScene();

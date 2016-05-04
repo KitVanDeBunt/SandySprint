@@ -2,13 +2,13 @@
  * RoadManager
  */
 var RoadManager = (function () {
-    function RoadManager(engine, cameraComponent) {
+    function RoadManager(engine, scene, cameraComponent) {
         this.clonesCreated = false;
         this.roadMeshes = [];
         this.engine = engine;
         var raodParts;
         var house = this.engine.createEntity();
-        var housePositionComponent = new ECS.ComponentTransform(new BABYLON.Vector3(5, 0, 5), new BABYLON.Vector3(0.2, 0.2, 0.2));
+        var housePositionComponent = new ECS.ComponentTransform(new BABYLON.Vector3(5, 0, 20), new BABYLON.Vector3(0.2, 0.2, 0.2));
         house.addComponent(housePositionComponent);
         house.addComponent(new ECS.ComponentAbstractMesh(housePositionComponent, "assets/models/", "house.babylon"));
         for (var i = 0; i < 10; i++) {
@@ -17,6 +17,7 @@ var RoadManager = (function () {
             road.addComponent(roadPositionComponent);
             this.roadMeshes[i] = new ECS.ComponentAbstractMesh(roadPositionComponent, "assets/models/", "Road_02.babylon");
             road.addComponent(this.roadMeshes[i]);
+            road.addComponent(new ComponentStraightLane(this.roadMeshes[i], new BABYLON.Vector3(0, 0, i * 14), BABYLON.Vector3.Zero(), scene));
         }
     }
     RoadManager.prototype.update = function () {

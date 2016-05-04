@@ -23,5 +23,23 @@ namespace ECS{
         abstract returnTypeOfSystem():string;
         
         abstract newOfThis():System;
+        
+        protected checkCompatibleEntity(entity: Entity):boolean{
+            let updateAbleEntity: boolean = true;
+            for (let j = 0; j < this.neededComponents.length; j++) {
+                let neededComponentFound: boolean = false;
+                for (let k = 0; k < entity.getComponentTypes.length; k++) {
+                    if (entity.getComponentTypes[k] == this.neededComponents[j]) {
+                        neededComponentFound = true;
+                        break;
+                    };
+                }
+                if (!neededComponentFound) {
+                    updateAbleEntity = false;
+                    break;
+                }
+            }
+            return updateAbleEntity;
+        }
     }
 }

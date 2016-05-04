@@ -8,37 +8,26 @@ var __extends = (this && this.__extends) || function (d, b) {
  */
 var SystemCamera = (function (_super) {
     __extends(SystemCamera, _super);
-    function SystemCamera() {
+    function SystemCamera(canvas) {
         _super.call(this);
         // get needed component types
         this.neededComponents[0] = new ECS.ComponentTransform(null, null).componentType();
         this.neededComponents[1] = new ComponentCamera(null, null).componentType();
+        this.canvas = canvas;
     }
     SystemCamera.prototype.Update = function (entities) {
         for (var i = 0; i < entities.length; i++) {
-            var updateAbleEntity = true;
-            for (var j = 0; j < this.neededComponents.length; j++) {
-                var neededComponentFound = false;
-                for (var k = 0; k < entities[i].getComponentTypes.length; k++) {
-                    if (entities[i].getComponentTypes[k] == this.neededComponents[j]) {
-                        neededComponentFound = true;
-                        break;
-                    }
-                    ;
-                }
-                if (!neededComponentFound) {
-                    updateAbleEntity = false;
-                    break;
-                }
-            }
-            if (updateAbleEntity) {
+            if (this.checkCompatibleEntity(entities[i])) {
                 // update
                 var componentTransform = entities[i].getComponent(this.neededComponents[0]);
                 var componentCamera = entities[i].getComponent(this.neededComponents[1]);
                 if (componentCamera.state == ComponentCameraState.None) {
-                    var cam = new BABYLON.FreeCamera("Camera", new BABYLON.Vector3(0, 20, -50), componentCamera.getScene);
+                    var cam = new BABYLON.FreeCamera("Camera", new BABYLON.Vector3(0, 0.5, -1.5), componentCamera.getScene);
+                    // attach the camera to the canvas
+                    cam.attachControl(this.canvas, false);
                     componentCamera.setCamera = cam;
-                    //componentCamera.getCamera. = new BABYLON.Vector3(0,0,-100);
+                    cam.cameraRotation = new BABYLON.Vector2(0.03, 0);
+                    //cam.position = new BABYLON.Vector3(0,0,0);
                     componentCamera.state = ComponentCameraState.Spawned;
                 }
             }
@@ -48,7 +37,7 @@ var SystemCamera = (function (_super) {
         return "TYPE_SYSTEM_CAMERA";
     };
     SystemCamera.prototype.newOfThis = function () {
-        return new SystemCamera();
+        return new SystemCamera(this.canvas);
     };
     return SystemCamera;
 }(ECS.System));

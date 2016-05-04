@@ -14,6 +14,7 @@ var ECS;
         function ComponentAbstractMesh(componentTransform, path, fileName, onsuccess, progressCallBack, onerror) {
             _super.call(this);
             this.meshState = ECS.MeshLoadState.Non;
+            this.rotateQueue = [];
             this.onsuccess = onsuccess;
             this.progressCallBack = onsuccess;
             this.onerror = onerror;
@@ -22,6 +23,26 @@ var ECS;
             this.path = path;
             this.fileName = fileName;
         }
+        ComponentAbstractMesh.prototype.meshRotate = function (axis, amount) {
+            if (this.meshState == ECS.MeshLoadState.Loaded) {
+                this.mesh.rotate(axis, amount);
+            }
+            else {
+                var newQueueItemPosition = this.rotateQueue.length;
+                this.rotateQueue[newQueueItemPosition] = new RotateQueueItem();
+                this.rotateQueue[newQueueItemPosition].axis = axis;
+                this.rotateQueue[newQueueItemPosition].amount = amount;
+                this.rotateQueue[newQueueItemPosition].executed = false;
+            }
+        };
+        ComponentAbstractMesh.prototype.executeRotateQueue = function () {
+            for (var i = 0; i < this.rotateQueue.length; i++) {
+                if (this.rotateQueue[i].executed == false) {
+                    this.rotateQueue[i].executed = true;
+                    this.mesh.rotate(this.rotateQueue[i].axis, this.rotateQueue[i].amount);
+                }
+            }
+        };
         ComponentAbstractMesh.prototype.setMeshReadyToLoad = function () {
             this.meshState = ECS.MeshLoadState.ReadyToLoad;
         };
@@ -45,5 +66,10 @@ var ECS;
         return ComponentAbstractMesh;
     }(ECS.Component));
     ECS.ComponentAbstractMesh = ComponentAbstractMesh;
+    var RotateQueueItem = (function () {
+        function RotateQueueItem() {
+        }
+        return RotateQueueItem;
+    }());
 })(ECS || (ECS = {}));
 //# sourceMappingURL=ecs.componentAbstractMesh.js.map

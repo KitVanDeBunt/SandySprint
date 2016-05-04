@@ -7,7 +7,8 @@ namespace ECS {
     export class ComponentAbstractMesh extends Component {
         private componentTransform: ComponentTransform;
         private mesh: BABYLON.AbstractMesh;
-        meshState: MeshLoadState = MeshLoadState.Non;
+        public meshState: MeshLoadState = MeshLoadState.Non;
+        private rotateQueue: RotateQueueItem[] = [];
 
         onsuccess: any;
         progressCallBack: any;
@@ -27,6 +28,27 @@ namespace ECS {
             this.fileName = fileName;
         }
 
+        public meshRotate(axis: BABYLON.Vector3, amount: number) {
+            if (this.meshState == MeshLoadState.Loaded) {
+                this.mesh.rotate(axis, amount);
+            } else {
+                let newQueueItemPosition = this.rotateQueue.length;
+                this.rotateQueue[newQueueItemPosition] = new RotateQueueItem();
+                this.rotateQueue[newQueueItemPosition].axis = axis;
+                this.rotateQueue[newQueueItemPosition].amount = amount;
+                this.rotateQueue[newQueueItemPosition].executed = false;
+            }
+        }
+        
+        public executeRotateQueue(){
+            for (var i = 0; i < this.rotateQueue.length; i++) {
+                if (this.rotateQueue[i].executed == false) {
+                    this.rotateQueue[i].executed = true;
+                    this.mesh.rotate(this.rotateQueue[i].axis, this.rotateQueue[i].amount);
+                }
+            }
+        }
+
         private setMeshReadyToLoad() {
             this.meshState = MeshLoadState.ReadyToLoad;
         }
@@ -39,8 +61,14 @@ namespace ECS {
             return this.mesh;
         }
 
-        set babylonMesh(mesh:BABYLON.AbstractMesh){
+        set babylonMesh(mesh: BABYLON.AbstractMesh) {
             this.mesh = mesh;
         }
+    }
+
+    class RotateQueueItem {
+        executed: boolean;
+        axis: BABYLON.Vector3;
+        amount: number;
     }
 }

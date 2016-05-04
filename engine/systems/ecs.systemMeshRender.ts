@@ -20,21 +20,7 @@ namespace ECS {
 
         Update<T extends Entity>(entities: T[]) {
             for (var i = 0; i < entities.length; i++) {
-                let updateAbleEntity: boolean = true;
-                for (var j = 0; j < this.neededComponents.length; j++) {
-                    let neededComponentFound: boolean = false;
-                    for (var k = 0; k < entities[i].getComponentTypes.length; k++) {
-                        if (entities[i].getComponentTypes[k] == this.neededComponents[j]) {
-                            neededComponentFound = true;
-                            break;
-                        };
-                    }
-                    if (!neededComponentFound) {
-                        updateAbleEntity = false;
-                        break;
-                    }
-                }
-                if (updateAbleEntity) {
+                if (this.checkCompatibleEntity(entities[i])) {
                     let componentAbstractMesh: ComponentAbstractMesh = <ComponentAbstractMesh>entities[i].getComponent(this.neededComponents[0]);
                     let componentPosition: ComponentTransform = <ComponentTransform>entities[i].getComponent(this.neededComponents[1]);
                     //console.log("[SystemMeshRender]mesh pos:" + componentPosition.getPosition);
@@ -55,6 +41,7 @@ namespace ECS {
                         case MeshLoadState.Loaded:
                             componentAbstractMesh.babylonMesh.setAbsolutePosition(componentPosition.getPosition);
                             componentAbstractMesh.babylonMesh.scaling = componentPosition.getScale;
+                            componentAbstractMesh.executeRotateQueue();
                         //console.log("-:"+componentAbstractMesh.babylonMesh.scaling);
                         //componentAbstractMesh.babylonMesh.translate(new BABYLON.Vector3(1,0,0),3.5);
                     break;
