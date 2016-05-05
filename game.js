@@ -7,12 +7,11 @@ var game = function () {
     var engine = new BABYLON.Engine(canvas, true);
     var ECSengine;
     var scene;
-    var player;
     var cameraECS;
-    var playerTranslateComponent;
     var cameraTranslateComponent;
     var cameraComponent;
     var roadManager;
+    var playerManager;
     var createScene = function () {
         // prevent manifest file error warning
         engine.enableOfflineSupport = false;
@@ -36,24 +35,14 @@ var game = function () {
         // add camera system
         var cameraSystem = new SystemCamera(canvas);
         ECSengine.addSystem(cameraSystem);
-        // create player entity
-        player = ECSengine.createEntity();
-        playerTranslateComponent = new ECS.ComponentTransform(BABYLON.Vector3.Zero(), new BABYLON.Vector3(0.004, 0.004, 0.004));
-        player.addComponent(playerTranslateComponent);
-        var playerMeshComponent = new ECS.ComponentAbstractMesh(playerTranslateComponent, "assets/models/", "Matthew_Full.babylon");
-        player.addComponent(playerMeshComponent);
-        playerTranslateComponent.setPosition = playerTranslateComponent.getPosition.add(new BABYLON.Vector3(0, 0, 5));
-        playerMeshComponent.meshRotate(new BABYLON.Vector3(1, 0, 0), Math.PI / 2);
-        playerMeshComponent.meshRotate(new BABYLON.Vector3(0, 0, 1), Math.PI);
+        // create player manager
+        playerManager = new PlayerManager(scene, ECSengine);
         // create camera entity
         var cameraECS = ECSengine.createEntity();
         cameraTranslateComponent = new ECS.ComponentTransform(BABYLON.Vector3.Zero(), new BABYLON.Vector3(0.005, 0.005, 0.005));
         cameraTranslateComponent.setPosition = cameraTranslateComponent.getPosition.add(new BABYLON.Vector3(0, 0, 5));
         cameraECS.addComponent(cameraTranslateComponent);
         cameraECS.addComponent(new ComponentCamera(cameraTranslateComponent, scene));
-        //playerTranslateComponent.setScale = new BABYLON.Vector3(0.1, 0.1, 0.1);
-        console.log(playerTranslateComponent.getPosition);
-        console.log("componentPosition instance type:" + playerTranslateComponent.componentType());
         roadManager = new RoadManager(ECSengine, scene, cameraComponent);
         return scene;
     };
@@ -62,23 +51,16 @@ var game = function () {
         var deltaTime = engine.getDeltaTime();
         // update game
         roadManager.update();
+        // update game
+        playerManager.update(deltaTime);
         // update entity component system
         ECSengine.updateSystems();
         // update babylon
         scene.render();
     });
-    function onKeyDown(evt) {
-        switch (evt.keyCode) {
-            case 68:
-                //house.translate(new BABYLON.Vector3(0, 0, 1), 3.5);
-                playerTranslateComponent.setPosition = playerTranslateComponent.getPosition.add(new BABYLON.Vector3(0, 0, 10));
-                break;
-            case 82:
-                //house.rotate(BABYLON.Vector3.Up(), Math.PI / 4);
-                playerTranslateComponent.setPosition = playerTranslateComponent.getPosition.add(new BABYLON.Vector3(0, 0, 10));
-                break;
-        }
-        console.log("key down: " + evt.keyCode);
+    function onKeyDown(keyEvt) {
+        playerManager.onKeyDown(keyEvt);
+        console.log("key down: " + keyEvt.keyCode);
     }
     // Resize
     window.addEventListener("resize", function () {
