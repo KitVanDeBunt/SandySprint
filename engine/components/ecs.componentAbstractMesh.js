@@ -63,6 +63,16 @@ var ECS;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(ComponentAbstractMesh.prototype, "babylonSkeleton", {
+            get: function () {
+                return this.skeleton;
+            },
+            set: function (skeleton) {
+                this.skeleton = skeleton;
+            },
+            enumerable: true,
+            configurable: true
+        });
         return ComponentAbstractMesh;
     }(ECS.Component));
     ECS.ComponentAbstractMesh = ComponentAbstractMesh;

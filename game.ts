@@ -51,8 +51,10 @@ var game = function () {
         let cameraSystem: SystemCamera = new SystemCamera(canvas);
         ECSengine.addSystem(cameraSystem);
         
+        roadManager = new RoadManager(ECSengine,scene,cameraComponent);
+        
         // create player manager
-        playerManager = new PlayerManager(scene,ECSengine);
+        playerManager = new PlayerManager(scene,ECSengine,roadManager);
         
         // create camera entity
         let cameraECS = ECSengine.createEntity();
@@ -60,8 +62,6 @@ var game = function () {
         cameraTranslateComponent.setPosition = cameraTranslateComponent.getPosition.add(new BABYLON.Vector3(0, 0, 5));
         cameraECS.addComponent(cameraTranslateComponent);
         cameraECS.addComponent(new ComponentCamera(cameraTranslateComponent,scene));
-        
-        roadManager = new RoadManager(ECSengine,scene,cameraComponent);
         
         return scene;
     };
@@ -72,7 +72,7 @@ var game = function () {
         let deltaTime:number = engine.getDeltaTime();
         
         // update game
-        roadManager.update();
+        roadManager.update(playerManager.getplayerT());
         
         // update game
         playerManager.update(deltaTime);

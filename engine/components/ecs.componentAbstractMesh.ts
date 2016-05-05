@@ -7,6 +7,7 @@ namespace ECS {
     export class ComponentAbstractMesh extends Component {
         private componentTransform: ComponentTransform;
         private mesh: BABYLON.AbstractMesh;
+        private skeleton: BABYLON.Skeleton;
         public meshState: MeshLoadState = MeshLoadState.Non;
         private rotateQueue: RotateQueueItem[] = [];
 
@@ -63,6 +64,14 @@ namespace ECS {
 
         set babylonMesh(mesh: BABYLON.AbstractMesh) {
             this.mesh = mesh;
+        }
+        
+        get babylonSkeleton(): BABYLON.Skeleton {
+            return this.skeleton;
+        }
+
+        set babylonSkeleton(skeleton: BABYLON.Skeleton) {
+            this.skeleton = skeleton;
         }
     }
 

@@ -5,7 +5,7 @@ namespace Utils {
     export class Bezier {
         public static GetPoint(p0: BABYLON.Vector3, p1: BABYLON.Vector3, p2: BABYLON.Vector3, p3: BABYLON.Vector3, t: number): BABYLON.Vector3 {
 
-            t = MathUtil.caller(t,0,1);
+            t = MathUtil.clamp(t,0,1);
 
             let ab:BABYLON.Vector3 = BABYLON.Vector3.Lerp(p0, p1, t);
             let bc:BABYLON.Vector3  = BABYLON.Vector3.Lerp(p1, p2, t);
@@ -21,7 +21,7 @@ namespace Utils {
         
         public static GetPointRotation(p0: BABYLON.Quaternion, p1: BABYLON.Quaternion, p2: BABYLON.Quaternion, p3: BABYLON.Quaternion, t: number): BABYLON.Quaternion {
 
-            t = MathUtil.caller(t,0,1);
+            t = MathUtil.clamp(t,0,1);
 
             let ab:BABYLON.Quaternion = BABYLON.Quaternion.Slerp(p0, p1, t);
             let bc:BABYLON.Quaternion  = BABYLON.Quaternion.Slerp(p1, p2, t);
@@ -37,7 +37,7 @@ namespace Utils {
     }
 
     export class MathUtil {
-        public static Clamp(value, min, max) {
+        public static clamp(value, min, max) {
             return Math.min(Math.max(value, min), max);
         };
     }
