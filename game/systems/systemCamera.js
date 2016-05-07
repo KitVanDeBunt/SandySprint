@@ -23,7 +23,8 @@ var SystemCamera = (function (_super) {
                 var componentCamera = entities[i].getComponent(this.neededComponents[1]);
                 if (componentCamera.state == ComponentCameraState.None) {
                     var cam = new BABYLON.FreeCamera("Camera", new BABYLON.Vector3(0, 0.5, -1.5), componentCamera.getScene);
-                    // attach the camera to the canvas
+                    componentCamera.getScene.activeCameras.push(cam);
+                    // attach the  camera to the canvas
                     cam.attachControl(this.canvas, false);
                     componentCamera.setCamera = cam;
                     cam.cameraRotation = new BABYLON.Vector2(0.03, 0);
