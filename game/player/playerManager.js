@@ -56,7 +56,7 @@ var PlayerManager = (function () {
             this.currentLane = this.currentLane.getNextLane;
         }
         var laneInputT = (this.playerT - this.currentLane.getStartT) / this.currentLane.getLaneLength();
-        console.log(laneInputT);
+        //console.log(laneInputT);
         this.playerTranslateComponent.setPosition = this.currentLane.getPointAtT(laneInputT);
         //this.playerTranslateComponent.setPosition = this.playerTranslateComponent.getPosition.add(new BABYLON.Vector3(0, 0, this.playerT));
     };

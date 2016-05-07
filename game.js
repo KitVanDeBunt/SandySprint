@@ -12,6 +12,7 @@ var game = function () {
     var cameraComponent;
     var roadManager;
     var playerManager;
+    var gameUI;
     var createScene = function () {
         // prevent manifest file error warning
         engine.enableOfflineSupport = false;
@@ -38,6 +39,8 @@ var game = function () {
         roadManager = new RoadManager(ECSengine, scene, cameraComponent);
         // create player manager
         playerManager = new PlayerManager(scene, ECSengine, roadManager);
+        // create ui
+        this.gameUI = new GameUI(scene, playerManager);
         // create camera entity
         var cameraECS = ECSengine.createEntity();
         cameraTranslateComponent = new ECS.ComponentTransform(BABYLON.Vector3.Zero(), new BABYLON.Vector3(0.005, 0.005, 0.005));
@@ -55,6 +58,8 @@ var game = function () {
         playerManager.update(deltaTime);
         // update entity component system
         ECSengine.updateSystems();
+        // update game ui
+        this.gameUI.update();
         // update babylon
         scene.render();
     });

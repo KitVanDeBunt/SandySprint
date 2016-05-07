@@ -14,6 +14,7 @@ var game = function () {
     let cameraComponent: ComponentCamera;
     let roadManager:RoadManager;
     let playerManager:PlayerManager;
+    let gameUI:GameUI;
 
     let createScene = function () {
         
@@ -56,6 +57,9 @@ var game = function () {
         // create player manager
         playerManager = new PlayerManager(scene,ECSengine,roadManager);
         
+        // create ui
+        this.gameUI = new GameUI(scene,playerManager);
+        
         // create camera entity
         let cameraECS = ECSengine.createEntity();
         cameraTranslateComponent = new ECS.ComponentTransform(BABYLON.Vector3.Zero(), new BABYLON.Vector3(0.005, 0.005, 0.005));
@@ -79,6 +83,9 @@ var game = function () {
         
         // update entity component system
         ECSengine.updateSystems();
+        
+        // update game ui
+        this.gameUI.update();
         
         // update babylon
         scene.render();
