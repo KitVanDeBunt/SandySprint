@@ -21,10 +21,10 @@ class ComponentStraightLane extends ComponentLaneBase {
         // set bezier points
         this.points = [
         new BABYLON.Vector3(startPos.x, startPos.y, startPos.z),
-        //new BABYLON.Vector3(startPos.x, startPos.y, startPos.z+(14 / 3) * 1),
-        new BABYLON.Vector3(startPos.x, startPos.y-1, startPos.z+(14 / 3) * 1),
-        //new BABYLON.Vector3(startPos.x, startPos.y, startPos.z+((14 / 3) * 2)),
-        new BABYLON.Vector3(startPos.x, startPos.y+1, startPos.z+((14 / 3) * 2)),
+        new BABYLON.Vector3(startPos.x, startPos.y, startPos.z+(14 / 3) * 1),
+        //new BABYLON.Vector3(startPos.x, startPos.y-1, startPos.z+(14 / 3) * 1),
+        new BABYLON.Vector3(startPos.x, startPos.y, startPos.z+((14 / 3) * 2)),
+        //new BABYLON.Vector3(startPos.x, startPos.y+1, startPos.z+((14 / 3) * 2)),
         new BABYLON.Vector3(startPos.x, startPos.y, startPos.z+14)];
         
         // draw lane

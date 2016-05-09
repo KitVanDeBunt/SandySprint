@@ -9,10 +9,6 @@ var RoadManager = (function () {
         this.roadMeshes = [];
         this.engine = engine;
         this.scene = scene;
-        var house = this.engine.createEntity();
-        var housePositionComponent = new ECS.ComponentTransform(new BABYLON.Vector3(5, 0, 20), new BABYLON.Vector3(0.2, 0.2, 0.2));
-        house.addComponent(housePositionComponent);
-        house.addComponent(new ECS.ComponentAbstractMesh(housePositionComponent, "assets/models/", "house.babylon"));
         this.createRaodPart();
         this.createRaodPart();
     }
@@ -43,6 +39,23 @@ var RoadManager = (function () {
         road.addComponent(this.lanes[roadN][0]);
         road.addComponent(this.lanes[roadN][1]);
         road.addComponent(this.lanes[roadN][2]);
+        // spike obsticles
+        var randomLane = Math.floor((Math.random() * 3));
+        var spike = this.engine.createEntity();
+        var spikePositionComponent = new ECS.ComponentTransform(this.lanes[roadN][randomLane].getPointAtT(Math.random()), new BABYLON.Vector3(1.4, 1.4, 1.4));
+        spike.addComponent(spikePositionComponent);
+        var spikeMeshComponent = new ECS.ComponentAbstractMesh(spikePositionComponent, "assets/models/", "Obstacle_Spikes.babylon");
+        spike.addComponent(spikeMeshComponent);
+        // house spawn
+        var house = this.engine.createEntity();
+        var housePositionComponent = new ECS.ComponentTransform(this.lanes[roadN][randomLane].getPointAtT(Math.random()).add(new BABYLON.Vector3(2.5, 0, 0)), new BABYLON.Vector3(0.2, 0.2, 0.2));
+        house.addComponent(housePositionComponent);
+        house.addComponent(new ECS.ComponentAbstractMesh(housePositionComponent, "assets/models/", "house.babylon"));
+        // house spawn
+        var house2 = this.engine.createEntity();
+        var housePositionComponent2 = new ECS.ComponentTransform(this.lanes[roadN][randomLane].getPointAtT(Math.random()).add(new BABYLON.Vector3(-2.5, 0, 0)), new BABYLON.Vector3(0.2, 0.2, 0.2));
+        house2.addComponent(housePositionComponent2);
+        house2.addComponent(new ECS.ComponentAbstractMesh(housePositionComponent2, "assets/models/", "house.babylon"));
         this.roadesSpawned++;
     };
     Object.defineProperty(RoadManager.prototype, "getStartLane", {
