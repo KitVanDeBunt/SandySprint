@@ -24,6 +24,18 @@ var ECS;
             for (var i = 0; i < this.systems.length; i++) {
                 this.systems[i].Update(this.entities);
             }
+            this.deleteObectsReadyToBeDestroyed();
+        };
+        Engine.prototype.deleteObectsReadyToBeDestroyed = function () {
+            for (var i = 0; i < this.entities.length; i++) {
+                if (this.entities[i].destroyed()) {
+                    console.log("delete enntity: " + i);
+                    console.log("e count: " + this.entities.length);
+                    //this.entities[i] = null;
+                    //this.entities.splice(i,1);
+                    console.log("e count: " + this.entities.length);
+                }
+            }
         };
         Engine.prototype.getSystem = function (newSystemOfType) {
             console.log("systems.length: " + this.systems.length);

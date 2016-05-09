@@ -9,9 +9,8 @@ var game = function () {
     let engine: BABYLON.Engine = new BABYLON.Engine(canvas, true);
     let ECSengine: ECS.Engine;
     let scene: BABYLON.Scene;
-    let cameraECS: ECS.Entity;
-    let cameraTranslateComponent: ECS.ComponentTransform;
-    let cameraComponent: ComponentCamera;
+    
+    let playerCameraManager:PlayerCameraManager;
     let roadManager:RoadManager;
     let playerManager:PlayerManager;
     let gameUI:GameUI;
@@ -52,20 +51,13 @@ var game = function () {
         let cameraSystem: SystemCamera = new SystemCamera(canvas);
         ECSengine.addSystem(cameraSystem);
         
-        roadManager = new RoadManager(ECSengine,scene,cameraComponent);
-        
-        // create player manager
+        // create managers (scripts that handel game logic) 
+        roadManager = new RoadManager(ECSengine,scene);
         playerManager = new PlayerManager(scene,ECSengine,roadManager);
+        playerCameraManager = new PlayerCameraManager(ECSengine,scene,playerManager);
         
         // create ui
         this.gameUI = new GameUI(scene,playerManager);
-        
-        // create camera entity
-        let cameraECS = ECSengine.createEntity();
-        cameraTranslateComponent = new ECS.ComponentTransform(BABYLON.Vector3.Zero(), new BABYLON.Vector3(0.005, 0.005, 0.005));
-        cameraTranslateComponent.setPosition = cameraTranslateComponent.getPosition.add(new BABYLON.Vector3(0, 0, 5));
-        cameraECS.addComponent(cameraTranslateComponent);
-        cameraECS.addComponent(new ComponentCamera(cameraTranslateComponent,scene));
         
         return scene;
     };
@@ -75,11 +67,10 @@ var game = function () {
     engine.runRenderLoop(function () {
         let deltaTime:number = engine.getDeltaTime();
         
-        // update game
+        // update managers (scripts that handel game logic)
         roadManager.update(playerManager.getplayerT());
-        
-        // update game
         playerManager.update(deltaTime);
+        playerCameraManager.update(deltaTime);
         
         // update entity component system
         ECSengine.updateSystems();
@@ -96,11 +87,12 @@ var game = function () {
         console.log("key down: " + keyEvt.keyCode);
     }
 
-    // Resize
+    // call resize on babylon engine if the windows resizes
     window.addEventListener("resize", function () {
         engine.resize();
     });
-    // Input
+    
+    // add input event listener
     window.addEventListener("keydown", onKeyDown);
 }
 

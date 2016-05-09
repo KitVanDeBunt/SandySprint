@@ -40,6 +40,14 @@ class PlayerManager {
     getplayerT():number{
         return this.playerT;
     }
+    
+    /**
+     * Returns the players position
+     * @returns players position
+     */
+    getplayerPosition():BABYLON.Vector3{
+        return this.playerTranslateComponent.getPosition;
+    }
 
     onKeyDown(keyEvent: KeyboardEvent): void {
         switch (keyEvent.keyCode) {

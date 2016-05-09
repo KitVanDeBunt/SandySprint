@@ -28,6 +28,13 @@ var PlayerManager = (function () {
     PlayerManager.prototype.getplayerT = function () {
         return this.playerT;
     };
+    /**
+     * Returns the players position
+     * @returns players position
+     */
+    PlayerManager.prototype.getplayerPosition = function () {
+        return this.playerTranslateComponent.getPosition;
+    };
     PlayerManager.prototype.onKeyDown = function (keyEvent) {
         switch (keyEvent.keyCode) {
             case 68:

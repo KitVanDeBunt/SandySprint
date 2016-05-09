@@ -9,6 +9,24 @@ var ECS;
             this.components = [];
             this.componentsTypes = [];
         }
+        // set entity to be destroy
+        Entity.prototype.destroy = function () {
+            for (var i = 0; i < this.components.length; i++) {
+                this.components[i].destroy();
+            }
+        };
+        // entity ready to be deleted
+        Entity.prototype.destroyed = function () {
+            if (this.components.length == 0) {
+                return false;
+            }
+            for (var i = 0; i < this.components.length; i++) {
+                if (!this.components[i].destroyed()) {
+                    return false;
+                }
+            }
+            return true;
+        };
         // function that exists to ensure generic constarain work
         // because generic constrains only checks if the methodes and fields are the same not the actual type 
         Entity.prototype.thisIsAEntity = function () {
@@ -18,6 +36,7 @@ var ECS;
             this.components[this.newComponentID] = newComponent;
             this.componentsTypes[this.newComponentID] = newComponent.componentType();
             this.newComponentID++;
+            newComponent.setParentEntity = this;
             //ECS.Component.componentType();
         };
         Object.defineProperty(Entity.prototype, "getComponentTypes", {
@@ -28,13 +47,9 @@ var ECS;
             configurable: true
         });
         Entity.prototype.getComponent = function (componentType) {
-            //console.log("components.length: "+this.components.length);
             for (var i = 0; i < this.components.length; i++) {
-                //console.log("typeof components[i]: "+this.components[i].componentType());
-                //console.log("newComponentOfType.returnTypeOfComponents(): "+newComponentsOfType.componentType());
                 if (this.components[i].componentType() == componentType) {
-                    // return system if found
-                    //console.log("[Entity]:getComponents():component found and returned");
+                    // return component if found
                     return this.components[i];
                 }
             }

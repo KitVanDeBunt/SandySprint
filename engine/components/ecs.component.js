@@ -5,7 +5,22 @@ var ECS;
      */
     var Component = (function () {
         function Component() {
+            this.isDestroyed = false;
         }
+        Object.defineProperty(Component.prototype, "setParentEntity", {
+            set: function (e) {
+                this.parentEntity = e;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Component.prototype, "getParentEntity", {
+            get: function () {
+                return this.parentEntity;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Component.prototype.componentType = function () {
             return Describer.getName(this);
         };
@@ -13,6 +28,12 @@ var ECS;
         };
         Component.prototype.onAddedToEntity = function (parent) {
             this.parent = parent;
+        };
+        Component.prototype.destroy = function () {
+            this.isDestroyed = false;
+        };
+        Component.prototype.destroyed = function () {
+            return this.isDestroyed;
         };
         return Component;
     }());

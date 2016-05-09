@@ -11,9 +11,9 @@ namespace ECS {
         public meshState: MeshLoadState = MeshLoadState.Non;
         private rotateQueue: RotateQueueItem[] = [];
 
-        onsuccess: any;
-        progressCallBack: any;
-        onerror: any;
+        private onsuccess: any;
+        private progressCallBack: any;
+        private onerror: any;
 
         path: string;
         fileName: string;
@@ -27,6 +27,11 @@ namespace ECS {
             this.componentTransform = componentTransform;
             this.path = path;
             this.fileName = fileName;
+        }
+        
+        destroy(){
+            this.mesh.dispose();
+            super.destroy();
         }
 
         public meshRotate(axis: BABYLON.Vector3, amount: number) {

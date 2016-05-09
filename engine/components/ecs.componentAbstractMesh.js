@@ -23,6 +23,10 @@ var ECS;
             this.path = path;
             this.fileName = fileName;
         }
+        ComponentAbstractMesh.prototype.destroy = function () {
+            this.mesh.dispose();
+            _super.prototype.destroy.call(this);
+        };
         ComponentAbstractMesh.prototype.meshRotate = function (axis, amount) {
             if (this.meshState == ECS.MeshLoadState.Loaded) {
                 this.mesh.rotate(axis, amount);

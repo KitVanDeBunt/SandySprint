@@ -7,10 +7,10 @@ class RoadManager {
     private scene: BABYLON.Scene;
     private clonesCreated: boolean = false;
     private roadMeshes: ECS.ComponentAbstractMesh[];
-    private roadMeshesCount:number = 0;
     private lanes:ComponentStraightLane[][];
+    private roadesSpawned = 0;
 
-    constructor(engine: ECS.Engine, scene: BABYLON.Scene, cameraComponent: ComponentCamera) {
+    constructor(engine: ECS.Engine, scene: BABYLON.Scene) {
         this.lanes = [];
         this.roadMeshes = [];
         this.engine = engine;
@@ -26,16 +26,16 @@ class RoadManager {
     }
     
     createRaodPart(){
-        let roadN = this.roadMeshesCount;
+        let roadN = this.lanes.length;
         let road: ECS.Entity = this.engine.createEntity();
-        let roadPositionComponent = new ECS.ComponentTransform(new BABYLON.Vector3(0, 0, roadN * 14), new BABYLON.Vector3(1, 1, 1));
+        let roadPositionComponent = new ECS.ComponentTransform(new BABYLON.Vector3(0, 0, this.roadesSpawned * 14), new BABYLON.Vector3(1, 1, 1));
         road.addComponent(roadPositionComponent);
         this.roadMeshes[roadN] = new ECS.ComponentAbstractMesh(roadPositionComponent, "assets/models/", "Road_02.babylon");
         road.addComponent(this.roadMeshes[roadN]);
         this.lanes[roadN] = [
-            new ComponentStraightLane(this.roadMeshes[roadN], new BABYLON.Vector3(-0.25, 0, roadN * 14), BABYLON.Vector3.Zero(), this.scene,roadN*14),
-            new ComponentStraightLane(this.roadMeshes[roadN], new BABYLON.Vector3(0, 0, roadN * 14), BABYLON.Vector3.Zero(), this.scene,roadN*14),
-            new ComponentStraightLane(this.roadMeshes[roadN], new BABYLON.Vector3(0.25, 0, roadN * 14), BABYLON.Vector3.Zero(), this.scene,roadN*14)
+            new ComponentStraightLane(this.roadMeshes[roadN], new BABYLON.Vector3(-0.25, 0, this.roadesSpawned * 14), BABYLON.Vector3.Zero(), this.scene,this.roadesSpawned*14),
+            new ComponentStraightLane(this.roadMeshes[roadN], new BABYLON.Vector3(0, 0, this.roadesSpawned * 14), BABYLON.Vector3.Zero(), this.scene,this.roadesSpawned*14),
+            new ComponentStraightLane(this.roadMeshes[roadN], new BABYLON.Vector3(0.25, 0, this.roadesSpawned * 14), BABYLON.Vector3.Zero(), this.scene,this.roadesSpawned*14)
         ];
         
         // set right en left lanes
@@ -51,12 +51,12 @@ class RoadManager {
             this.lanes[roadN-1][2].setNextLane = this.lanes[roadN][2];
         }
         
-        
+        // add lane components to road entity
         road.addComponent(this.lanes[roadN][0]);
         road.addComponent(this.lanes[roadN][1]);
         road.addComponent(this.lanes[roadN][2]);
         
-        this.roadMeshesCount++;
+        this.roadesSpawned++;
     }
     
     public get getStartLane():ComponentLaneBase{
@@ -64,18 +64,11 @@ class RoadManager {
     }
 
     update(playerT:number) {
-        
-        //console.log("playerT: "+playerT);
-        
-        for (var i = 0; i < this.roadMeshes.length; i++) {
-            var element: ECS.ComponentAbstractMesh = this.roadMeshes[i];
-
-            let roadPos: BABYLON.Vector3 = element.positionComponent.getPosition;
-            //element.positionComponent.setPosition = roadPos.add(new BABYLON.Vector3(0, 0, -0.2));
-
-            if (element.positionComponent.getPosition.z < -20) {
-                let roadPos: BABYLON.Vector3 = element.positionComponent.getPosition;
-                //element.positionComponent.setPosition = roadPos.add(new BABYLON.Vector3(0, 0, 10*14));
+        for (var i = 0; i < this.lanes.length; i++) {
+            if(this.lanes[i][0].getStartT < playerT-20){
+                this.roadMeshes[i].getParentEntity.destroy();
+                this.roadMeshes.splice(i,1);
+                this.lanes.splice(i,1);
             }
         }
     }

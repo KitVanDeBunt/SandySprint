@@ -7,9 +7,7 @@ var game = function () {
     var engine = new BABYLON.Engine(canvas, true);
     var ECSengine;
     var scene;
-    var cameraECS;
-    var cameraTranslateComponent;
-    var cameraComponent;
+    var playerCameraManager;
     var roadManager;
     var playerManager;
     var gameUI;
@@ -36,26 +34,21 @@ var game = function () {
         // add camera system
         var cameraSystem = new SystemCamera(canvas);
         ECSengine.addSystem(cameraSystem);
-        roadManager = new RoadManager(ECSengine, scene, cameraComponent);
-        // create player manager
+        // create managers (scripts that handel game logic) 
+        roadManager = new RoadManager(ECSengine, scene);
         playerManager = new PlayerManager(scene, ECSengine, roadManager);
+        playerCameraManager = new PlayerCameraManager(ECSengine, scene, playerManager);
         // create ui
         this.gameUI = new GameUI(scene, playerManager);
-        // create camera entity
-        var cameraECS = ECSengine.createEntity();
-        cameraTranslateComponent = new ECS.ComponentTransform(BABYLON.Vector3.Zero(), new BABYLON.Vector3(0.005, 0.005, 0.005));
-        cameraTranslateComponent.setPosition = cameraTranslateComponent.getPosition.add(new BABYLON.Vector3(0, 0, 5));
-        cameraECS.addComponent(cameraTranslateComponent);
-        cameraECS.addComponent(new ComponentCamera(cameraTranslateComponent, scene));
         return scene;
     };
     scene = createScene();
     engine.runRenderLoop(function () {
         var deltaTime = engine.getDeltaTime();
-        // update game
+        // update managers (scripts that handel game logic)
         roadManager.update(playerManager.getplayerT());
-        // update game
         playerManager.update(deltaTime);
+        playerCameraManager.update(deltaTime);
         // update entity component system
         ECSengine.updateSystems();
         // update game ui
@@ -67,11 +60,11 @@ var game = function () {
         playerManager.onKeyDown(keyEvt);
         console.log("key down: " + keyEvt.keyCode);
     }
-    // Resize
+    // call resize on babylon engine if the windows resizes
     window.addEventListener("resize", function () {
         engine.resize();
     });
-    // Input
+    // add input event listener
     window.addEventListener("keydown", onKeyDown);
 };
 game();

@@ -34,7 +34,7 @@ abstract class ComponentLaneBase extends ECS.Component {
     get getLeftLaneAvalable(): boolean {
         return this.leftLaneAvalable;
     }
-    
+
     get getNextLaneAvalable(): boolean {
         return this.nextLaneAvalable;
     }
@@ -43,7 +43,7 @@ abstract class ComponentLaneBase extends ECS.Component {
         this.rightLane = lane;
         this.rightLaneAvalable = true;
     }
-    
+
     get getRightLane(): ComponentLaneBase {
         return this.rightLane;
     }
@@ -65,13 +65,13 @@ abstract class ComponentLaneBase extends ECS.Component {
     get getNextLane(): ComponentLaneBase {
         return this.nextLane;
     }
-    
+
     /**
      * Returns the end interpontation(t) of the lane.
      * @returns end interpontation(t) of the lane
      */
-    abstract getEndT() :number;
-    
+    abstract getEndT(): number;
+
     abstract getLaneLength(): number;
 
     abstract getPointAtT(t: number): BABYLON.Vector3;

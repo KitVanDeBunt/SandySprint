@@ -4,7 +4,7 @@
  */
 class SystemCamera extends ECS.System {
 
-    canvas: HTMLCanvasElement;
+    private canvas: HTMLCanvasElement;
 
     constructor(canvas: HTMLCanvasElement) {
         super();
@@ -12,7 +12,7 @@ class SystemCamera extends ECS.System {
         // get needed component types
         this.neededComponents[0] = new ECS.ComponentTransform(null, null).componentType();
         this.neededComponents[1] = new ComponentCamera(null, null).componentType();
-        
+
         this.canvas = canvas;
     }
 
@@ -22,16 +22,32 @@ class SystemCamera extends ECS.System {
                 // update
                 let componentTransform: ECS.ComponentTransform = <ECS.ComponentTransform>entities[i].getComponent(this.neededComponents[0]);
                 let componentCamera: ComponentCamera = <ComponentCamera>entities[i].getComponent(this.neededComponents[1]);
+                switch (componentCamera.state) {
 
-                if (componentCamera.state == ComponentCameraState.None) {
-                    let cam: BABYLON.FreeCamera = new BABYLON.FreeCamera("Camera", new BABYLON.Vector3(0, 0.5, -1.5), componentCamera.getScene);
-                    componentCamera.getScene.activeCameras.push(cam);
-                    // attach the  camera to the canvas
-                    cam.attachControl(this.canvas, false);
-                    componentCamera.setCamera = cam;
-                    cam.cameraRotation = new BABYLON.Vector2(0.03, 0);
-                    //cam.position = new BABYLON.Vector3(0,0,0);
-                    componentCamera.state = ComponentCameraState.Spawned;
+                    case ComponentCameraState.None:
+
+                        // create camera and push it to the scene
+                        let newCam: BABYLON.FreeCamera = new BABYLON.FreeCamera("Camera", new BABYLON.Vector3(0, 0.5, -1.5), componentCamera.getScene);
+                        componentCamera.getScene.activeCameras.push(newCam);
+
+                        // attach the  camera to the canvas
+                        //cam.attachControl(this.canvas, false);
+
+                        componentCamera.setCamera = newCam;
+
+                        newCam.cameraRotation = new BABYLON.Vector2(0.03, 0);
+                        
+                        //cam.position = new BABYLON.Vector3(0,0,0);
+
+                        componentCamera.state = ComponentCameraState.Spawned;
+                        
+                        break;
+                    case ComponentCameraState.Spawned:
+                        // update camera position
+                        componentCamera.getCamera.position = componentTransform.getPosition.add(new BABYLON.Vector3(0, 0.5, -1.5));
+                        break;
+                    default:
+                        break;
                 }
             }
         }
