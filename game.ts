@@ -57,7 +57,7 @@ var game = function () {
         playerCameraManager = new PlayerCameraManager(ECSengine,scene,playerManager);
         
         // create ui
-        this.gameUI = new GameUI(scene,playerManager);
+        this.gameUI = new GameUI(scene,playerManager,ECSengine);
         
         return scene;
     };

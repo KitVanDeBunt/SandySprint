@@ -30,6 +30,10 @@ var SystemCamera = (function (_super) {
                         //cam.attachControl(this.canvas, false);
                         componentCamera.setCamera = newCam;
                         newCam.cameraRotation = new BABYLON.Vector2(0.03, 0);
+                        if (componentCamera.getLayermask == 1) {
+                            console.log("UICAM");
+                            newCam.layerMask = 0x20000000;
+                        }
                         //cam.position = new BABYLON.Vector3(0,0,0);
                         componentCamera.state = ComponentCameraState.Spawned;
                         break;

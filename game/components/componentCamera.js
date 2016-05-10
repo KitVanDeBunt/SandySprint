@@ -10,6 +10,7 @@ var ComponentCamera = (function (_super) {
     __extends(ComponentCamera, _super);
     function ComponentCamera(transformComponent, scene) {
         _super.call(this);
+        this.layer = 0;
         this.state = ComponentCameraState.None;
         this.scene = scene;
     }
@@ -27,9 +28,23 @@ var ComponentCamera = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(ComponentCamera.prototype, "getLayermask", {
+        get: function () {
+            return this.layer;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(ComponentCamera.prototype, "setCamera", {
         set: function (camera) {
             this.camera = camera;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ComponentCamera.prototype, "setLayermask", {
+        set: function (layer) {
+            this.layer = layer;
         },
         enumerable: true,
         configurable: true

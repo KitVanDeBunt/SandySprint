@@ -24,8 +24,7 @@ class SystemCamera extends ECS.System {
                 let componentCamera: ComponentCamera = <ComponentCamera>entities[i].getComponent(this.neededComponents[1]);
                 switch (componentCamera.state) {
 
-                    case ComponentCameraState.None:
-
+                    case ComponentCameraState.None:                        
                         // create camera and push it to the scene
                         let newCam: BABYLON.FreeCamera = new BABYLON.FreeCamera("Camera", new BABYLON.Vector3(0, 0.5, -1.5), componentCamera.getScene);
                         componentCamera.getScene.activeCameras.push(newCam);
@@ -36,6 +35,11 @@ class SystemCamera extends ECS.System {
                         componentCamera.setCamera = newCam;
 
                         newCam.cameraRotation = new BABYLON.Vector2(0.03, 0);
+                        
+                        if(componentCamera.getLayermask==1){
+                            console.log("UICAM");
+                            newCam.layerMask = 0x20000000;
+                        }
                         
                         //cam.position = new BABYLON.Vector3(0,0,0);
 
