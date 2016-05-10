@@ -7,7 +7,6 @@ class GameUI {
     playerManager: PlayerManager;
     myMaterial_diffuseTexture: BABYLON.DynamicTexture;
     box: BABYLON.Mesh;
-    //  UICamera:BABYLON.FreeCamera;
 
     constructor(scene: BABYLON.Scene, playerManager: PlayerManager, ecs: ECS.Engine) {
         this.playerManager = playerManager;
@@ -16,15 +15,8 @@ class GameUI {
         var UIlight = new BABYLON.DirectionalLight("UIemit", new BABYLON.Vector3(0, 0, 1), scene);
         UIlight.includeOnlyWithLayerMask = 2;
 
-        //Adding UI camera
-        //info: layerMask = 0x20000000;
-        /*this.UICamera = new BABYLON.FreeCamera("UICamera",new BABYLON.Vector3(0,0,-5),scene);
-        this.UICamera.mode = BABYLON.Camera.ORTHOGRAPHIC_CAMERA;
-        this.UICamera.layerMask = 0x20000000;
-        scene.activeCameras.push(this.UICamera);*/
-
-
-        // create camera entity
+        // create UIcamera entity
+        // when layerMask == 1 it gets converted to 0x20000000
         let cameraECS = ecs.createEntity();
         let cameraTranslateComponent = new ECS.ComponentTransform(BABYLON.Vector3.Zero(), new BABYLON.Vector3(0.005, 0.005, 0.005));
         cameraTranslateComponent.setPosition = cameraTranslateComponent.getPosition.add(new BABYLON.Vector3(0, 0, 5));
@@ -32,15 +24,6 @@ class GameUI {
         let UICam = new ComponentCamera(cameraTranslateComponent, scene);
         UICam.setLayermask = 1;
         cameraECS.addComponent(UICam);
-
-        /*  let cameraECS = ecs.createEntity();
-           cameraTranslateComponent.setPosition = cameraTranslateComponent.getPosition.add(new BABYLON.Vector3(0, 0, 5));
-           cameraECS.addComponent(cameraTranslateComponent);
-           let componentCam = new ComponentCamera(cameraTranslateComponent,scene);
-           cameraECS.addComponent(componentCam);*/
-        //componentCam.setLayermask = 0x20000000;
-        //let UIcamera:BABYLON.FreeCamera = componentCam.getCamera;
-        // componentCam.getCamera.layerMask = 0x20000000;
 
         //Adding UI Test Element Material
         var material = new BABYLON.StandardMaterial("texture1", scene);
@@ -50,7 +33,6 @@ class GameUI {
 
         this.myMaterial_diffuseTexture = new BABYLON.DynamicTexture('ScoreTex', 512, scene, true);
         this.myMaterial_diffuseTexture.hasAlpha = true;
-        //myMaterial_diffuseTexture.clear();
         material.diffuseTexture = this.myMaterial_diffuseTexture;
 
         //Adding UI Test Element
