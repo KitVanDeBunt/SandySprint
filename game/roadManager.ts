@@ -60,9 +60,9 @@ class RoadManager {
         // spike obsticles
         let randomLane: number = Math.floor((Math.random() * 3));
         let spike: ECS.Entity = this.engine.createEntity();
-        let spikePositionComponent: ECS.ComponentTransform = new ECS.ComponentTransform(this.lanes[roadN][randomLane].getPointAtT(Math.random()), new BABYLON.Vector3(1.4, 1.4, 1.4));
+        let spikePositionComponent: ECS.ComponentTransform = new ECS.ComponentTransform(this.lanes[roadN][randomLane].getPointAtT(Math.random()), new BABYLON.Vector3(0.14, 0.14, 0.14);
         spike.addComponent(spikePositionComponent);
-        let spikeMeshComponent = new ECS.ComponentAbstractMesh(spikePositionComponent, "assets/models/", "Obstacle_Spikes.babylon");
+        let spikeMeshComponent = new ECS.ComponentAbstractMesh(spikePositionComponent, "assets/models/", "pillar.babylon");
         spike.addComponent(spikeMeshComponent);
 
         // house spawn

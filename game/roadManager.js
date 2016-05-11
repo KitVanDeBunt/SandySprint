@@ -42,9 +42,9 @@ var RoadManager = (function () {
         // spike obsticles
         var randomLane = Math.floor((Math.random() * 3));
         var spike = this.engine.createEntity();
-        var spikePositionComponent = new ECS.ComponentTransform(this.lanes[roadN][randomLane].getPointAtT(Math.random()), new BABYLON.Vector3(1.4, 1.4, 1.4));
+        var spikePositionComponent = new ECS.ComponentTransform(this.lanes[roadN][randomLane].getPointAtT(Math.random()), new BABYLON.Vector3(0.14, 0.14, 0.14));
         spike.addComponent(spikePositionComponent);
-        var spikeMeshComponent = new ECS.ComponentAbstractMesh(spikePositionComponent, "assets/models/", "Obstacle_Spikes.babylon");
+        var spikeMeshComponent = new ECS.ComponentAbstractMesh(spikePositionComponent, "assets/models/", "pillar.babylon");
         spike.addComponent(spikeMeshComponent);
         // house spawn
         var house = this.engine.createEntity();
