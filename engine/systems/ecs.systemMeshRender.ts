@@ -19,7 +19,7 @@ namespace ECS {
         }
 
         Update<T extends Entity>(entities: T[]) {
-            for (var i = 0; i < entities.length; i++) {
+            for (let i = 0; i < entities.length; i++) {
                 if (this.checkCompatibleEntity(entities[i])) {
                     let componentAbstractMesh: ComponentAbstractMesh = <ComponentAbstractMesh>entities[i].getComponent(this.neededComponents[0]);
                     let componentPosition: ComponentTransform = <ComponentTransform>entities[i].getComponent(this.neededComponents[1]);

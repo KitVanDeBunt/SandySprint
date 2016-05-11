@@ -20,7 +20,7 @@ var ECS;
             this.scene = scene;
         };
         SystemMeshRender.prototype.Update = function (entities) {
-            var _loop_1 = function() {
+            var _loop_1 = function(i) {
                 if (this_1.checkCompatibleEntity(entities[i])) {
                     var componentAbstractMesh_1 = entities[i].getComponent(this_1.neededComponents[0]);
                     var componentPosition = entities[i].getComponent(this_1.neededComponents[1]);
@@ -50,7 +50,7 @@ var ECS;
             };
             var this_1 = this;
             for (var i = 0; i < entities.length; i++) {
-                _loop_1();
+                _loop_1(i);
             }
         };
         SystemMeshRender.prototype.returnTypeOfSystem = function () {
