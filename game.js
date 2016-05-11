@@ -16,7 +16,7 @@ var game = function () {
         engine.enableOfflineSupport = false;
         var scene = new BABYLON.Scene(engine);
         // set background color
-        scene.clearColor = BABYLON.Color3.Black();
+        scene.clearColor = new BABYLON.Color3(56 / 255, 71 / 255, 79 / 255);
         // set ambiant color
         scene.ambientColor = new BABYLON.Color3(0.9, 0.72, 0.75);
         //Adding a light
