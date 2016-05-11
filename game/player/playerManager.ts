@@ -51,13 +51,15 @@ class PlayerManager {
 
     onKeyDown(keyEvent: KeyboardEvent): void {
         switch (keyEvent.keyCode) {
-            case 68: //'D'
-                //house.translate(new BABYLON.Vector3(0, 0, 1), 3.5);
-                this.playerTranslateComponent.setPosition = this.playerTranslateComponent.getPosition.add(new BABYLON.Vector3(0, 0, 10));
+            case 65: //'A'
+                if(this.currentLane.getLeftLaneAvalable){
+                    this.currentLane = this.currentLane.getLeftLane;
+                }
                 break;
-            case 82: //'R'
-                //house.rotate(BABYLON.Vector3.Up(), Math.PI / 4);
-                this.playerTranslateComponent.setPosition = this.playerTranslateComponent.getPosition.add(new BABYLON.Vector3(0, 0, 10));
+            case 68: //'D'
+                if(this.currentLane.getRightLaneAvalable){
+                    this.currentLane = this.currentLane.getRightLane;
+                }
                 break;
         }
     }
