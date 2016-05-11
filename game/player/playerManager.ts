@@ -17,7 +17,7 @@ class PlayerManager {
         this.roadManager = roadManager;
         this.scene = scene;
         this.player = ECSengine.createEntity();
-        this.playerTranslateComponent = new ECS.ComponentTransform(BABYLON.Vector3.Zero(), new BABYLON.Vector3(0.004, 0.004, 0.004));
+        this.playerTranslateComponent = new ECS.ComponentTransform(BABYLON.Vector3.Zero(), new BABYLON.Vector3(0.003, 0.003, 0.003));
         this.player.addComponent(this.playerTranslateComponent);
         this.playerMeshComponent = new ECS.ComponentAbstractMesh(this.playerTranslateComponent, "assets/models/", "Matthew_Full.babylon");
         this.player.addComponent(this.playerMeshComponent);
@@ -76,7 +76,13 @@ class PlayerManager {
         
         // spawn lane if needed
         if(!this.currentLane.getNextLaneAvalable){
-            this.roadManager.createRaodPart();
+            if(!this.currentLane.getNextLane.getNextLaneAvalable){
+                this.roadManager.createRaodPart();
+            }
+        }else{
+            if(!this.currentLane.getNextLane.getNextLaneAvalable){
+                this.roadManager.createRaodPart();
+            }
         }
         
         // set next lane if at end of current lane
