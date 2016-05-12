@@ -57,10 +57,10 @@ class RoadManager {
         road.addComponent(this.lanes[roadN][1]);
         road.addComponent(this.lanes[roadN][2]);
 
-        // spike obsticles
+        // spike obstacles
         let randomLane: number = Math.floor((Math.random() * 3));
         let spike: ECS.Entity = this.engine.createEntity();
-        let spikePositionComponent: ECS.ComponentTransform = new ECS.ComponentTransform(this.lanes[roadN][randomLane].getPointAtT(Math.random()), new BABYLON.Vector3(0.14, 0.14, 0.14);
+        let spikePositionComponent: ECS.ComponentTransform = new ECS.ComponentTransform(this.lanes[roadN][randomLane].getPointAtT(Math.random()), new BABYLON.Vector3(0.14, 0.14, 0.14));
         spike.addComponent(spikePositionComponent);
         let spikeMeshComponent = new ECS.ComponentAbstractMesh(spikePositionComponent, "assets/models/", "pillar.babylon");
         spike.addComponent(spikeMeshComponent);

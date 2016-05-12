@@ -39,7 +39,7 @@ var RoadManager = (function () {
         road.addComponent(this.lanes[roadN][0]);
         road.addComponent(this.lanes[roadN][1]);
         road.addComponent(this.lanes[roadN][2]);
-        // spike obsticles
+        // spike obstacles
         var randomLane = Math.floor((Math.random() * 3));
         var spike = this.engine.createEntity();
         var spikePositionComponent = new ECS.ComponentTransform(this.lanes[roadN][randomLane].getPointAtT(Math.random()), new BABYLON.Vector3(0.14, 0.14, 0.14));

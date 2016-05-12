@@ -15,16 +15,14 @@ var game = function () {
         // prevent manifest file error warning
         engine.enableOfflineSupport = false;
         var scene = new BABYLON.Scene(engine);
+        //enable collision
+        scene.collisionsEnabled = true;
         // set background color
         scene.clearColor = new BABYLON.Color3(56 / 255, 71 / 255, 79 / 255);
         // set ambiant color
         scene.ambientColor = new BABYLON.Color3(0.9, 0.72, 0.75);
         //Adding a light
         var light = new BABYLON.DirectionalLight("Omni", new BABYLON.Vector3(20, -100, -100), scene);
-        // Move the light with the camera
-        /*scene.registerBeforeRender(function () {
-            light.position = camera.position;
-        });*/
         // create entity component system
         ECSengine = new ECS.Engine();
         // add render system

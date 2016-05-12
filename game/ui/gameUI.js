@@ -7,6 +7,7 @@ var GameUI = (function () {
         //Adding light for UI elements
         var UIlight = new BABYLON.DirectionalLight("UIemit", new BABYLON.Vector3(0, 0, 1), scene);
         UIlight.includeOnlyWithLayerMask = 0x20000000;
+        var tempLight = new BABYLON.DirectionalLight("UIemit", new BABYLON.Vector3(0, 0, 1), scene);
         // create UIcamera entity
         var cameraECS = ecs.createEntity();
         var cameraTranslateComponent = new ECS.ComponentTransform(BABYLON.Vector3.Zero(), new BABYLON.Vector3(0.005, 0.005, 0.005));
@@ -15,7 +16,7 @@ var GameUI = (function () {
         UICam.setLayermask = 0x20000000;
         cameraECS.addComponent(UICam);
         //Adding UI Test Element Material
-        var material = new BABYLON.StandardMaterial("texture1", scene);
+        var material = new BABYLON.StandardMaterial("textuare1", scene);
         material.alpha = 1;
         material.diffuseColor = new BABYLON.Color3(1.00, 1.00, 1.00);
         this.myMaterial_diffuseTexture = new BABYLON.DynamicTexture('ScoreTex', 512, scene, true);

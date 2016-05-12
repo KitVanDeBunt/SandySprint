@@ -14,6 +14,7 @@ class GameUI {
         //Adding light for UI elements
         var UIlight = new BABYLON.DirectionalLight("UIemit", new BABYLON.Vector3(0, 0, 1), scene);
         UIlight.includeOnlyWithLayerMask = 0x20000000;
+        var tempLight = new BABYLON.DirectionalLight("UIemit", new BABYLON.Vector3(0, 0, 1), scene);
 
         // create UIcamera entity
         let cameraECS = ecs.createEntity();
@@ -24,7 +25,7 @@ class GameUI {
         cameraECS.addComponent(UICam);
 
         //Adding UI Test Element Material
-        var material = new BABYLON.StandardMaterial("texture1", scene);
+        var material = new BABYLON.StandardMaterial("textuare1", scene);
         material.alpha = 1;
 
         material.diffuseColor = new BABYLON.Color3(1.00, 1.00, 1.00);
