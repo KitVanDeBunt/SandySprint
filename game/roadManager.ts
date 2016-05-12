@@ -9,12 +9,14 @@ class RoadManager {
     private scene: BABYLON.Scene;
     private clonesCreated: boolean = false;
     private roadMeshes: ECS.ComponentAbstractMesh[];
+    obstacles: BABYLON.Mesh[];
     private lanes: ComponentStraightLane[][];
     private roadesSpawned = 0;
 
     constructor(engine: ECS.Engine, scene: BABYLON.Scene) {
         this.lanes = [];
         this.roadMeshes = [];
+        this.obstacles = [];
         this.engine = engine;
         this.scene = scene;
 
@@ -64,6 +66,9 @@ class RoadManager {
         spike.addComponent(spikePositionComponent);
         let spikeMeshComponent = new ECS.ComponentAbstractMesh(spikePositionComponent, "assets/models/", "pillar.babylon");
         spike.addComponent(spikeMeshComponent);
+        spikeMeshComponent.setCollision(BABYLON.Mesh.CreateBox("Pillar",0.15,this.scene,false));
+        spikeMeshComponent.updateCollision = spikePositionComponent.getPosition;
+        this.obstacles[this.obstacles.length]=spikeMeshComponent.getCollider;
 
         // house spawn
         let house: ECS.Entity = this.engine.createEntity();
@@ -89,6 +94,7 @@ class RoadManager {
                 this.roadMeshes[i].getParentEntity.destroy();
                 this.roadMeshes.splice(i, 1);
                 this.lanes.splice(i, 1);
+                this.obstacles.splice(i,1);
             }
         }
     }

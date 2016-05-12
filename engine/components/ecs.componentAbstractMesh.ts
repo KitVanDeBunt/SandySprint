@@ -10,6 +10,7 @@ namespace ECS {
         private skeleton: BABYLON.Skeleton;
         public meshState: MeshLoadState = MeshLoadState.Non;
         private rotateQueue: RotateQueueItem[] = [];
+        public collider: BABYLON.Mesh;
 
         private onsuccess: any;
         private progressCallBack: any;
@@ -59,6 +60,20 @@ namespace ECS {
             this.meshState = MeshLoadState.ReadyToLoad;
         }
 
+        public setCollision(mesh: BABYLON.Mesh){
+            this.collider = mesh;
+            this.collider.updatePhysicsBody;
+            this.collider.isVisible = false;
+        }
+        
+        set updateCollision(position:BABYLON.Vector3){
+            this.collider.position = position;
+        }
+        
+        get getCollider():BABYLON.Mesh{
+            return this.collider;
+        }
+        
         get positionComponent(): ComponentTransform {
             return this.componentTransform;
         }
@@ -66,7 +81,7 @@ namespace ECS {
         get babylonMesh(): BABYLON.AbstractMesh {
             return this.mesh;
         }
-
+        
         set babylonMesh(mesh: BABYLON.AbstractMesh) {
             this.mesh = mesh;
         }

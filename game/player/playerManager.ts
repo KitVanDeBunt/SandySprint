@@ -24,8 +24,9 @@ class PlayerManager {
         this.playerTranslateComponent.setPosition = this.playerTranslateComponent.getPosition.add(new BABYLON.Vector3(0, 0, 0));
         this.playerMeshComponent.meshRotate(new BABYLON.Vector3(1, 0, 0), Math.PI / 2);
         this.playerMeshComponent.meshRotate(new BABYLON.Vector3(0, 0, 1), Math.PI);
+        this.playerMeshComponent.setCollision(BABYLON.Mesh.CreateBox("ColBox", 0.2, this.scene, false));
         this.playerT = 0;
-        
+
 
         //playerTranslateComponent.setScale = new BABYLON.Vector3(0.1, 0.1, 0.1);
         console.log(this.playerTranslateComponent.getPosition);
@@ -73,6 +74,17 @@ class PlayerManager {
             this.scene.beginAnimation(this.playerMeshComponent.babylonSkeleton, 2, 18, true, 1);
         }
 
+        //check collision with obstacles
+        for (var index = 0; index < this.roadManager.obstacles.length; index++) {
+            if (this.roadManager.obstacles[index] != null) {
+                var coll = this.playerMeshComponent.getCollider.intersectsMesh(this.roadManager.obstacles[index]);
+                if (coll) {
+                   // this.playerSpeed = 0;
+                   console.log(""+this.roadManager.obstacles[index].name);
+                }
+            }
+        }
+
         this.playerT += (deltaTime * this.playerSpeed);
 
         // spawn lane if needed
@@ -94,6 +106,7 @@ class PlayerManager {
         let laneInputT: number = (this.playerT - this.currentLane.getStartT) / this.currentLane.getLaneLength();
         //console.log(laneInputT);
         this.playerTranslateComponent.setPosition = this.currentLane.getPointAtT(laneInputT);
+        this.playerMeshComponent.updateCollision = this.playerTranslateComponent.getPosition;
         //this.playerTranslateComponent.setPosition = this.playerTranslateComponent.getPosition.add(new BABYLON.Vector3(0, 0, this.playerT));
     }
 }

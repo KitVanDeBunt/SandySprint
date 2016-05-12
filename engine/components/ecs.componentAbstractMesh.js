@@ -50,6 +50,25 @@ var ECS;
         ComponentAbstractMesh.prototype.setMeshReadyToLoad = function () {
             this.meshState = ECS.MeshLoadState.ReadyToLoad;
         };
+        ComponentAbstractMesh.prototype.setCollision = function (mesh) {
+            this.collider = mesh;
+            this.collider.updatePhysicsBody;
+            this.collider.isVisible = false;
+        };
+        Object.defineProperty(ComponentAbstractMesh.prototype, "updateCollision", {
+            set: function (position) {
+                this.collider.position = position;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ComponentAbstractMesh.prototype, "getCollider", {
+            get: function () {
+                return this.collider;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(ComponentAbstractMesh.prototype, "positionComponent", {
             get: function () {
                 return this.componentTransform;

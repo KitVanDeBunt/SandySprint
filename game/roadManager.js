@@ -7,6 +7,7 @@ var RoadManager = (function () {
         this.roadesSpawned = 0;
         this.lanes = [];
         this.roadMeshes = [];
+        this.obstacles = [];
         this.engine = engine;
         this.scene = scene;
         this.createRaodPart();
@@ -46,6 +47,9 @@ var RoadManager = (function () {
         spike.addComponent(spikePositionComponent);
         var spikeMeshComponent = new ECS.ComponentAbstractMesh(spikePositionComponent, "assets/models/", "pillar.babylon");
         spike.addComponent(spikeMeshComponent);
+        spikeMeshComponent.setCollision(BABYLON.Mesh.CreateBox("Pillar", 0.15, this.scene, false));
+        spikeMeshComponent.updateCollision = spikePositionComponent.getPosition;
+        this.obstacles[this.obstacles.length] = spikeMeshComponent.getCollider;
         // house spawn
         var house = this.engine.createEntity();
         var housePositionComponent = new ECS.ComponentTransform(this.lanes[roadN][randomLane].getPointAtT(Math.random()).add(new BABYLON.Vector3(2.5, 0, 0)), new BABYLON.Vector3(0.2, 0.2, 0.2));
@@ -71,6 +75,7 @@ var RoadManager = (function () {
                 this.roadMeshes[i].getParentEntity.destroy();
                 this.roadMeshes.splice(i, 1);
                 this.lanes.splice(i, 1);
+                this.obstacles.splice(i, 1);
             }
         }
     };

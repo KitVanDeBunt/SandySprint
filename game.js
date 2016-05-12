@@ -21,6 +21,8 @@ var game = function () {
         scene.clearColor = new BABYLON.Color3(56 / 255, 71 / 255, 79 / 255);
         // set ambiant color
         scene.ambientColor = new BABYLON.Color3(0.9, 0.72, 0.75);
+        //enable physcis for collision
+        scene.enablePhysics();
         //Adding a light
         var light = new BABYLON.DirectionalLight("Omni", new BABYLON.Vector3(20, -100, -100), scene);
         // create entity component system
