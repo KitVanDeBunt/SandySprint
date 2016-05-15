@@ -11,6 +11,7 @@ var game = function () {
     var roadManager;
     var playerManager;
     var gameUI;
+    var skyboxManager;
     var createScene = function () {
         // prevent manifest file error warning
         engine.enableOfflineSupport = false;
@@ -40,6 +41,8 @@ var game = function () {
         playerCameraManager = new PlayerCameraManager(ECSengine, scene, playerManager);
         // create ui
         this.gameUI = new GameUI(scene, playerManager, ECSengine);
+        // create skybox managers
+        skyboxManager = new SkyBoxManager(scene);
         return scene;
     };
     scene = createScene();
