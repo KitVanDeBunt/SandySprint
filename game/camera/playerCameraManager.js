@@ -12,7 +12,7 @@ var PlayerCameraManager = (function () {
         cameraECS.addComponent(new ComponentCamera(this.cameraTranslateComponent, scene));
     }
     PlayerCameraManager.prototype.update = function (deltaTime) {
-        this.cameraTranslateComponent.setPosition = this.playerManager.getplayerPosition().add(new BABYLON.Vector3(0, 0.5, -1.5));
+        this.cameraTranslateComponent.setPosition = this.playerManager.getplayerPosition().add(new BABYLON.Vector3(0, 0.5, 0.0));
     };
     return PlayerCameraManager;
 }());
