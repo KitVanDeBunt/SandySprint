@@ -6,12 +6,15 @@ class PlayerManager {
     player: ECS.Entity;
     playerTranslateComponent: ECS.ComponentTransform;
     playerMeshComponent: ECS.ComponentAbstractMesh;
-    playerSpeed: number = 0.005;
+    playerSpeed: number = 0.015;
     playerT: number;
     scene: BABYLON.Scene;
     animationStarted: boolean = false;
     roadManager: RoadManager;
     currentLane: ComponentLaneBase;
+    jumpManager: ComponentJumpLane;
+    
+    temp:number = 0;
 
     constructor(scene: BABYLON.Scene, ECSengine: ECS.Engine, roadManager: RoadManager) {
         this.roadManager = roadManager;
@@ -24,8 +27,9 @@ class PlayerManager {
         this.playerTranslateComponent.setPosition = this.playerTranslateComponent.getPosition.add(new BABYLON.Vector3(0, 0, 0));
         this.playerMeshComponent.meshRotate(new BABYLON.Vector3(1, 0, 0), Math.PI / 2);
         this.playerMeshComponent.meshRotate(new BABYLON.Vector3(0, 0, 1), Math.PI);
-        this.playerMeshComponent.setCollision(BABYLON.Mesh.CreateBox("ColBox", 0.2, this.scene, false));
+        this.playerMeshComponent.setCollision(BABYLON.Mesh.CreateBox("CollBox", 0.2, this.scene, false));
         this.playerT = 0;
+        this.jumpManager = new ComponentJumpLane(this.playerMeshComponent,BABYLON.Vector3.Zero(),this.scene,this.playerT)
 
 
         //playerTranslateComponent.setScale = new BABYLON.Vector3(0.1, 0.1, 0.1);
@@ -52,6 +56,7 @@ class PlayerManager {
     }
 
     onKeyDown(keyEvent: KeyboardEvent): void {
+        
         switch (keyEvent.keyCode) {
             case 65: //'A'
                 if (this.currentLane.getLeftLaneAvalable) {
@@ -61,6 +66,11 @@ class PlayerManager {
             case 68: //'D'
                 if (this.currentLane.getRightLaneAvalable) {
                     this.currentLane = this.currentLane.getRightLane;
+                }
+                break;
+            case 32: //'Space'
+                if(this.jumpManager.jumping == false){
+                    this.jumpManager.jump(this.playerT);
                 }
                 break;
         }
@@ -74,12 +84,16 @@ class PlayerManager {
             this.scene.beginAnimation(this.playerMeshComponent.babylonSkeleton, 2, 18, true, 1);
         }
 
+        
         //check collision with obstacles
         for (var index = 0; index < this.roadManager.obstacles.length; index++) {
             if (this.roadManager.obstacles[index] != null) {
                 var coll = this.playerMeshComponent.getCollider.intersectsMesh(this.roadManager.obstacles[index]);
                 if (coll) {
-                   // this.playerSpeed = 0;
+                    this.temp++;
+                    if(this.temp>2){
+                   //     this.playerSpeed=0;
+                    }
                    console.log(""+this.roadManager.obstacles[index].name);
                 }
             }
@@ -104,9 +118,16 @@ class PlayerManager {
         }
 
         let laneInputT: number = (this.playerT - this.currentLane.getStartT) / this.currentLane.getLaneLength();
-        //console.log(laneInputT);
-        this.playerTranslateComponent.setPosition = this.currentLane.getPointAtT(laneInputT);
-        this.playerMeshComponent.updateCollision = this.playerTranslateComponent.getPosition;
-        //this.playerTranslateComponent.setPosition = this.playerTranslateComponent.getPosition.add(new BABYLON.Vector3(0, 0, this.playerT));
+        let pos: BABYLON.Vector3 = this.currentLane.getPointAtT(laneInputT);
+        
+        if(this.jumpManager.jumping == true){
+            let jumpInputT:number = (this.playerT - this.jumpManager.getT()) / this.jumpManager.getLaneLength();
+            if(jumpInputT>1){
+                this.jumpManager.done();
+            }
+            pos= this.currentLane.getPointAtT(laneInputT).add(this.jumpManager.getPointAtT(jumpInputT));
+        }
+        this.playerTranslateComponent.setPosition = pos;
+        this.playerMeshComponent.updateCollision = pos;
     }
 }
