@@ -30,7 +30,7 @@ class SystemCamera extends ECS.System {
                         componentCamera.getScene.activeCameras.push(newCam);
 
                         // attach the  camera to the canvas
-                        //cam.attachControl(this.canvas, false);
+                        //newCam.attachControl(this.canvas, false);
 
                         componentCamera.setCamera = newCam;
                         

@@ -3,8 +3,9 @@
  */
 var PlayerManager = (function () {
     function PlayerManager(scene, ECSengine, roadManager) {
-        this.playerSpeed = 0.005;
+        this.playerSpeed = 0.015;
         this.animationStarted = false;
+        this.temp = 0;
         this.roadManager = roadManager;
         this.scene = scene;
         this.player = ECSengine.createEntity();
@@ -15,8 +16,9 @@ var PlayerManager = (function () {
         this.playerTranslateComponent.setPosition = this.playerTranslateComponent.getPosition.add(new BABYLON.Vector3(0, 0, 0));
         this.playerMeshComponent.meshRotate(new BABYLON.Vector3(1, 0, 0), Math.PI / 2);
         this.playerMeshComponent.meshRotate(new BABYLON.Vector3(0, 0, 1), Math.PI);
-        this.playerMeshComponent.setCollision(BABYLON.Mesh.CreateBox("ColBox", 0.2, this.scene, false));
+        this.playerMeshComponent.setCollision(BABYLON.Mesh.CreateBox("CollBox", 0.2, this.scene, false));
         this.playerT = 0;
+        this.jumpManager = new ComponentJumpLane(this.playerMeshComponent, BABYLON.Vector3.Zero(), this.scene, this.playerT);
         //playerTranslateComponent.setScale = new BABYLON.Vector3(0.1, 0.1, 0.1);
         console.log(this.playerTranslateComponent.getPosition);
         console.log("componentPosition instance type:" + this.playerTranslateComponent.componentType());
@@ -48,6 +50,11 @@ var PlayerManager = (function () {
                     this.currentLane = this.currentLane.getRightLane;
                 }
                 break;
+            case 32:
+                if (this.jumpManager.jumping == false) {
+                    this.jumpManager.jump(this.playerT);
+                }
+                break;
         }
     };
     PlayerManager.prototype.update = function (deltaTime) {
@@ -61,7 +68,9 @@ var PlayerManager = (function () {
             if (this.roadManager.obstacles[index] != null) {
                 var coll = this.playerMeshComponent.getCollider.intersectsMesh(this.roadManager.obstacles[index]);
                 if (coll) {
-                    // this.playerSpeed = 0;
+                    this.temp++;
+                    if (this.temp > 2) {
+                    }
                     console.log("" + this.roadManager.obstacles[index].name);
                 }
             }
@@ -83,10 +92,16 @@ var PlayerManager = (function () {
             this.currentLane = this.currentLane.getNextLane;
         }
         var laneInputT = (this.playerT - this.currentLane.getStartT) / this.currentLane.getLaneLength();
-        //console.log(laneInputT);
-        this.playerTranslateComponent.setPosition = this.currentLane.getPointAtT(laneInputT);
-        this.playerMeshComponent.updateCollision = this.playerTranslateComponent.getPosition;
-        //this.playerTranslateComponent.setPosition = this.playerTranslateComponent.getPosition.add(new BABYLON.Vector3(0, 0, this.playerT));
+        var pos = this.currentLane.getPointAtT(laneInputT);
+        if (this.jumpManager.jumping == true) {
+            var jumpInputT = (this.playerT - this.jumpManager.getT()) / this.jumpManager.getLaneLength();
+            if (jumpInputT > 1) {
+                this.jumpManager.done();
+            }
+            pos = this.currentLane.getPointAtT(laneInputT).add(this.jumpManager.getPointAtT(jumpInputT));
+        }
+        this.playerTranslateComponent.setPosition = pos;
+        this.playerMeshComponent.updateCollision = pos;
     };
     return PlayerManager;
 }());

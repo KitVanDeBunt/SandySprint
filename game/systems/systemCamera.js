@@ -27,7 +27,7 @@ var SystemCamera = (function (_super) {
                         var newCam = new BABYLON.FreeCamera("Camera", new BABYLON.Vector3(0, 0.5, -1.5), componentCamera.getScene);
                         componentCamera.getScene.activeCameras.push(newCam);
                         // attach the  camera to the canvas
-                        //cam.attachControl(this.canvas, false);
+                        //newCam.attachControl(this.canvas, false);
                         componentCamera.setCamera = newCam;
                         if (componentCamera.getLayermask != 0) {
                             newCam.layerMask = 0x20000000;
