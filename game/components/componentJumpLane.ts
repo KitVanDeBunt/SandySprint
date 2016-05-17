@@ -23,8 +23,8 @@ class ComponentJumpLane extends ComponentLaneBase {
         // set bezier points
         this.points = [
         new BABYLON.Vector3(0, 0, 0),
-        new BABYLON.Vector3(0, 5, 0),
-        new BABYLON.Vector3(0, 3, 0),
+        new BABYLON.Vector3(0, 2, 0),
+        new BABYLON.Vector3(0, 0, 0),
         new BABYLON.Vector3(0, 0, 0)];
         
         // draw lane

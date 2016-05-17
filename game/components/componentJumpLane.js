@@ -23,8 +23,8 @@ var ComponentJumpLane = (function (_super) {
         // set bezier points
         this.points = [
             new BABYLON.Vector3(0, 0, 0),
-            new BABYLON.Vector3(0, 5, 0),
-            new BABYLON.Vector3(0, 3, 0),
+            new BABYLON.Vector3(0, 2, 0),
+            new BABYLON.Vector3(0, 0, 0),
             new BABYLON.Vector3(0, 0, 0)];
         // draw lane
         var curve = BABYLON.Curve3.CreateCubicBezier(this.points[0], this.points[1], this.points[2], this.points[3], 20);

@@ -6,7 +6,7 @@ class PlayerManager {
     player: ECS.Entity;
     playerTranslateComponent: ECS.ComponentTransform;
     playerMeshComponent: ECS.ComponentAbstractMesh;
-    playerSpeed: number = 0.015;
+    playerSpeed: number = 0.01;
     playerT: number;
     scene: BABYLON.Scene;
     animationStarted: boolean = false;
@@ -92,7 +92,7 @@ class PlayerManager {
                 if (coll) {
                     this.temp++;
                     if(this.temp>2){
-                   //     this.playerSpeed=0;
+                        this.playerSpeed=0;
                     }
                    console.log(""+this.roadManager.obstacles[index].name);
                 }

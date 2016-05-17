@@ -8,7 +8,7 @@ class GameUI {
     myMaterial_diffuseTexture: BABYLON.DynamicTexture;
     box: BABYLON.Mesh;
 
-    constructor(scene: BABYLON.Scene, playerManager: PlayerManager, ecs: ECS.Engine) {
+    constructor(scene: BABYLON.Scene, playerManager: PlayerManager, ecs: ECS.Engine, canvas:HTMLCanvasElement) {
         this.playerManager = playerManager;
 
         //Adding light for UI elements
@@ -37,13 +37,18 @@ class GameUI {
         //Adding UI Test Element
         this.box = BABYLON.Mesh.CreatePlane("Box", 5, scene, false);
         this.box.material = material;
-        this.box.scaling = new BABYLON.Vector3(10, 10, 1);
+        console.log(""+canvas.width);
+        this.box.scaling = new BABYLON.Vector3((19200/canvas.width), 10, 1);
         this.box.position = new BABYLON.Vector3(-53, -30, 100);
 
 
         this.box.layerMask = 0x20000000;
 
         this.context2D = this.myMaterial_diffuseTexture.getContext();
+    }
+    
+    rescale():void{
+        
     }
 
     update(): void {

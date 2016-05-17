@@ -47,7 +47,7 @@ var RoadManager = (function () {
         spike.addComponent(spikePositionComponent);
         var spikeMeshComponent = new ECS.ComponentAbstractMesh(spikePositionComponent, "assets/models/", "pillar.babylon");
         spike.addComponent(spikeMeshComponent);
-        spikeMeshComponent.setCollision(BABYLON.Mesh.CreateBox("Pillar", 0.15, this.scene, false));
+        spikeMeshComponent.setCollision(BABYLON.Mesh.CreateCylinder("Pillar", 2, 0.2, 0.2, 0, 0, this.scene));
         spikeMeshComponent.updateCollision = spikePositionComponent.getPosition;
         this.obstacles[this.obstacles.length] = spikeMeshComponent.getCollider;
         // house spawn

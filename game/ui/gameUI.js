@@ -2,7 +2,7 @@
  * GameUI
  */
 var GameUI = (function () {
-    function GameUI(scene, playerManager, ecs) {
+    function GameUI(scene, playerManager, ecs, canvas) {
         this.playerManager = playerManager;
         //Adding light for UI elements
         var UIlight = new BABYLON.DirectionalLight("UIemit", new BABYLON.Vector3(0, 0, 1), scene);
@@ -25,11 +25,14 @@ var GameUI = (function () {
         //Adding UI Test Element
         this.box = BABYLON.Mesh.CreatePlane("Box", 5, scene, false);
         this.box.material = material;
-        this.box.scaling = new BABYLON.Vector3(10, 10, 1);
+        console.log("" + canvas.width);
+        this.box.scaling = new BABYLON.Vector3((19200 / canvas.width), 10, 1);
         this.box.position = new BABYLON.Vector3(-53, -30, 100);
         this.box.layerMask = 0x20000000;
         this.context2D = this.myMaterial_diffuseTexture.getContext();
     }
+    GameUI.prototype.rescale = function () {
+    };
     GameUI.prototype.update = function () {
         this.context2D.clearRect(0, 0, 512, 512);
         this.myMaterial_diffuseTexture.drawText("Score:" + this.playerManager.getplayerT(), 10, 360, "100px Arial", "white", "transparent");

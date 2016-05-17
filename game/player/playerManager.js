@@ -3,7 +3,7 @@
  */
 var PlayerManager = (function () {
     function PlayerManager(scene, ECSengine, roadManager) {
-        this.playerSpeed = 0.015;
+        this.playerSpeed = 0.01;
         this.animationStarted = false;
         this.temp = 0;
         this.roadManager = roadManager;
@@ -70,6 +70,7 @@ var PlayerManager = (function () {
                 if (coll) {
                     this.temp++;
                     if (this.temp > 2) {
+                        this.playerSpeed = 0;
                     }
                     console.log("" + this.roadManager.obstacles[index].name);
                 }
