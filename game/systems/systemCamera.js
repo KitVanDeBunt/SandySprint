@@ -11,7 +11,7 @@ var SystemCamera = (function (_super) {
     function SystemCamera(canvas) {
         _super.call(this);
         // get needed component types
-        this.neededComponents[0] = new ECS.ComponentTransform(null, null).componentType();
+        this.neededComponents[0] = new ECS.ComponentTransform(null, null, null).componentType();
         this.neededComponents[1] = new ComponentCamera(null, null).componentType();
         this.canvas = canvas;
     }

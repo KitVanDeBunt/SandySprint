@@ -11,7 +11,7 @@ namespace ECS {
 
             // get needed component types
             this.neededComponents[0] = new ComponentAbstractMesh(null, "", "").componentType();
-            this.neededComponents[1] = new ComponentTransform(BABYLON.Vector3.Zero(), BABYLON.Vector3.Zero()).componentType();
+            this.neededComponents[1] = new ComponentTransform(BABYLON.Vector3.Zero(), BABYLON.Vector3.Zero(),BABYLON.Quaternion.Identity()).componentType();
         }
 
         initRendering(scene: BABYLON.Scene) {
@@ -22,7 +22,7 @@ namespace ECS {
             for (let i = 0; i < entities.length; i++) {
                 if (this.checkCompatibleEntity(entities[i])) {
                     let componentAbstractMesh: ComponentAbstractMesh = <ComponentAbstractMesh>entities[i].getComponent(this.neededComponents[0]);
-                    let componentPosition: ComponentTransform = <ComponentTransform>entities[i].getComponent(this.neededComponents[1]);
+                    let componentTransform: ComponentTransform = <ComponentTransform>entities[i].getComponent(this.neededComponents[1]);
                     //console.log("[SystemMeshRender]mesh pos:" + componentPosition.getPosition);
                     //console.log("[SystemMeshRender]mesh state:" + componentAbstractMesh.meshState);
 
@@ -41,8 +41,9 @@ namespace ECS {
                                 });
                             break;
                         case MeshLoadState.Loaded:
-                            componentAbstractMesh.babylonMesh.setAbsolutePosition(componentPosition.getPosition);
-                            componentAbstractMesh.babylonMesh.scaling = componentPosition.getScale;
+                            componentAbstractMesh.babylonMesh.setAbsolutePosition(componentTransform.getPosition);
+                            componentAbstractMesh.babylonMesh.scaling = componentTransform.getScale;
+                            componentAbstractMesh.babylonMesh.rotationQuaternion = componentTransform.getRotationQuaternion;
                             componentAbstractMesh.executeRotateQueue();
                             //console.log("-:"+componentAbstractMesh.babylonMesh.scaling);
                             //componentAbstractMesh.babylonMesh.translate(new BABYLON.Vector3(1,0,0),3.5);

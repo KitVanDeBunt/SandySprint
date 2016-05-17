@@ -20,7 +20,7 @@ class PlayerManager {
         this.roadManager = roadManager;
         this.scene = scene;
         this.player = ECSengine.createEntity();
-        this.playerTranslateComponent = new ECS.ComponentTransform(BABYLON.Vector3.Zero(), new BABYLON.Vector3(0.003, 0.003, 0.003));
+        this.playerTranslateComponent = new ECS.ComponentTransform(BABYLON.Vector3.Zero(), new BABYLON.Vector3(0.003, 0.003, 0.003),BABYLON.Quaternion.Identity());
         this.player.addComponent(this.playerTranslateComponent);
         this.playerMeshComponent = new ECS.ComponentAbstractMesh(this.playerTranslateComponent, "assets/models/", "Matthew_Full.babylon");
         this.player.addComponent(this.playerMeshComponent);

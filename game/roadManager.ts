@@ -30,7 +30,10 @@ class RoadManager {
 
         let road: ECS.Entity = this.engine.createEntity();
 
-        let roadPositionComponent: ECS.ComponentTransform = new ECS.ComponentTransform(new BABYLON.Vector3(0, 0, this.roadesSpawned * 14), new BABYLON.Vector3(1, 1, 1));
+        let roadPositionComponent: ECS.ComponentTransform = new ECS.ComponentTransform(new BABYLON.Vector3(0, 0, this.roadesSpawned * 14)
+            , new BABYLON.Vector3(1, 1, 1)
+            , BABYLON.Quaternion.Identity());
+
         road.addComponent(roadPositionComponent);
         this.roadMeshes[roadN] = new ECS.ComponentAbstractMesh(roadPositionComponent, "assets/models/", "Road_02.babylon");
         road.addComponent(this.roadMeshes[roadN]);
@@ -62,22 +65,37 @@ class RoadManager {
         // spike obstacles
         let randomLane: number = Math.floor((Math.random() * 3));
         let spike: ECS.Entity = this.engine.createEntity();
-        let spikePositionComponent: ECS.ComponentTransform = new ECS.ComponentTransform(this.lanes[roadN][randomLane].getPointAtT(Math.random()), new BABYLON.Vector3(0.14, 0.14, 0.14));
+        let spikePositionComponent: ECS.ComponentTransform = new ECS.ComponentTransform(this.lanes[roadN][randomLane].getPointAtT(Math.random())
+            , new BABYLON.Vector3(0.14, 0.14, 0.14)
+            , BABYLON.Quaternion.Identity());
         spike.addComponent(spikePositionComponent);
         let spikeMeshComponent = new ECS.ComponentAbstractMesh(spikePositionComponent, "assets/models/", "pillar.babylon");
         spike.addComponent(spikeMeshComponent);
-        spikeMeshComponent.setCollision(BABYLON.Mesh.CreateCylinder("Pillar",2,0.2,0.2,0,0,this.scene));
+        spikeMeshComponent.setCollision(BABYLON.Mesh.CreateCylinder("Pillar", 2, 0.2, 0.2, 0, 0, this.scene));
         spikeMeshComponent.updateCollision = spikePositionComponent.getPosition;
-        this.obstacles[this.obstacles.length]=spikeMeshComponent.getCollider;
+        this.obstacles[this.obstacles.length] = spikeMeshComponent.getCollider;
+
+        // coin obstacles
+        let randomLane2: number = Math.floor((Math.random() * 3));
+        let coin: ECS.Entity = this.engine.createEntity();
+        let coinTransformComponent: ECS.ComponentTransform = new ECS.ComponentTransform(
+            this.lanes[roadN][randomLane2].getPointAtT(Math.random())
+            , new BABYLON.Vector3(0.07, 0.07, 0.07)
+            , new BABYLON.Quaternion(0, 1, 0, 0)
+        );
+        coinTransformComponent.setPosition = coinTransformComponent.getPosition.add(new BABYLON.Vector3(0, 0.5, 0));
+        coin.addComponent(coinTransformComponent);
+        let coinMeshComponent = new ECS.ComponentAbstractMesh(coinTransformComponent, "assets/models/", "pickup_scarab.babylon");
+        coin.addComponent(coinMeshComponent);
 
         // house spawn
         let house: ECS.Entity = this.engine.createEntity();
-        let housePositionComponent = new ECS.ComponentTransform(this.lanes[roadN][randomLane].getPointAtT(Math.random()).add(new BABYLON.Vector3(2.5, 0, 0)), new BABYLON.Vector3(0.2, 0.2, 0.2));
+        let housePositionComponent = new ECS.ComponentTransform(this.lanes[roadN][randomLane].getPointAtT(Math.random()).add(new BABYLON.Vector3(2.5, 0, 0)), new BABYLON.Vector3(0.2, 0.2, 0.2), BABYLON.Quaternion.Identity());
         house.addComponent(housePositionComponent);
         house.addComponent(new ECS.ComponentAbstractMesh(housePositionComponent, "assets/models/", "house.babylon"));
         // house spawn
         let house2: ECS.Entity = this.engine.createEntity();
-        let housePositionComponent2 = new ECS.ComponentTransform(this.lanes[roadN][randomLane].getPointAtT(Math.random()).add(new BABYLON.Vector3(-2.5, 0, 0)), new BABYLON.Vector3(0.2, 0.2, 0.2));
+        let housePositionComponent2 = new ECS.ComponentTransform(this.lanes[roadN][randomLane].getPointAtT(Math.random()).add(new BABYLON.Vector3(-2.5, 0, 0)), new BABYLON.Vector3(0.2, 0.2, 0.2), BABYLON.Quaternion.Identity());
         house2.addComponent(housePositionComponent2);
         house2.addComponent(new ECS.ComponentAbstractMesh(housePositionComponent2, "assets/models/", "house.babylon"));
 
@@ -94,7 +112,7 @@ class RoadManager {
                 this.roadMeshes[i].getParentEntity.destroy();
                 this.roadMeshes.splice(i, 1);
                 this.lanes.splice(i, 1);
-                this.obstacles.splice(i,1);
+                this.obstacles.splice(i, 1);
             }
         }
     }

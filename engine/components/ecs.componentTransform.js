@@ -11,10 +11,11 @@ var ECS;
      */
     var ComponentTransform = (function (_super) {
         __extends(ComponentTransform, _super);
-        function ComponentTransform(position, scale) {
+        function ComponentTransform(position, scale, rotation) {
             _super.call(this);
             this.position = position;
             this.scale = scale;
+            this.rotation = rotation;
         }
         Object.defineProperty(ComponentTransform.prototype, "getPosition", {
             get: function () {
@@ -26,6 +27,20 @@ var ECS;
         Object.defineProperty(ComponentTransform.prototype, "setPosition", {
             set: function (newPosition) {
                 this.position = newPosition;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ComponentTransform.prototype, "getRotationQuaternion", {
+            get: function () {
+                return this.rotation;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ComponentTransform.prototype, "setRotationQuaternion", {
+            set: function (newQuaternion) {
+                this.rotation = newQuaternion;
             },
             enumerable: true,
             configurable: true
@@ -45,7 +60,7 @@ var ECS;
             configurable: true
         });
         ComponentTransform.prototype.newOfThis = function () {
-            return new ComponentTransform(BABYLON.Vector3.Zero(), BABYLON.Vector3.Zero());
+            return new ComponentTransform(BABYLON.Vector3.Zero(), BABYLON.Vector3.Zero(), BABYLON.Quaternion.Identity());
         };
         return ComponentTransform;
     }(ECS.Component));
