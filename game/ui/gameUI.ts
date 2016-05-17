@@ -7,9 +7,11 @@ class GameUI {
     playerManager: PlayerManager;
     myMaterial_diffuseTexture: BABYLON.DynamicTexture;
     box: BABYLON.Mesh;
+    canvas: HTMLCanvasElement;
 
     constructor(scene: BABYLON.Scene, playerManager: PlayerManager, ecs: ECS.Engine, canvas:HTMLCanvasElement) {
         this.playerManager = playerManager;
+        this.canvas = canvas;
 
         //Adding light for UI elements
         var UIlight = new BABYLON.DirectionalLight("UIemit", new BABYLON.Vector3(0, 0, 1), scene);
@@ -37,9 +39,8 @@ class GameUI {
         //Adding UI Test Element
         this.box = BABYLON.Mesh.CreatePlane("Box", 5, scene, false);
         this.box.material = material;
-      //  console.log(""+canvas.width);
-        this.box.scaling = new BABYLON.Vector3((10), 10, 1);
-        this.box.position = new BABYLON.Vector3(-53, -30, 100);
+        this.box.scaling = new BABYLON.Vector3((10*canvas.width)/1842,(10*canvas.width)/1842, 1);
+        this.box.position = new BABYLON.Vector3((-53*canvas.width)/1842, (-30*canvas.height)/1019, 100);
 
 
         this.box.layerMask = 0x20000000;
@@ -48,7 +49,8 @@ class GameUI {
     }
     
     rescale():void{
-        
+        this.box.scaling = new BABYLON.Vector3((10*this.canvas.width)/1842,(10*this.canvas.width)/1842, 1);
+        this.box.position = new BABYLON.Vector3((-53*this.canvas.width)/1842, (-30*this.canvas.height)/1019, 100);
     }
 
     update(): void {

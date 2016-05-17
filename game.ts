@@ -95,6 +95,7 @@ var game = function () {
     // call resize on babylon engine if the windows resizes
     window.addEventListener("resize", function () {
         engine.resize();
+        this.gameUI.rescale();
     });
 
     // add input event listener

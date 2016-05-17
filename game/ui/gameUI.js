@@ -4,6 +4,7 @@
 var GameUI = (function () {
     function GameUI(scene, playerManager, ecs, canvas) {
         this.playerManager = playerManager;
+        this.canvas = canvas;
         //Adding light for UI elements
         var UIlight = new BABYLON.DirectionalLight("UIemit", new BABYLON.Vector3(0, 0, 1), scene);
         UIlight.includeOnlyWithLayerMask = 0x20000000;
@@ -25,13 +26,14 @@ var GameUI = (function () {
         //Adding UI Test Element
         this.box = BABYLON.Mesh.CreatePlane("Box", 5, scene, false);
         this.box.material = material;
-        //  console.log(""+canvas.width);
-        this.box.scaling = new BABYLON.Vector3((10), 10, 1);
-        this.box.position = new BABYLON.Vector3(-53, -30, 100);
+        this.box.scaling = new BABYLON.Vector3((10 * canvas.width) / 1842, (10 * canvas.width) / 1842, 1);
+        this.box.position = new BABYLON.Vector3((-53 * canvas.width) / 1842, (-30 * canvas.height) / 1019, 100);
         this.box.layerMask = 0x20000000;
         this.context2D = this.myMaterial_diffuseTexture.getContext();
     }
     GameUI.prototype.rescale = function () {
+        this.box.scaling = new BABYLON.Vector3((10 * this.canvas.width) / 1842, (10 * this.canvas.width) / 1842, 1);
+        this.box.position = new BABYLON.Vector3((-53 * this.canvas.width) / 1842, (-30 * this.canvas.height) / 1019, 100);
     };
     GameUI.prototype.update = function () {
         this.context2D.clearRect(0, 0, 512, 512);

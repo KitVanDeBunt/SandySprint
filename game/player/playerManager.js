@@ -72,7 +72,6 @@ var PlayerManager = (function () {
                     if (this.temp > 2) {
                         this.playerSpeed = 0;
                     }
-                    console.log("" + this.roadManager.obstacles[index].name);
                 }
             }
         }
