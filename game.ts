@@ -59,7 +59,7 @@ var game = function () {
         playerCameraManager = new PlayerCameraManager(ECSengine, scene, playerManager);
 
         // create ui
-        this.gameUI = new GameUI(scene, playerManager, ECSengine);
+        this.gameUI = new GameUI(scene, playerManager, ECSengine,canvas);
 
         // create skybox managers
         skyboxManager = new SkyBoxManager(scene);

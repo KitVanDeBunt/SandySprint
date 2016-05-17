@@ -2,7 +2,7 @@
  * GameUI
  */
 var GameUI = (function () {
-    function GameUI(scene, playerManager, ecs) {
+    function GameUI(scene, playerManager, ecs, canvas) {
         this.playerManager = playerManager;
         //Adding light for UI elements
         var UIlight = new BABYLON.DirectionalLight("UIemit", new BABYLON.Vector3(0, 0, 1), scene);

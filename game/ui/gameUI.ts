@@ -8,7 +8,7 @@ class GameUI {
     myMaterial_diffuseTexture: BABYLON.DynamicTexture;
     box: BABYLON.Mesh;
 
-    constructor(scene: BABYLON.Scene, playerManager: PlayerManager, ecs: ECS.Engine) {
+    constructor(scene: BABYLON.Scene, playerManager: PlayerManager, ecs: ECS.Engine, canvas:HTMLCanvasElement) {
         this.playerManager = playerManager;
 
         //Adding light for UI elements
