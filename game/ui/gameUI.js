@@ -35,7 +35,14 @@ var GameUI = (function () {
         this.box.scaling = new BABYLON.Vector3((10 * this.canvas.width) / 1842, (10 * this.canvas.width) / 1842, 1);
         this.box.position = new BABYLON.Vector3((-53 * this.canvas.width) / 1842, (-30 * this.canvas.height) / 1019, 100);
     };
+    GameUI.prototype.onTouchStart = function (touchEvt) {
+    };
+    GameUI.prototype.onTouchEnd = function (touchEvt) {
+    };
+    GameUI.prototype.onTouchMove = function (touchEvt) {
+    };
     GameUI.prototype.update = function () {
+        //  console.log(""+ontouchstart);
         this.context2D.clearRect(0, 0, 512, 512);
         this.myMaterial_diffuseTexture.drawText("Score:" + this.playerManager.getplayerT(), 10, 360, "100px Arial", "white", "transparent");
     };

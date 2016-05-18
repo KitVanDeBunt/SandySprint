@@ -13,6 +13,8 @@ class PlayerManager {
     roadManager: RoadManager;
     currentLane: ComponentLaneBase;
     jumpManager: ComponentJumpLane;
+    touchStart: BABYLON.Vector2;
+    touchEnd: BABYLON.Vector2;
     
     temp:number = 0;
 
@@ -54,6 +56,24 @@ class PlayerManager {
     getplayerPosition(): BABYLON.Vector3 {
         return this.playerTranslateComponent.getPosition;
     }
+    
+    onTouchStart(touchEvt: TouchEvent) {
+        this.touchStart = new BABYLON.Vector2(touchEvt.touches[0].screenX,touchEvt.touches[0].screenY);
+    }
+
+    onTouchEnd(touchEvt: TouchEvent) {
+        
+    }
+
+    onTouchMove(touchEvt: TouchEvent) {
+        this.touchEnd = new BABYLON.Vector2(touchEvt.touches[0].screenX,touchEvt.touches[0].screenY);
+        if(this.touchEnd.x - this.touchStart.x > screen.width*0.3 && this.currentLane.getRightLaneAvalable){
+            this.currentLane = this.currentLane.getRightLane;
+        }
+        if(this.touchEnd.x - this.touchStart.x < -screen.width*0.3 && this.currentLane.getLeftLaneAvalable){
+            this.currentLane = this.currentLane.getLeftLane;
+        }
+    }
 
     onKeyDown(keyEvent: KeyboardEvent): void {
         
@@ -83,7 +103,6 @@ class PlayerManager {
             // set run animation
             this.scene.beginAnimation(this.playerMeshComponent.babylonSkeleton, 2, 18, true, 1);
         }
-
         
         //check collision with obstacles
         for (var index = 0; index < this.roadManager.obstacles.length; index++) {

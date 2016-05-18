@@ -63,11 +63,27 @@ var game = function () {
         playerManager.onKeyDown(keyEvt);
         console.log("key down: " + keyEvt.keyCode);
     }
+    function onTouchStart(touchEvt) {
+        playerManager.onTouchStart(touchEvt);
+        gameUI.onTouchStart(touchEvt);
+    }
+    function onTouchEnd(touchEvt) {
+        playerManager.onTouchEnd(touchEvt);
+        gameUI.onTouchEnd(touchEvt);
+    }
+    function onTouchMove(touchEvt) {
+        playerManager.onTouchMove(touchEvt);
+        gameUI.onTouchMove(touchEvt);
+    }
     // call resize on babylon engine if the windows resizes
     window.addEventListener("resize", function () {
         engine.resize();
         this.gameUI.rescale();
     });
+    window.addEventListener("touchstart", onTouchStart);
+    window.addEventListener("touchend", onTouchEnd);
+    window.addEventListener("touchcancel", onTouchEnd);
+    window.addEventListener("touchmove", onTouchMove);
     // add input event listener
     window.addEventListener("keydown", onKeyDown);
 };

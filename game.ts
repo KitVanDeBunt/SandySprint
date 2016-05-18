@@ -59,11 +59,11 @@ var game = function () {
         playerCameraManager = new PlayerCameraManager(ECSengine, scene, playerManager);
 
         // create ui
-        this.gameUI = new GameUI(scene, playerManager, ECSengine,canvas);
+        this.gameUI = new GameUI(scene, playerManager, ECSengine, canvas);
 
         // create skybox managers
         skyboxManager = new SkyBoxManager(scene);
-            
+
         return scene;
     };
 
@@ -92,11 +92,31 @@ var game = function () {
         console.log("key down: " + keyEvt.keyCode);
     }
 
+    function onTouchStart(touchEvt: TouchEvent) {
+        playerManager.onTouchStart(touchEvt);
+        gameUI.onTouchStart(touchEvt);
+    }
+
+    function onTouchEnd(touchEvt: TouchEvent) {
+        playerManager.onTouchEnd(touchEvt);
+        gameUI.onTouchEnd(touchEvt);
+    }
+
+    function onTouchMove(touchEvt: TouchEvent) {
+        playerManager.onTouchMove(touchEvt);
+        gameUI.onTouchMove(touchEvt);
+    }
+
     // call resize on babylon engine if the windows resizes
     window.addEventListener("resize", function () {
         engine.resize();
         this.gameUI.rescale();
     });
+
+    window.addEventListener("touchstart", onTouchStart);
+    window.addEventListener("touchend", onTouchEnd);
+    window.addEventListener("touchcancel", onTouchEnd);
+    window.addEventListener("touchmove", onTouchMove);
 
     // add input event listener
     window.addEventListener("keydown", onKeyDown);

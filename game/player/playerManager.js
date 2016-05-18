@@ -38,6 +38,20 @@ var PlayerManager = (function () {
     PlayerManager.prototype.getplayerPosition = function () {
         return this.playerTranslateComponent.getPosition;
     };
+    PlayerManager.prototype.onTouchStart = function (touchEvt) {
+        this.touchStart = new BABYLON.Vector2(touchEvt.touches[0].screenX, touchEvt.touches[0].screenY);
+    };
+    PlayerManager.prototype.onTouchEnd = function (touchEvt) {
+    };
+    PlayerManager.prototype.onTouchMove = function (touchEvt) {
+        this.touchEnd = new BABYLON.Vector2(touchEvt.touches[0].screenX, touchEvt.touches[0].screenY);
+        if (this.touchEnd.x - this.touchStart.x > screen.width * 0.3 && this.currentLane.getRightLaneAvalable) {
+            this.currentLane = this.currentLane.getRightLane;
+        }
+        if (this.touchEnd.x - this.touchStart.x < -screen.width * 0.3 && this.currentLane.getLeftLaneAvalable) {
+            this.currentLane = this.currentLane.getLeftLane;
+        }
+    };
     PlayerManager.prototype.onKeyDown = function (keyEvent) {
         switch (keyEvent.keyCode) {
             case 65:

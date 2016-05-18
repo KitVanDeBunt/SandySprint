@@ -23,6 +23,7 @@ class GameUI {
         let cameraTranslateComponent = new ECS.ComponentTransform(BABYLON.Vector3.Zero(), new BABYLON.Vector3(0.005, 0.005, 0.005));
         cameraECS.addComponent(cameraTranslateComponent);
         let UICam = new ComponentCamera(cameraTranslateComponent, scene);
+
         UICam.setLayermask = 0x20000000;
         cameraECS.addComponent(UICam);
 
@@ -52,8 +53,21 @@ class GameUI {
         this.box.scaling = new BABYLON.Vector3((10*this.canvas.width)/1842,(10*this.canvas.width)/1842, 1);
         this.box.position = new BABYLON.Vector3((-53*this.canvas.width)/1842, (-30*this.canvas.height)/1019, 100);
     }
+    
+    onTouchStart(touchEvt: TouchEvent) {
+        
+    }
+
+    onTouchEnd(touchEvt: TouchEvent) {
+        
+    }
+
+    onTouchMove(touchEvt: TouchEvent) {
+        
+    }
 
     update(): void {
+      //  console.log(""+ontouchstart);
         this.context2D.clearRect(0, 0, 512, 512);
         this.myMaterial_diffuseTexture.drawText("Score:" + this.playerManager.getplayerT(), 10, 360, "100px Arial", "white", "transparent");
     }
