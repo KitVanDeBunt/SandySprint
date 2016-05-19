@@ -15,6 +15,7 @@ var game = function () {
     let playerManager: PlayerManager;
     let gameUI: GameUI;
     let skyboxManager: SkyBoxManager;
+    
 
     let createScene = function () {
 

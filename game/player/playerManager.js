@@ -4,6 +4,7 @@
 var PlayerManager = (function () {
     function PlayerManager(scene, ECSengine, roadManager) {
         this.playerSpeed = 0.01;
+        this.playerMoved = false;
         this.animationStarted = false;
         this.temp = 0;
         this.roadManager = roadManager;
@@ -18,6 +19,7 @@ var PlayerManager = (function () {
         this.playerMeshComponent.meshRotate(new BABYLON.Vector3(0, 0, 1), Math.PI);
         this.playerMeshComponent.setCollision(BABYLON.Mesh.CreateBox("CollBox", 0.2, this.scene, false));
         this.playerT = 0;
+        this.pickupsCollected = 0;
         this.jumpManager = new ComponentJumpLane(this.playerMeshComponent, BABYLON.Vector3.Zero(), this.scene, this.playerT);
         //playerTranslateComponent.setScale = new BABYLON.Vector3(0.1, 0.1, 0.1);
         console.log(this.playerTranslateComponent.getPosition);
@@ -39,17 +41,23 @@ var PlayerManager = (function () {
         return this.playerTranslateComponent.getPosition;
     };
     PlayerManager.prototype.onTouchStart = function (touchEvt) {
+        this.playerMoved = false;
         this.touchStart = new BABYLON.Vector2(touchEvt.touches[0].screenX, touchEvt.touches[0].screenY);
     };
     PlayerManager.prototype.onTouchEnd = function (touchEvt) {
     };
     PlayerManager.prototype.onTouchMove = function (touchEvt) {
         this.touchEnd = new BABYLON.Vector2(touchEvt.touches[0].screenX, touchEvt.touches[0].screenY);
-        if (this.touchEnd.x - this.touchStart.x > screen.width * 0.3 && this.currentLane.getRightLaneAvalable) {
+        if (this.touchEnd.x - this.touchStart.x > screen.width * 0.2 && this.currentLane.getRightLaneAvalable && !this.playerMoved) {
             this.currentLane = this.currentLane.getRightLane;
+            this.playerMoved = true;
         }
-        if (this.touchEnd.x - this.touchStart.x < -screen.width * 0.3 && this.currentLane.getLeftLaneAvalable) {
+        if (this.touchEnd.x - this.touchStart.x < -screen.width * 0.2 && this.currentLane.getLeftLaneAvalable && !this.playerMoved) {
             this.currentLane = this.currentLane.getLeftLane;
+            this.playerMoved = true;
+        }
+        if (this.touchEnd.y - this.touchStart.y < -screen.height * 0.2 && this.jumpManager.jumping == false) {
+            this.jumpManager.jump(this.playerT);
         }
     };
     PlayerManager.prototype.onKeyDown = function (keyEvent) {
@@ -77,19 +85,35 @@ var PlayerManager = (function () {
             // set run animation
             this.scene.beginAnimation(this.playerMeshComponent.babylonSkeleton, 2, 18, true, 1);
         }
+        //playermovement
+        if (this.playerSpeed != 0) {
+            this.playerT += ((deltaTime * this.playerSpeed) + (this.playerT / 7000));
+        }
         //check collision with obstacles
         for (var index = 0; index < this.roadManager.obstacles.length; index++) {
             if (this.roadManager.obstacles[index] != null) {
                 var coll = this.playerMeshComponent.getCollider.intersectsMesh(this.roadManager.obstacles[index]);
                 if (coll) {
                     this.temp++;
-                    if (this.temp > 2) {
+                    if (this.temp > 4) {
                         this.playerSpeed = 0;
                     }
                 }
             }
         }
-        this.playerT += (deltaTime * this.playerSpeed);
+        //check collision with pickups
+        for (var index = 0; index < this.roadManager.pickups.length; index++) {
+            if (this.roadManager.pickups[index] != null) {
+                var coll = this.playerMeshComponent.getCollider.intersectsMesh(this.roadManager.pickups[index]);
+                if (coll) {
+                    this.temp++;
+                    if (this.temp > 4) {
+                        this.pickupsCollected++;
+                        console.log("Pickups Collected");
+                    }
+                }
+            }
+        }
         // spawn lane if needed
         if (!this.currentLane.getNextLaneAvalable) {
             if (!this.currentLane.getNextLane.getNextLaneAvalable) {
