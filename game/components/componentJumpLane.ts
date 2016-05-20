@@ -17,6 +17,7 @@ class ComponentJumpLane extends ComponentLaneBase {
         //new BABYLON.Quaternion(0.92,0.38,0.0,0.0),  // (45,0,0)
         BABYLON.Quaternion.Identity()];
 
+
     constructor(componentAbstractMesh: ECS.ComponentAbstractMesh, startDirection: BABYLON.Vector3, scene:BABYLON.Scene, startT:number) {
         super(componentAbstractMesh,startT);
         
