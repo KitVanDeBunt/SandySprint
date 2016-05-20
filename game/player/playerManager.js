@@ -5,18 +5,19 @@ var PlayerManager = (function () {
     function PlayerManager(scene, ECSengine, roadManager) {
         this.playerSpeed = 0.01;
         this.animationStarted = false;
-        this.temp = 0;
+        this.firstFrame = true;
         this.roadManager = roadManager;
         this.scene = scene;
         this.player = ECSengine.createEntity();
-        this.playerTranslateComponent = new ECS.ComponentTransform(BABYLON.Vector3.Zero(), new BABYLON.Vector3(0.003, 0.003, 0.003), BABYLON.Quaternion.Identity());
+        this.playerTranslateComponent = new ECS.ComponentTransform(BABYLON.Vector3.Zero(), new BABYLON.Vector3(0.0015, 0.0015, 0.0015), new BABYLON.Quaternion(0, 1, 0, 0));
         this.player.addComponent(this.playerTranslateComponent);
-        this.playerMeshComponent = new ECS.ComponentAbstractMesh(this.playerTranslateComponent, "assets/models/", "Matthew_Full.babylon");
+        this.playerMeshComponent = new ECS.ComponentAbstractMesh(this.playerTranslateComponent, "assets/models/", "explorer_rig_running.babylon");
         this.player.addComponent(this.playerMeshComponent);
-        this.playerTranslateComponent.setPosition = this.playerTranslateComponent.getPosition.add(new BABYLON.Vector3(0, 0, 0));
-        this.playerMeshComponent.meshRotate(new BABYLON.Vector3(1, 0, 0), Math.PI / 2);
-        this.playerMeshComponent.meshRotate(new BABYLON.Vector3(0, 0, 1), Math.PI);
-        this.playerMeshComponent.setCollision(BABYLON.Mesh.CreateBox("CollBox", 0.2, this.scene, false));
+        // setup collision
+        var mesh = BABYLON.Mesh.CreateBox("CollBox", 0.2, this.scene, false);
+        mesh.scaling = new BABYLON.Vector3(1, 2, 1);
+        this.playerMeshComponent.setColliderOffset = new BABYLON.Vector3(0, 0.25, 0);
+        this.playerMeshComponent.setCollision(mesh);
         this.playerT = 0;
         this.jumpManager = new ComponentJumpLane(this.playerMeshComponent, BABYLON.Vector3.Zero(), this.scene, this.playerT);
         //playerTranslateComponent.setScale = new BABYLON.Vector3(0.1, 0.1, 0.1);
@@ -63,14 +64,22 @@ var PlayerManager = (function () {
             // set run animation
             this.scene.beginAnimation(this.playerMeshComponent.babylonSkeleton, 2, 18, true, 1);
         }
-        //check collision with obstacles
-        for (var index = 0; index < this.roadManager.obstacles.length; index++) {
-            if (this.roadManager.obstacles[index] != null) {
-                var coll = this.playerMeshComponent.getCollider.intersectsMesh(this.roadManager.obstacles[index]);
-                if (coll) {
-                    this.temp++;
-                    if (this.temp > 2) {
-                        this.playerSpeed = 0;
+        // check collision with obstacles
+        if (!this.firstFrame) {
+            for (var index = 0; index < this.roadManager.obstacles.length; index++) {
+                if (this.roadManager.obstacles[index] != null) {
+                    var coll = this.playerMeshComponent.getCollider.intersectsMesh(this.roadManager.obstacles[index].meshCollider);
+                    if (coll) {
+                        switch (this.roadManager.obstacles[index].meshType) {
+                            case CollisionMeshType.pillar:
+                                this.playerSpeed = 0;
+                                break;
+                            case CollisionMeshType.scarab:
+                                console.log("scarab collision");
+                                break;
+                            default:
+                                break;
+                        }
                     }
                 }
             }
@@ -98,10 +107,13 @@ var PlayerManager = (function () {
             if (jumpInputT > 1) {
                 this.jumpManager.done();
             }
-            pos = this.currentLane.getPointAtT(laneInputT).add(this.jumpManager.getPointAtT(jumpInputT));
+            pos = pos.add(this.jumpManager.getPointAtT(jumpInputT));
         }
         this.playerTranslateComponent.setPosition = pos;
-        this.playerMeshComponent.updateCollision = pos;
+        this.playerMeshComponent.updateCollision();
+        if (this.firstFrame) {
+            this.firstFrame = false;
+        }
     };
     return PlayerManager;
 }());

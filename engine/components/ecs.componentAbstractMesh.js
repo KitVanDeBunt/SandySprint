@@ -14,7 +14,7 @@ var ECS;
         function ComponentAbstractMesh(componentTransform, path, fileName, onsuccess, progressCallBack, onerror) {
             _super.call(this);
             this.meshState = ECS.MeshLoadState.Non;
-            this.rotateQueue = [];
+            this.colliderOffset = BABYLON.Vector3.Zero();
             this.onsuccess = onsuccess;
             this.progressCallBack = onsuccess;
             this.onerror = onerror;
@@ -27,41 +27,28 @@ var ECS;
             this.mesh.dispose();
             _super.prototype.destroy.call(this);
         };
-        ComponentAbstractMesh.prototype.meshRotate = function (axis, amount) {
-            if (this.meshState == ECS.MeshLoadState.Loaded) {
-                this.mesh.rotate(axis, amount);
-            }
-            else {
-                var newQueueItemPosition = this.rotateQueue.length;
-                this.rotateQueue[newQueueItemPosition] = new RotateQueueItem();
-                this.rotateQueue[newQueueItemPosition].axis = axis;
-                this.rotateQueue[newQueueItemPosition].amount = amount;
-                this.rotateQueue[newQueueItemPosition].executed = false;
-            }
-        };
-        ComponentAbstractMesh.prototype.executeRotateQueue = function () {
-            for (var i = 0; i < this.rotateQueue.length; i++) {
-                if (this.rotateQueue[i].executed == false) {
-                    this.rotateQueue[i].executed = true;
-                    this.mesh.rotate(this.rotateQueue[i].axis, this.rotateQueue[i].amount);
-                }
-            }
-        };
         ComponentAbstractMesh.prototype.setMeshReadyToLoad = function () {
             this.meshState = ECS.MeshLoadState.ReadyToLoad;
         };
         ComponentAbstractMesh.prototype.setCollision = function (mesh) {
             this.collider = mesh;
             this.collider.updatePhysicsBody;
-            this.collider.isVisible = false;
+            //this.collider.isVisible = false;
         };
-        Object.defineProperty(ComponentAbstractMesh.prototype, "updateCollision", {
-            set: function (position) {
-                this.collider.position = position;
+        Object.defineProperty(ComponentAbstractMesh.prototype, "setColliderOffset", {
+            /**
+             * set the offset of the collider from the mesh
+             * @param offset
+             */
+            set: function (offset) {
+                this.colliderOffset = offset;
             },
             enumerable: true,
             configurable: true
         });
+        ComponentAbstractMesh.prototype.updateCollision = function () {
+            this.collider.position = this.componentTransform.getPosition.add(this.colliderOffset);
+        };
         Object.defineProperty(ComponentAbstractMesh.prototype, "getCollider", {
             get: function () {
                 return this.collider;
@@ -99,10 +86,5 @@ var ECS;
         return ComponentAbstractMesh;
     }(ECS.Component));
     ECS.ComponentAbstractMesh = ComponentAbstractMesh;
-    var RotateQueueItem = (function () {
-        function RotateQueueItem() {
-        }
-        return RotateQueueItem;
-    }());
 })(ECS || (ECS = {}));
 //# sourceMappingURL=ecs.componentAbstractMesh.js.map

@@ -13,12 +13,15 @@ var RoadManager = (function () {
         this.createRaodPart();
         this.createRaodPart();
     }
+    /**
+     * spawns a new road section
+     */
     RoadManager.prototype.createRaodPart = function () {
         var roadN = this.lanes.length;
         var road = this.engine.createEntity();
         var roadPositionComponent = new ECS.ComponentTransform(new BABYLON.Vector3(0, 0, this.roadesSpawned * 14), new BABYLON.Vector3(1, 1, 1), BABYLON.Quaternion.Identity());
         road.addComponent(roadPositionComponent);
-        this.roadMeshes[roadN] = new ECS.ComponentAbstractMesh(roadPositionComponent, "assets/models/", "Road_02.babylon");
+        this.roadMeshes[roadN] = new ECS.ComponentAbstractMesh(roadPositionComponent, "assets/models/", "road_river.babylon");
         road.addComponent(this.roadMeshes[roadN]);
         this.lanes[roadN] = [
             new ComponentStraightLane(this.roadMeshes[roadN], new BABYLON.Vector3(-0.25, 0, this.roadesSpawned * 14), BABYLON.Vector3.Zero(), this.scene, this.roadesSpawned * 14),
@@ -41,34 +44,53 @@ var RoadManager = (function () {
         road.addComponent(this.lanes[roadN][1]);
         road.addComponent(this.lanes[roadN][2]);
         // spike obstacles
-        var randomLane = Math.floor((Math.random() * 3));
-        var spike = this.engine.createEntity();
-        var spikePositionComponent = new ECS.ComponentTransform(this.lanes[roadN][randomLane].getPointAtT(Math.random()), new BABYLON.Vector3(0.14, 0.14, 0.14), BABYLON.Quaternion.Identity());
+        /*
+        let randomLane: number = Math.floor((Math.random() * 3));
+        let spike: ECS.Entity = this.engine.createEntity();
+        let spikePositionComponent: ECS.ComponentTransform = new ECS.ComponentTransform(this.lanes[roadN][randomLane].getPointAtT(Math.random())
+            , new BABYLON.Vector3(0.14, 0.14, 0.14)
+            , BABYLON.Quaternion.Identity());
         spike.addComponent(spikePositionComponent);
-        var spikeMeshComponent = new ECS.ComponentAbstractMesh(spikePositionComponent, "assets/models/", "pillar.babylon");
+        let spikeMeshComponent = new ECS.ComponentAbstractMesh(spikePositionComponent, "assets/models/", "pillar.babylon");
         spike.addComponent(spikeMeshComponent);
         spikeMeshComponent.setCollision(BABYLON.Mesh.CreateCylinder("Pillar", 2, 0.2, 0.2, 0, 0, this.scene));
         spikeMeshComponent.updateCollision = spikePositionComponent.getPosition;
-        this.obstacles[this.obstacles.length] = spikeMeshComponent.getCollider;
-        // coin obstacles
-        var randomLane2 = Math.floor((Math.random() * 3));
-        var coin = this.engine.createEntity();
-        var coinTransformComponent = new ECS.ComponentTransform(this.lanes[roadN][randomLane2].getPointAtT(Math.random()), new BABYLON.Vector3(0.07, 0.07, 0.07), new BABYLON.Quaternion(0, 1, 0, 0));
-        coinTransformComponent.setPosition = coinTransformComponent.getPosition.add(new BABYLON.Vector3(0, 0.5, 0));
-        coin.addComponent(coinTransformComponent);
-        var coinMeshComponent = new ECS.ComponentAbstractMesh(coinTransformComponent, "assets/models/", "pickup_scarab.babylon");
-        coin.addComponent(coinMeshComponent);
+        this.obstacles[this.obstacles.length].meshCollider = spikeMeshComponent.getCollider;
+        this.obstacles[this.obstacles.length].meshType = spikeMeshComponent.getCollider;*/
+        this.createLaneObject(roadN, "assets/models/", "pillar.babylon", CollisionMeshType.pillar, new BABYLON.Vector3(0.14, 0.14, 0.14), BABYLON.Quaternion.Identity(), new BABYLON.Vector3(0, 0, 0), BABYLON.Vector3.Zero(), 0.2, 2);
+        this.createLaneObject(roadN, "assets/models/", "pickup_scarab.babylon", CollisionMeshType.scarab, new BABYLON.Vector3(2.5, 2.5, 2.5), new BABYLON.Quaternion(0, 0, 0, 1), new BABYLON.Vector3(0, 0.5, 0), BABYLON.Vector3.Zero(), 0.2, 0.5);
         // house spawn
         var house = this.engine.createEntity();
-        var housePositionComponent = new ECS.ComponentTransform(this.lanes[roadN][randomLane].getPointAtT(Math.random()).add(new BABYLON.Vector3(2.5, 0, 0)), new BABYLON.Vector3(0.2, 0.2, 0.2), BABYLON.Quaternion.Identity());
+        var housePositionComponent = new ECS.ComponentTransform(this.lanes[roadN][1].getPointAtT(Math.random()).add(new BABYLON.Vector3(2.5, 0, 0)), new BABYLON.Vector3(0.2, 0.2, 0.2), BABYLON.Quaternion.Identity());
         house.addComponent(housePositionComponent);
         house.addComponent(new ECS.ComponentAbstractMesh(housePositionComponent, "assets/models/", "house.babylon"));
         // house spawn
         var house2 = this.engine.createEntity();
-        var housePositionComponent2 = new ECS.ComponentTransform(this.lanes[roadN][randomLane].getPointAtT(Math.random()).add(new BABYLON.Vector3(-2.5, 0, 0)), new BABYLON.Vector3(0.2, 0.2, 0.2), BABYLON.Quaternion.Identity());
+        var housePositionComponent2 = new ECS.ComponentTransform(this.lanes[roadN][1].getPointAtT(Math.random()).add(new BABYLON.Vector3(-2.5, 0, 0)), new BABYLON.Vector3(0.2, 0.2, 0.2), BABYLON.Quaternion.Identity());
         house2.addComponent(housePositionComponent2);
         house2.addComponent(new ECS.ComponentAbstractMesh(housePositionComponent2, "assets/models/", "house.babylon"));
         this.roadesSpawned++;
+    };
+    /**
+     * creates Obstacle or pickup on a lane
+     */
+    RoadManager.prototype.createLaneObject = function (roadN, path, file, type, scale, rotation, obstacleDisplacement, collisionMeshOffset, colliderWidth, colliderHeight) {
+        // pickup
+        var obstacle = this.engine.createEntity();
+        var randomLane = Math.floor((Math.random() * 3));
+        var obstacleTransformComponent = new ECS.ComponentTransform(this.lanes[roadN][randomLane].getPointAtT(Math.random()), scale, rotation);
+        obstacleTransformComponent.setPosition = obstacleTransformComponent.getPosition.add(obstacleDisplacement);
+        obstacle.addComponent(obstacleTransformComponent);
+        var obstacleMesh = new ECS.ComponentAbstractMesh(obstacleTransformComponent, path, file);
+        obstacle.addComponent(obstacleMesh);
+        // pickup collision
+        obstacleMesh.setCollision(BABYLON.Mesh.CreateCylinder("LaneObject Collider", colliderHeight, colliderWidth, colliderWidth, 0, 0, this.scene));
+        obstacleMesh.setColliderOffset = collisionMeshOffset;
+        obstacleMesh.updateCollision();
+        var arrayPosition = this.obstacles.length;
+        this.obstacles[arrayPosition] = new RoadObstacle();
+        this.obstacles[arrayPosition].meshCollider = obstacleMesh.getCollider;
+        this.obstacles[arrayPosition].meshType = type;
     };
     Object.defineProperty(RoadManager.prototype, "getStartLane", {
         get: function () {

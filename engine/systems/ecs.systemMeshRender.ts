@@ -44,7 +44,6 @@ namespace ECS {
                             componentAbstractMesh.babylonMesh.setAbsolutePosition(componentTransform.getPosition);
                             componentAbstractMesh.babylonMesh.scaling = componentTransform.getScale;
                             componentAbstractMesh.babylonMesh.rotationQuaternion = componentTransform.getRotationQuaternion;
-                            componentAbstractMesh.executeRotateQueue();
                             //console.log("-:"+componentAbstractMesh.babylonMesh.scaling);
                             //componentAbstractMesh.babylonMesh.translate(new BABYLON.Vector3(1,0,0),3.5);
                             break;

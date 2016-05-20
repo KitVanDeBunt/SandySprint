@@ -42,7 +42,6 @@ var ECS;
                             componentAbstractMesh_1.babylonMesh.setAbsolutePosition(componentTransform.getPosition);
                             componentAbstractMesh_1.babylonMesh.scaling = componentTransform.getScale;
                             componentAbstractMesh_1.babylonMesh.rotationQuaternion = componentTransform.getRotationQuaternion;
-                            componentAbstractMesh_1.executeRotateQueue();
                             //console.log("-:"+componentAbstractMesh.babylonMesh.scaling);
                             //componentAbstractMesh.babylonMesh.translate(new BABYLON.Vector3(1,0,0),3.5);
                             break;
