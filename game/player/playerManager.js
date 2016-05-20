@@ -6,6 +6,7 @@ var PlayerManager = (function () {
         this.playerSpeed = 0.01;
         this.animationStarted = false;
         this.firstFrame = true;
+        this.temp = 0;
         this.roadManager = roadManager;
         this.scene = scene;
         this.player = ECSengine.createEntity();
@@ -19,6 +20,7 @@ var PlayerManager = (function () {
         this.playerMeshComponent.setColliderOffset = new BABYLON.Vector3(0, 0.25, 0);
         this.playerMeshComponent.setCollision(mesh);
         this.playerT = 0;
+        this.pickupsCollected = 0;
         this.jumpManager = new ComponentJumpLane(this.playerMeshComponent, BABYLON.Vector3.Zero(), this.scene, this.playerT);
         //playerTranslateComponent.setScale = new BABYLON.Vector3(0.1, 0.1, 0.1);
         console.log(this.playerTranslateComponent.getPosition);
@@ -38,6 +40,26 @@ var PlayerManager = (function () {
      */
     PlayerManager.prototype.getplayerPosition = function () {
         return this.playerTranslateComponent.getPosition;
+    };
+    PlayerManager.prototype.onTouchStart = function (touchEvt) {
+        this.playerMoved = false;
+        this.touchStart = new BABYLON.Vector2(touchEvt.touches[0].screenX, touchEvt.touches[0].screenY);
+    };
+    PlayerManager.prototype.onTouchEnd = function (touchEvt) {
+    };
+    PlayerManager.prototype.onTouchMove = function (touchEvt) {
+        this.touchEnd = new BABYLON.Vector2(touchEvt.touches[0].screenX, touchEvt.touches[0].screenY);
+        if (this.touchEnd.x - this.touchStart.x > screen.width * 0.2 && this.currentLane.getRightLaneAvalable && !this.playerMoved) {
+            this.currentLane = this.currentLane.getRightLane;
+            this.playerMoved = true;
+        }
+        if (this.touchEnd.x - this.touchStart.x < -screen.width * 0.2 && this.currentLane.getLeftLaneAvalable && !this.playerMoved) {
+            this.currentLane = this.currentLane.getLeftLane;
+            this.playerMoved = true;
+        }
+        if (this.touchEnd.y - this.touchStart.y < -screen.height * 0.2 && this.jumpManager.jumping == false) {
+            this.jumpManager.jump(this.playerT);
+        }
     };
     PlayerManager.prototype.onKeyDown = function (keyEvent) {
         switch (keyEvent.keyCode) {
@@ -64,6 +86,10 @@ var PlayerManager = (function () {
             // set run animation
             this.scene.beginAnimation(this.playerMeshComponent.babylonSkeleton, 2, 18, true, 1);
         }
+        //playermovement
+        if (this.playerSpeed != 0) {
+            this.playerT += ((deltaTime * this.playerSpeed) + (this.playerT / 7000));
+        }
         // check collision with obstacles
         if (!this.firstFrame) {
             for (var index = 0; index < this.roadManager.obstacles.length; index++) {
@@ -84,7 +110,6 @@ var PlayerManager = (function () {
                 }
             }
         }
-        this.playerT += (deltaTime * this.playerSpeed);
         // spawn lane if needed
         if (!this.currentLane.getNextLaneAvalable) {
             if (!this.currentLane.getNextLane.getNextLaneAvalable) {

@@ -33,7 +33,7 @@ var ECS;
         ComponentAbstractMesh.prototype.setCollision = function (mesh) {
             this.collider = mesh;
             this.collider.updatePhysicsBody;
-            //this.collider.isVisible = false;
+            this.collider.isVisible = false;
         };
         Object.defineProperty(ComponentAbstractMesh.prototype, "setColliderOffset", {
             /**

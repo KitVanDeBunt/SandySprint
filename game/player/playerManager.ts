@@ -14,7 +14,15 @@ class PlayerManager {
     private currentLane: ComponentLaneBase;
     private jumpManager: ComponentJumpLane;
 
+    private pickupsCollected : number;
+    
     private firstFrame: boolean = true;
+    
+    private playerMoved: boolean;
+    private touchStart: BABYLON.Vector2;
+    private touchEnd: BABYLON.Vector2;
+    
+    temp:number = 0;
 
     constructor(scene: BABYLON.Scene, ECSengine: ECS.Engine, roadManager: RoadManager) {
         this.roadManager = roadManager;
@@ -32,7 +40,8 @@ class PlayerManager {
         this.playerMeshComponent.setCollision(mesh);
 
         this.playerT = 0;
-        this.jumpManager = new ComponentJumpLane(this.playerMeshComponent, BABYLON.Vector3.Zero(), this.scene, this.playerT)
+        this.pickupsCollected = 0;
+        this.jumpManager = new ComponentJumpLane(this.playerMeshComponent,BABYLON.Vector3.Zero(),this.scene,this.playerT);
 
 
         //playerTranslateComponent.setScale = new BABYLON.Vector3(0.1, 0.1, 0.1);
@@ -56,6 +65,30 @@ class PlayerManager {
      */
     getplayerPosition(): BABYLON.Vector3 {
         return this.playerTranslateComponent.getPosition;
+    }
+    
+    onTouchStart(touchEvt: TouchEvent) {
+        this.playerMoved = false;
+        this.touchStart = new BABYLON.Vector2(touchEvt.touches[0].screenX,touchEvt.touches[0].screenY);
+    }
+
+    onTouchEnd(touchEvt: TouchEvent) {
+        
+    }
+
+    onTouchMove(touchEvt: TouchEvent) {
+        this.touchEnd = new BABYLON.Vector2(touchEvt.touches[0].screenX,touchEvt.touches[0].screenY);
+        if(this.touchEnd.x - this.touchStart.x > screen.width*0.2 && this.currentLane.getRightLaneAvalable && !this.playerMoved){
+            this.currentLane = this.currentLane.getRightLane;
+            this.playerMoved=true;
+        }
+        if(this.touchEnd.x - this.touchStart.x < -screen.width*0.2 && this.currentLane.getLeftLaneAvalable && !this.playerMoved){
+            this.currentLane = this.currentLane.getLeftLane;
+            this.playerMoved=true;
+        }
+        if(this.touchEnd.y - this.touchStart.y < -screen.height*0.2 && this.jumpManager.jumping == false){
+            this.jumpManager.jump(this.playerT);
+        }
     }
 
     onKeyDown(keyEvent: KeyboardEvent): void {
@@ -87,6 +120,11 @@ class PlayerManager {
             this.scene.beginAnimation(this.playerMeshComponent.babylonSkeleton, 2, 18, true, 1);
         }
 
+        //playermovement
+        if(this.playerSpeed!=0){
+            this.playerT += ((deltaTime * this.playerSpeed) + (this.playerT/7000));
+        }
+        
         // check collision with obstacles
         if (!this.firstFrame) {
             for (var index: number = 0; index < this.roadManager.obstacles.length; index++) {
@@ -107,8 +145,6 @@ class PlayerManager {
                 }
             }
         }
-
-        this.playerT += (deltaTime * this.playerSpeed);
 
         // spawn lane if needed
         if (!this.currentLane.getNextLaneAvalable) {

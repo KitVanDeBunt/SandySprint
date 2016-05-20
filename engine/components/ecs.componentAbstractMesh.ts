@@ -42,7 +42,7 @@ namespace ECS {
         public setCollision(mesh: BABYLON.Mesh){
             this.collider = mesh;
             this.collider.updatePhysicsBody;
-            //this.collider.isVisible = false;
+            this.collider.isVisible = false;
         }
         
         /**
