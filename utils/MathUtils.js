@@ -36,6 +36,10 @@ var Utils;
             return Math.min(Math.max(value, min), max);
         };
         ;
+        MathUtil.floatInterpolateFunction = function (startValue, endValue, gradient) {
+            return startValue + (endValue - startValue) * gradient;
+        };
+        ;
         return MathUtil;
     }());
     Utils.MathUtil = MathUtil;
