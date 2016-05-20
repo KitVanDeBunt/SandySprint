@@ -1,20 +1,19 @@
 /**
  * SkyBoxManager
- * info: http://doc.babylonjs.com/extensions/Sky#introduction
+ * info: https://www.eternalcoding.com/?p=263
  * manages the skybox
  */
 var SkyBoxManager = (function () {
-    function SkyBoxManager(scene) {
-        var skyMaterial = new BABYLON.SkyMaterial("skyMaterial", scene);
-        skyMaterial.backFaceCulling = false;
-        skyMaterial.luminance = 0.1;
-        skyMaterial.inclination = 0.42;
-        skyMaterial.azimuth = 0.25;
-        skyMaterial.rayleigh = 1;
-        skyMaterial.mieDirectionalG = 0.90;
-        skyMaterial.mieCoefficient = 0.005;
-        var skybox = BABYLON.Mesh.CreateBox("skyBox", 10000.0, scene);
-        skybox.material = skyMaterial;
+    function SkyBoxManager(scene, ECSengine) {
+        // Skybox
+        var skybox = BABYLON.Mesh.CreateBox("skyBox", 1000.0, scene);
+        var skyboxMaterial = new BABYLON.StandardMaterial("assets/textures/skyBox", scene);
+        skyboxMaterial.backFaceCulling = false;
+        skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("assets/textures/skybox/skybox", scene);
+        skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+        skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+        skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+        skybox.material = skyboxMaterial;
     }
     return SkyBoxManager;
 }());

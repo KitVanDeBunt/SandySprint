@@ -42,7 +42,7 @@ var game = function () {
         // create ui
         this.gameUI = new GameUI(scene, playerManager, ECSengine, canvas);
         // create skybox managers
-        skyboxManager = new SkyBoxManager(scene);
+        skyboxManager = new SkyBoxManager(scene, ECSengine);
         return scene;
     };
     scene = createScene();
