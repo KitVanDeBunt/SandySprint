@@ -197,7 +197,7 @@ class PlayerManager {
         
         // jumping
         if (this.jumpManager.jumping) {
-            let jumpInputT: number = (this.playerT - this.jumpManager.getT()) / this.jumpManager.getLaneLength();
+            let jumpInputT: number = (this.playerT - this.jumpManager.getT()) / (this.jumpManager.getLaneLength()/2.5);
             if (jumpInputT > 1) {
                 this.jumpManager.done();
             }
@@ -221,6 +221,7 @@ class PlayerManager {
                                 break;
                             case CollisionMeshType.scarab:
                                 console.log("scarab collision");
+                                this.pickupsCollected++;
                                 break;
                             default:
                                 break;

@@ -153,7 +153,7 @@ var PlayerManager = (function () {
         }
         // jumping
         if (this.jumpManager.jumping) {
-            var jumpInputT = (this.playerT - this.jumpManager.getT()) / this.jumpManager.getLaneLength();
+            var jumpInputT = (this.playerT - this.jumpManager.getT()) / (this.jumpManager.getLaneLength() / 2.5);
             if (jumpInputT > 1) {
                 this.jumpManager.done();
             }
@@ -175,6 +175,7 @@ var PlayerManager = (function () {
                                 break;
                             case CollisionMeshType.scarab:
                                 console.log("scarab collision");
+                                this.pickupsCollected++;
                                 break;
                             default:
                                 break;
