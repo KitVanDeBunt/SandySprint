@@ -30,6 +30,7 @@ var ComponentJumpLane = (function (_super) {
         var curve = BABYLON.Curve3.CreateCubicBezier(this.points[0], this.points[1], this.points[2], this.points[3], 20);
         var cubicBezierCurve = BABYLON.Mesh.CreateLines("cbezier", curve.getPoints(), scene);
         cubicBezierCurve.color = new BABYLON.Color3(1, 0, .5);
+        cubicBezierCurve.isVisible = false;
     }
     ComponentJumpLane.prototype.jump = function (playerT) {
         this.jumping = true;

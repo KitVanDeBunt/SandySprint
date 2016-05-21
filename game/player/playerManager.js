@@ -46,23 +46,29 @@ var PlayerManager = (function () {
     PlayerManager.prototype.getplayerPosition = function () {
         return this.playerTranslateComponent.getPosition;
     };
+    //get touch start position
     PlayerManager.prototype.onTouchStart = function (touchEvt) {
         this.playerMovedCurrentTouch = false;
         this.touchStart = new BABYLON.Vector2(touchEvt.touches[0].screenX, touchEvt.touches[0].screenY);
     };
     PlayerManager.prototype.onTouchEnd = function (touchEvt) {
     };
+    //check for swipe
+    // TODO : if swipe > screen.width*0.5 move 2 lanes? 
     PlayerManager.prototype.onTouchMove = function (touchEvt) {
         this.touchEnd = new BABYLON.Vector2(touchEvt.touches[0].screenX, touchEvt.touches[0].screenY);
-        if (this.touchEnd.x - this.touchStart.x > screen.width * 0.2 && this.currentLane.getRightLaneAvalable && !this.playerMovedCurrentTouch) {
+        //swipe right
+        if (this.touchEnd.x - this.touchStart.x > screen.width * 0.1 && this.currentLane.getRightLaneAvalable && !this.playerMovedCurrentTouch) {
             this.movePlayerRight();
             this.playerMovedCurrentTouch = true;
         }
-        if (this.touchEnd.x - this.touchStart.x < -screen.width * 0.2 && this.currentLane.getLeftLaneAvalable && !this.playerMovedCurrentTouch) {
+        //swipe left
+        if (this.touchEnd.x - this.touchStart.x < -screen.width * 0.1 && this.currentLane.getLeftLaneAvalable && !this.playerMovedCurrentTouch) {
             this.movePlayerLeft();
             this.playerMovedCurrentTouch = true;
         }
-        if (this.touchEnd.y - this.touchStart.y < -screen.height * 0.2 && this.jumpManager.jumping == false) {
+        //swipe up
+        if (this.touchEnd.y - this.touchStart.y < -screen.height * 0.1 && this.jumpManager.jumping == false) {
             this.jumpManager.jump(this.playerT);
         }
     };
@@ -176,6 +182,7 @@ var PlayerManager = (function () {
                             case CollisionMeshType.scarab:
                                 console.log("scarab collision");
                                 this.pickupsCollected++;
+                                // TODO : remove scarab
                                 break;
                             default:
                                 break;

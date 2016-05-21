@@ -31,7 +31,7 @@ class ComponentStraightLane extends ComponentLaneBase {
         let curve:BABYLON.Curve3 = BABYLON.Curve3.CreateCubicBezier(this.points[0], this.points[1], this.points[2], this.points[3],20);
         let cubicBezierCurve: BABYLON.LinesMesh = BABYLON.Mesh.CreateLines("cbezier", curve.getPoints(), scene);
         cubicBezierCurve.color = new BABYLON.Color3(1, 0, .5);
-        
+        cubicBezierCurve.isVisible = false;
         /*
         //draw lane up
         for (let i = 0; i < 10; i++) {

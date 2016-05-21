@@ -33,7 +33,7 @@ var GameUI = (function () {
         }
         else {
             this.box.scaling = new BABYLON.Vector3(800, 800, 1);
-            this.box.position = new BABYLON.Vector3(0, 0, 8000);
+            this.box.position = new BABYLON.Vector3(200, -2500, 8000);
         }
         this.box.layerMask = 0x20000000;
         this.context2D = this.myMaterial_diffuseTexture.getContext();
@@ -45,7 +45,7 @@ var GameUI = (function () {
         }
         else {
             this.box.scaling = new BABYLON.Vector3(800, 800, 1);
-            this.box.position = new BABYLON.Vector3(0, 0, 8000);
+            this.box.position = new BABYLON.Vector3(200, 2500, 8000);
         }
     };
     GameUI.prototype.onTouchStart = function (touchEvt) {
