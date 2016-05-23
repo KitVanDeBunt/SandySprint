@@ -81,5 +81,6 @@ class GameUI {
     update(): void {
         this.context2D.clearRect(0, 0, 512, 512);
         this.myMaterial_diffuseTexture.drawText("Score:" + Math.round(this.playerManager.getplayerT()), 0, 400, "60px Arial", "white", "transparent");
+        this.myMaterial_diffuseTexture.drawText("Scarabs:"+this.playerManager.getPickupsCollected(), 0, 470, "60px Arial", "white", "transparent");
     }
 }

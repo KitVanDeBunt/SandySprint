@@ -3,10 +3,13 @@
 /// <reference path="engine/systems/ecs.system.ts" />
 /// <reference path="engine/components/ecs.component.ts" />
 
+var canvas:HTMLCanvasElement;
+var engine:BABYLON.Engine;
+
 var game = function () {
 
-    let canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("renderCanvas");
-    let engine: BABYLON.Engine = new BABYLON.Engine(canvas, true);
+    //let canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("renderCanvas");
+    //let engine: BABYLON.Engine = new BABYLON.Engine(canvas, true);
     let ECSengine: ECS.Engine;
     let scene: BABYLON.Scene;
 
@@ -15,7 +18,7 @@ var game = function () {
     let playerManager: PlayerManager;
     let gameUI: GameUI;
     let skyboxManager: SkyBoxManager;
-    
+
 
     let createScene = function () {
 
@@ -63,7 +66,7 @@ var game = function () {
         this.gameUI = new GameUI(scene, playerManager, ECSengine, canvas);
 
         // create skybox managers
-        skyboxManager = new SkyBoxManager(scene,ECSengine);
+        skyboxManager = new SkyBoxManager(scene, ECSengine);
 
         return scene;
     };
@@ -123,4 +126,12 @@ var game = function () {
     window.addEventListener("keydown", onKeyDown);
 }
 
-game();
+var menu = function () {
+    canvas = <HTMLCanvasElement>document.getElementById("renderCanvas");
+    engine = new BABYLON.Engine(canvas, true);
+    let mainMenu: MainMenu = new MainMenu(canvas,engine);
+}
+
+menu();
+
+//game();

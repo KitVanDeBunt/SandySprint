@@ -39,6 +39,9 @@ var PlayerManager = (function () {
     PlayerManager.prototype.getplayerT = function () {
         return this.playerT;
     };
+    PlayerManager.prototype.getPickupsCollected = function () {
+        return this.pickupsCollected;
+    };
     /**
      * Returns the players position
      * @returns players position

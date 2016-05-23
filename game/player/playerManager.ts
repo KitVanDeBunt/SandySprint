@@ -64,6 +64,10 @@ class PlayerManager {
     getplayerT(): number {
         return this.playerT;
     }
+    
+    getPickupsCollected():number{
+        return this.pickupsCollected;
+    }
 
     /**
      * Returns the players position

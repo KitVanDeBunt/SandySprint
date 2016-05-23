@@ -2,9 +2,11 @@
 /// <reference path="engine/ecs.entity.ts" />
 /// <reference path="engine/systems/ecs.system.ts" />
 /// <reference path="engine/components/ecs.component.ts" />
+var canvas;
+var engine;
 var game = function () {
-    var canvas = document.getElementById("renderCanvas");
-    var engine = new BABYLON.Engine(canvas, true);
+    //let canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("renderCanvas");
+    //let engine: BABYLON.Engine = new BABYLON.Engine(canvas, true);
     var ECSengine;
     var scene;
     var playerCameraManager;
@@ -87,5 +89,11 @@ var game = function () {
     // add input event listener
     window.addEventListener("keydown", onKeyDown);
 };
-game();
+var menu = function () {
+    canvas = document.getElementById("renderCanvas");
+    engine = new BABYLON.Engine(canvas, true);
+    var mainMenu = new MainMenu(canvas, engine);
+};
+menu();
+//game(); 
 //# sourceMappingURL=game.js.map
