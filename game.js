@@ -94,6 +94,6 @@ var menu = function () {
     engine = new BABYLON.Engine(canvas, true);
     var mainMenu = new MainMenu(canvas, engine);
 };
-menu();
-//game(); 
+//menu();
+game();
 //# sourceMappingURL=game.js.map

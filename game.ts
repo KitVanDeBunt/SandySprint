@@ -132,6 +132,6 @@ var menu = function () {
     let mainMenu: MainMenu = new MainMenu(canvas,engine);
 }
 
-menu();
+//menu();
 
-//game();
+game();
