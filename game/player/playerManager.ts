@@ -150,7 +150,7 @@ class PlayerManager {
         this.updateAnimation();
         this.updateRoadLane();
         this.updatePlayerMovment(deltaTime);
-        this.updateCollision();
+       // this.updateCollision();
 
         if (this.firstFrame) {
             this.firstFrame = false;
@@ -161,7 +161,7 @@ class PlayerManager {
         if (!this.animationStarted && this.playerMeshComponent.meshState == ECS.MeshLoadState.Loaded) {
             this.animationStarted = true;
             // set run animation
-            this.scene.beginAnimation(this.playerMeshComponent.babylonSkeleton, 2, 18, true, 1);
+            this.scene.beginAnimation(this.playerMeshComponent.babylonSkeleton, 0, 21, true, 1);
         }
     }
 
@@ -184,10 +184,18 @@ class PlayerManager {
         }
     }
 
+
     private updatePlayerMovment(deltaTime: number) {
         if (this.playerSpeed != 0) {
             // TODO : add max speed
-            this.playerT += ((deltaTime * (this.playerSpeed+(this.playerT / 280000))));
+            if(deltaTime>8){
+                this.playerT += ((8 * (this.playerSpeed+(this.playerT / 280000))));
+                deltaTime-=8;
+                this.updatePlayerMovment(deltaTime);
+            }
+            else{
+                this.playerT += ((deltaTime * (this.playerSpeed+(this.playerT / 280000))));
+            }
         }
 
         let laneInputT: number = (this.playerT - this.currentLane.getStartT) / this.currentLane.getLaneLength();
@@ -215,6 +223,7 @@ class PlayerManager {
         }
         
         this.playerTranslateComponent.setPosition = pos;
+        this.updateCollision();
     }
 
     private updateCollision() {
@@ -232,7 +241,8 @@ class PlayerManager {
                             case CollisionMeshType.scarab:
                                 console.log("scarab collision");
                                 this.pickupsCollected++;
-                                // TODO : remove scarab
+                                this.roadManager.obstacles[index].entity.destroy();
+                                this.roadManager.obstacles.splice(index, 1);
                                 break;
                             default:
                                 break;

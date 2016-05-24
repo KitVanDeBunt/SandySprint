@@ -112,7 +112,7 @@ var PlayerManager = (function () {
         this.updateAnimation();
         this.updateRoadLane();
         this.updatePlayerMovment(deltaTime);
-        this.updateCollision();
+        // this.updateCollision();
         if (this.firstFrame) {
             this.firstFrame = false;
         }
@@ -121,7 +121,7 @@ var PlayerManager = (function () {
         if (!this.animationStarted && this.playerMeshComponent.meshState == ECS.MeshLoadState.Loaded) {
             this.animationStarted = true;
             // set run animation
-            this.scene.beginAnimation(this.playerMeshComponent.babylonSkeleton, 2, 18, true, 1);
+            this.scene.beginAnimation(this.playerMeshComponent.babylonSkeleton, 0, 21, true, 1);
         }
     };
     PlayerManager.prototype.updateRoadLane = function () {
@@ -145,7 +145,14 @@ var PlayerManager = (function () {
     PlayerManager.prototype.updatePlayerMovment = function (deltaTime) {
         if (this.playerSpeed != 0) {
             // TODO : add max speed
-            this.playerT += ((deltaTime * (this.playerSpeed + (this.playerT / 280000))));
+            if (deltaTime > 8) {
+                this.playerT += ((8 * (this.playerSpeed + (this.playerT / 280000))));
+                deltaTime -= 8;
+                this.updatePlayerMovment(deltaTime);
+            }
+            else {
+                this.playerT += ((deltaTime * (this.playerSpeed + (this.playerT / 280000))));
+            }
         }
         var laneInputT = (this.playerT - this.currentLane.getStartT) / this.currentLane.getLaneLength();
         var pos = this.currentLane.getPointAtT(laneInputT);
@@ -169,6 +176,7 @@ var PlayerManager = (function () {
             pos = pos.add(this.jumpManager.getPointAtT(jumpInputT));
         }
         this.playerTranslateComponent.setPosition = pos;
+        this.updateCollision();
     };
     PlayerManager.prototype.updateCollision = function () {
         this.playerMeshComponent.updateCollision();
@@ -185,7 +193,8 @@ var PlayerManager = (function () {
                             case CollisionMeshType.scarab:
                                 console.log("scarab collision");
                                 this.pickupsCollected++;
-                                // TODO : remove scarab
+                                this.roadManager.obstacles[index].entity.destroy();
+                                this.roadManager.obstacles.splice(index, 1);
                                 break;
                             default:
                                 break;

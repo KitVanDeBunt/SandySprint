@@ -27,26 +27,28 @@ var GameUI = (function () {
         //Adding UI Element
         this.box = BABYLON.Mesh.CreatePlane("Box", 5, scene, false);
         this.box.material = material;
-        if (screen.width > screen.height) {
+        if (this.canvas.width > this.canvas.height) {
             this.box.scaling = new BABYLON.Vector3(400, 400, 1);
-            this.box.position = new BABYLON.Vector3(-2500, 2500, 5600);
+            this.box.position = new BABYLON.Vector3(0, 0, (1842 / this.canvas.width) * 1300);
         }
         else {
-            this.box.scaling = new BABYLON.Vector3(800, 800, 1);
-            this.box.position = new BABYLON.Vector3(200, -2500, 8000);
+            this.box.scaling = new BABYLON.Vector3(400, 400, 1);
+            this.box.position = new BABYLON.Vector3(0, 0, (1019 / this.canvas.height) * 3000);
         }
+        console.log("" + "WxH:" + this.canvas.width + "x" + this.canvas.height);
         this.box.layerMask = 0x20000000;
         this.context2D = this.myMaterial_diffuseTexture.getContext();
     }
     GameUI.prototype.rescale = function () {
-        if (screen.width > screen.height) {
+        if (this.canvas.width > this.canvas.height) {
             this.box.scaling = new BABYLON.Vector3(400, 400, 1);
-            this.box.position = new BABYLON.Vector3(-2500, 2500, 5600);
+            this.box.position = new BABYLON.Vector3(0, 0, (1842 / this.canvas.width) * 1300);
         }
         else {
-            this.box.scaling = new BABYLON.Vector3(800, 800, 1);
-            this.box.position = new BABYLON.Vector3(200, 2500, 8000);
+            this.box.scaling = new BABYLON.Vector3(400, 400, 1);
+            this.box.position = new BABYLON.Vector3(0, 0, (1019 / this.canvas.height) * 3000);
         }
+        console.log("" + "WxH:" + this.canvas.width + "x" + this.canvas.height);
     };
     GameUI.prototype.onTouchStart = function (touchEvt) {
     };
@@ -56,8 +58,8 @@ var GameUI = (function () {
     };
     GameUI.prototype.update = function () {
         this.context2D.clearRect(0, 0, 512, 512);
-        this.myMaterial_diffuseTexture.drawText("Score:" + Math.round(this.playerManager.getplayerT()), 0, 400, "60px Arial", "white", "transparent");
-        this.myMaterial_diffuseTexture.drawText("Scarabs:" + this.playerManager.getPickupsCollected(), 0, 470, "60px Arial", "white", "transparent");
+        this.myMaterial_diffuseTexture.drawText("Score:" + Math.round(this.playerManager.getplayerT()), (1842 / this.canvas.width) * 200, (1019 / this.canvas.height) * 400, "60px Arial", "white", "black");
+        this.myMaterial_diffuseTexture.drawText("Scarabs:" + this.playerManager.getPickupsCollected(), (1842 / this.canvas.width) * 200, (1019 / this.canvas.height) * 470, "60px Arial", "white", "black");
     };
     return GameUI;
 }());

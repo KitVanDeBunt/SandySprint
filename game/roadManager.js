@@ -103,7 +103,7 @@ var RoadManager = (function () {
                 this.lanes.splice(i_1, 1);
             }
         }
-        // delete obstacles if of screen
+        // delete obstacles if out of view
         for (var i = 0; i < this.obstacles.length; i++) {
             if (this.obstacles[i].spawnDistance < playerT - 10) {
                 // check if object mesh is loaded before destroying it
@@ -114,7 +114,17 @@ var RoadManager = (function () {
                 }
             }
         }
-        // TODO: delete sceneObjects if of screen
+        // delete sceneObjects if out of view
+        for (var i = 0; i < this.sceneObjects.length; i++) {
+            if (this.sceneObjects[i].spawnDistance < playerT - 5) {
+                // check if object mesh is loaded before destroying it
+                var meshLoaded = (this.sceneObjects[i].entity.getComponent(this.abstractMeshComponetType).meshState == ECS.MeshLoadState.Loaded);
+                if (meshLoaded) {
+                    this.sceneObjects[i].entity.destroy();
+                    this.sceneObjects.splice(i, 1);
+                }
+            }
+        }
     };
     return RoadManager;
 }());
