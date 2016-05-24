@@ -188,9 +188,9 @@ class PlayerManager {
     private updatePlayerMovment(deltaTime: number) {
         if (this.playerSpeed != 0) {
             // TODO : add max speed
-            if(deltaTime>8){
-                this.playerT += ((8 * (this.playerSpeed+(this.playerT / 280000))));
-                deltaTime-=8;
+            if(deltaTime>5){
+                this.playerT += ((5 * (this.playerSpeed+(this.playerT / 280000))));
+                deltaTime-=5;
                 this.updatePlayerMovment(deltaTime);
             }
             else{
