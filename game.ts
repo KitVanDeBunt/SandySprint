@@ -8,8 +8,8 @@ var engine:BABYLON.Engine;
 
 var game = function () {
 
-    //let canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("renderCanvas");
-    //let engine: BABYLON.Engine = new BABYLON.Engine(canvas, true);
+    let canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("renderCanvas");
+    let engine: BABYLON.Engine = new BABYLON.Engine(canvas, true);
     let ECSengine: ECS.Engine;
     let scene: BABYLON.Scene;
 
@@ -117,19 +117,19 @@ var game = function () {
         this.gameUI.rescale();
     });
 
+    // add input event listener
+    window.addEventListener("keydown", onKeyDown);
     window.addEventListener("touchstart", onTouchStart);
     window.addEventListener("touchend", onTouchEnd);
     window.addEventListener("touchcancel", onTouchEnd);
     window.addEventListener("touchmove", onTouchMove);
 
-    // add input event listener
-    window.addEventListener("keydown", onKeyDown);
 }
 
 var menu = function () {
     canvas = <HTMLCanvasElement>document.getElementById("renderCanvas");
     engine = new BABYLON.Engine(canvas, true);
-    let mainMenu: MainMenu = new MainMenu(canvas,engine);
+    let mainMenu = new MainMenu(canvas,engine);
 }
 
 //menu();
