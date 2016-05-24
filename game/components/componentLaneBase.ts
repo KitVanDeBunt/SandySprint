@@ -72,6 +72,13 @@ abstract class ComponentLaneBase extends ECS.Component {
      */
     abstract getEndT(): number;
 
+    /**
+     * returns te distance tranvled of the onteroplation value of 't'
+     * @param t interpolation value between 0 and 1
+     * @returns distance travled
+     */
+    abstract getDistanceAtT(t: number): number;
+
     abstract getLaneLength(): number;
 
     abstract getPointAtT(t: number): BABYLON.Vector3;

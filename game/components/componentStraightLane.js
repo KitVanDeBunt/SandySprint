@@ -61,6 +61,9 @@ var ComponentStraightLane = (function (_super) {
     ComponentStraightLane.prototype.getEndT = function () {
         return this.startT + 14;
     };
+    ComponentStraightLane.prototype.getDistanceAtT = function (t) {
+        return this.startT + (this.getLaneLength() * t);
+    };
     ComponentStraightLane.prototype.getLaneLength = function () {
         return 14;
     };

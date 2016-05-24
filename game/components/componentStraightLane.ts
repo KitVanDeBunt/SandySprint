@@ -65,10 +65,14 @@ class ComponentStraightLane extends ComponentLaneBase {
         return this.startT+14;
     }
     
+    getDistanceAtT (t:number):number{
+        return this.startT+(this.getLaneLength()*t);
+    }
+    
     getLaneLength ():number{
         return 14;
     }
-
+    
     getPointAtT(t: number): BABYLON.Vector3 {
         return Utils.Bezier.GetPoint(this.points[0], this.points[1], this.points[2], this.points[3], t);
     }

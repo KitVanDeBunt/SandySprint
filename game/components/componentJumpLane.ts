@@ -24,8 +24,8 @@ class ComponentJumpLane extends ComponentLaneBase {
         // set bezier points
         this.points = [
         new BABYLON.Vector3(0, 0, 0),
-        new BABYLON.Vector3(0, 2, 0),
         new BABYLON.Vector3(0, 0, 0),
+        new BABYLON.Vector3(0, 2, 0),
         new BABYLON.Vector3(0, 0, 0)];
         
         // draw lane
@@ -48,10 +48,20 @@ class ComponentJumpLane extends ComponentLaneBase {
         return this.T+14;
     }
     
+    /**
+     * TODO
+     */
+    getDistanceAtT(t: number): number{
+        return 0;
+    }
+    
     getT():number{
         return this.T;
     }
     
+    /**
+     * TODO: calculate length correctly
+     */
     getLaneLength ():number{
         return 14;
     }
