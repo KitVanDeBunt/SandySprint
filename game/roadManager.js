@@ -95,6 +95,10 @@ var RoadManager = (function () {
         configurable: true
     });
     RoadManager.prototype.update = function (playerT) {
+        // spawn road if needed
+        if (playerT + 60 > this.lanes[this.lanes.length - 1][1].getEndT()) {
+            this.createRaodPart();
+        }
         // delete road if of screen
         for (var i_1 = 0; i_1 < this.lanes.length; i_1++) {
             if (this.lanes[i_1][0].getStartT < playerT - 20) {

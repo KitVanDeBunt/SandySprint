@@ -194,6 +194,10 @@ class RoadManager {
     }
 
     update(playerT: number) {
+        // spawn road if needed
+        if (playerT+60 >  this.lanes[this.lanes.length-1][1].getEndT()) {
+            this.createRaodPart();
+        }
         // delete road if of screen
         for (let i = 0; i < this.lanes.length; i++) {
             if (this.lanes[i][0].getStartT < playerT - 20) {
