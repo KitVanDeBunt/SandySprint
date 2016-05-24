@@ -31,6 +31,7 @@ var PlayerManager = (function () {
         console.log("componentPosition instance type:" + this.playerTranslateComponent.componentType());
         this.currentLane = this.roadManager.getStartLane;
         this.previousLane = this.roadManager.getStartLane;
+        this.abstractMeshComponetType = new ECS.ComponentAbstractMesh(null, null, null).componentType();
     }
     /**
      * Returns the players interpontation(t or dictance in game).
@@ -125,17 +126,6 @@ var PlayerManager = (function () {
         }
     };
     PlayerManager.prototype.updateRoadLane = function () {
-        // spawn road if needed
-        if (!this.currentLane.getNextLaneAvalable) {
-            if (!this.currentLane.getNextLane.getNextLaneAvalable) {
-                this.roadManager.createRaodPart();
-            }
-        }
-        else {
-            if (!this.currentLane.getNextLane.getNextLaneAvalable) {
-                this.roadManager.createRaodPart();
-            }
-        }
         // set next lane if at end of current lane
         if (this.playerT > this.currentLane.getEndT()) {
             this.currentLane = this.currentLane.getNextLane;
@@ -182,22 +172,25 @@ var PlayerManager = (function () {
         this.playerMeshComponent.updateCollision();
         // check collision with obstacles
         if (!this.firstFrame) {
-            for (var index = 0; index < this.roadManager.obstacles.length; index++) {
-                if (this.roadManager.obstacles[index] != null) {
-                    var coll = this.playerMeshComponent.getCollider.intersectsMesh(this.roadManager.obstacles[index].meshCollider);
-                    if (coll) {
-                        switch (this.roadManager.obstacles[index].meshType) {
-                            case CollisionMeshType.pillar:
-                                this.playerSpeed = 0;
-                                break;
-                            case CollisionMeshType.scarab:
-                                console.log("scarab collision");
-                                this.pickupsCollected++;
-                                this.roadManager.obstacles[index].entity.destroy();
-                                this.roadManager.obstacles.splice(index, 1);
-                                break;
-                            default:
-                                break;
+            for (var i = 0; i < this.roadManager.obstacles.length; i++) {
+                var meshLoaded = (this.roadManager.obstacles[i].entity.getComponent(this.abstractMeshComponetType).meshState == ECS.MeshLoadState.Loaded);
+                if (meshLoaded) {
+                    if (this.roadManager.obstacles[i] != null) {
+                        var coll = this.playerMeshComponent.getCollider.intersectsMesh(this.roadManager.obstacles[i].meshCollider);
+                        if (coll) {
+                            switch (this.roadManager.obstacles[i].meshType) {
+                                case CollisionMeshType.pillar:
+                                    this.playerSpeed = 0;
+                                    break;
+                                case CollisionMeshType.scarab:
+                                    console.log("scarab collision");
+                                    this.pickupsCollected++;
+                                    this.roadManager.obstacles[i].entity.destroy();
+                                    this.roadManager.obstacles.splice(i, 1);
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
                     }
                 }
