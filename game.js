@@ -60,6 +60,8 @@ var game = function () {
         this.gameUI.update();
         // update babylon
         scene.render();
+        // update skybox position
+        skyboxManager.update(playerCameraManager.cameraPosition);
     });
     function onKeyDown(keyEvt) {
         playerManager.onKeyDown(keyEvt);
