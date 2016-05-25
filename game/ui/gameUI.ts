@@ -43,11 +43,11 @@ class GameUI {
         this.box.material = material;
         if (this.canvas.width > this.canvas.height) {
             this.box.scaling = new BABYLON.Vector3(400, 400, 1);
-            this.box.position = new BABYLON.Vector3(0, 0, (1842/this.canvas.width)*1300);
+            this.box.position = new BABYLON.Vector3(0, 0, 1340);
         }
         else {
-            this.box.scaling = new BABYLON.Vector3(400, 400, 1);
-            this.box.position = new BABYLON.Vector3(0, 0,  (1019/this.canvas.height)*3000);
+            this.box.scaling = new BABYLON.Vector3(500, 500, 1);
+            this.box.position = new BABYLON.Vector3(0, 0, 2200);
         }
         console.log("" + "WxH:" + this.canvas.width + "x" + this.canvas.height)
         this.box.layerMask = 0x20000000;
@@ -58,11 +58,11 @@ class GameUI {
     rescale(): void {
         if (this.canvas.width > this.canvas.height) {
             this.box.scaling = new BABYLON.Vector3(400, 400, 1);
-            this.box.position = new BABYLON.Vector3(0, 0, (1842/this.canvas.width)*1300);
+            this.box.position = new BABYLON.Vector3(0, 0, 1340);
         }
         else {
-            this.box.scaling = new BABYLON.Vector3(400, 400, 1);
-            this.box.position = new BABYLON.Vector3(0, 0,  (1019/this.canvas.height)*3000);
+            this.box.scaling = new BABYLON.Vector3(500, 500, 1);
+            this.box.position = new BABYLON.Vector3(0, 0, 2200);
         }
         console.log("" + "WxH:" + this.canvas.width + "x" + this.canvas.height)
     }
@@ -81,7 +81,14 @@ class GameUI {
 
     update(): void {
         this.context2D.clearRect(0, 0, 512, 512);
-        this.myMaterial_diffuseTexture.drawText("Score:" + Math.round(this.playerManager.getplayerT()), (1842 / this.canvas.width) * 200, (1019 / this.canvas.height) * 400, "60px Arial", "white", "black");
-        this.myMaterial_diffuseTexture.drawText("Scarabs:" + this.playerManager.getPickupsCollected(), (1842 / this.canvas.width) * 200, (1019 / this.canvas.height) * 470, "60px Arial", "white", "black");
+        if (this.canvas.width > this.canvas.height) {
+      //      this.myMaterial_diffuseTexture.drawText("Score:" + Math.round(this.playerManager.getplayerT()), (this.canvas.height*0.3), 0, "40px Arial", "white", "transparent");
+      //      this.myMaterial_diffuseTexture.drawText("Scarabs:" + this.playerManager.getPickupsCollected(), 0,300-((1842 / this.canvas.width)*100), "40px Arial", "white", "transparent");
+        }
+        else{
+            this.myMaterial_diffuseTexture.drawText("Score:" + Math.round(this.playerManager.getplayerT()), 135-(this.canvas.width*0.18645731108930323846908734052993)+(this.canvas.height*0.14), 100, "30px Arial", "white", "transparent");
+            this.myMaterial_diffuseTexture.drawText("Scarabs:" + this.playerManager.getPickupsCollected(), 135-(this.canvas.width*0.18645731108930323846908734052993)+(this.canvas.height*0.14),  140, "30px Arial", "white", "transparent");
+        }
+        
     }
 }
