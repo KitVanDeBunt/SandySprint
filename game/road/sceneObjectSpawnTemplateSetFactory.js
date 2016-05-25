@@ -31,7 +31,7 @@ var SceneObjectSpawnTemplateSetFactory = (function () {
         // create scene object spawn template sets
         this.templatesSetList = [];
         var listNum = 0;
-        /*this.templatesSetList[listNum] = new SceneObjectSpawnTemplateSet();
+        this.templatesSetList[listNum] = new SceneObjectSpawnTemplateSet();
         this.templatesSetList[listNum].compatableWithWaterTile = true;
         this.templatesSetList[listNum].templateList.push(this.templatesList[0]);
         this.templatesSetList[listNum].templateList.push(this.templatesList[1]);
@@ -42,7 +42,7 @@ var SceneObjectSpawnTemplateSetFactory = (function () {
         this.templatesSetList[listNum].compatableWithWaterTile = true;
         this.templatesSetList[listNum].templateList.push(this.templatesList[0]);
         this.templatesSetList[listNum].templateList.push(this.templatesList[2]);
-        listNum++;*/
+        listNum++;
         this.templatesSetList[listNum] = new SceneObjectSpawnTemplateSet();
         this.templatesSetList[listNum].compatableWithWaterTile = true;
         this.templatesSetList[listNum].templateList.push(this.templatesList[1]);

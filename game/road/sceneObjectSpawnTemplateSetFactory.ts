@@ -104,7 +104,7 @@ class SceneObjectSpawnTemplateSetFactory {
         this.templatesSetList = [];
 
         let listNum:number = 0;
-        /*this.templatesSetList[listNum] = new SceneObjectSpawnTemplateSet();
+        this.templatesSetList[listNum] = new SceneObjectSpawnTemplateSet();
         this.templatesSetList[listNum].compatableWithWaterTile = true;
         this.templatesSetList[listNum].templateList.push(this.templatesList[0]);
         this.templatesSetList[listNum].templateList.push(this.templatesList[1]);
@@ -115,7 +115,7 @@ class SceneObjectSpawnTemplateSetFactory {
         this.templatesSetList[listNum].compatableWithWaterTile = true;
         this.templatesSetList[listNum].templateList.push(this.templatesList[0]);
         this.templatesSetList[listNum].templateList.push(this.templatesList[2]);
-        listNum++;*/
+        listNum++;
         this.templatesSetList[listNum] = new SceneObjectSpawnTemplateSet();
         this.templatesSetList[listNum].compatableWithWaterTile = true;
         this.templatesSetList[listNum].templateList.push(this.templatesList[1]);
