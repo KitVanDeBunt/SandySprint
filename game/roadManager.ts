@@ -12,9 +12,14 @@ class RoadManager {
     private lanes: ComponentStraightLane[][];
     private roadesSpawned = 0;
     private abstractMeshComponetType: string;
+    private sceneObjectFactory: SceneObjectSpawnTemplateSetFactory;
 
     obstacles: RoadObstacle[];
     sceneObjects: SceneObject[];
+
+    get getLanes(): ComponentStraightLane[][] {
+        return this.lanes;
+    }
 
     constructor(engine: ECS.Engine, scene: BABYLON.Scene) {
         this.lanes = [];
@@ -24,10 +29,15 @@ class RoadManager {
         this.engine = engine;
         this.scene = scene;
 
-        this.createRaodPart();
-        this.createRaodPart();
 
         this.abstractMeshComponetType = new ECS.ComponentAbstractMesh(null, null, null).componentType();
+
+        // initialize scene object factory
+        this.sceneObjectFactory = new SceneObjectSpawnTemplateSetFactory(this, engine);
+
+
+        this.createRaodPart();
+        this.createRaodPart();
     }
 
     /**
@@ -100,52 +110,10 @@ class RoadManager {
                 , this.randomLane()
             );
         }
-        // house
-        this.createSceneObject(
-            roadN
-            , "assets/models/"
-            , "house.babylon"
-            , new BABYLON.Vector3(0.2, 0.2, 0.2)
-            , BABYLON.Quaternion.Identity()
-            , new BABYLON.Vector3(2.5, 0, 0)
-            , 1
-        )
-        // house
-        this.createSceneObject(
-            roadN
-            , "assets/models/"
-            , "house.babylon"
-            , new BABYLON.Vector3(0.2, 0.2, 0.2)
-            , BABYLON.Quaternion.Identity()
-            , new BABYLON.Vector3(-2.5, 0, 0)
-            , 1
-        )
+
+        this.sceneObjectFactory.createRandomTemplateSet(roadN);
+
         this.roadesSpawned++;
-    }
-
-    private createSceneObject(
-        roadN: number
-        , path: string
-        , file: string
-        , scale: BABYLON.Vector3
-        , rotation: BABYLON.Quaternion
-        , objectDisplacement: BABYLON.Vector3
-        , lane: number) {
-
-        let randomT: number = Math.random();
-        let sceneObjectEntity: ECS.Entity = this.engine.createEntity();
-        let sceneObjectTransformComponent: ECS.ComponentTransform = new ECS.ComponentTransform(
-            this.lanes[roadN][lane].getPointAtT(randomT)
-            , scale
-            , rotation
-        );
-        sceneObjectTransformComponent.setPosition = sceneObjectTransformComponent.getPosition.add(objectDisplacement);
-        sceneObjectEntity.addComponent(sceneObjectTransformComponent);
-        let sceneObjectMesh: ECS.ComponentAbstractMesh = new ECS.ComponentAbstractMesh(sceneObjectTransformComponent, path, file);
-        sceneObjectEntity.addComponent(sceneObjectMesh);
-
-        let arrayPosition: number = this.sceneObjects.length;
-        this.sceneObjects[arrayPosition] = new SceneObject(sceneObjectEntity, this.lanes[roadN][lane].getDistanceAtT(randomT));
     }
 
     /**
@@ -195,7 +163,7 @@ class RoadManager {
 
     update(playerT: number) {
         // spawn road if needed
-        if (playerT+60 >  this.lanes[this.lanes.length-1][1].getEndT()) {
+        if (playerT + 60 > this.lanes[this.lanes.length - 1][1].getEndT()) {
             this.createRaodPart();
         }
         // delete road if of screen

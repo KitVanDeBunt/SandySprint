@@ -11,6 +11,13 @@ var PlayerCameraManager = (function () {
         cameraECS.addComponent(this.cameraTranslateComponent);
         cameraECS.addComponent(new ComponentCamera(this.cameraTranslateComponent, scene));
     }
+    Object.defineProperty(PlayerCameraManager.prototype, "cameraPosition", {
+        get: function () {
+            return this.cameraTranslateComponent.getPosition;
+        },
+        enumerable: true,
+        configurable: true
+    });
     PlayerCameraManager.prototype.update = function (deltaTime) {
         this.cameraTranslateComponent.setPosition = this.playerManager.getplayerPosition().add(new BABYLON.Vector3(0, 0.5, 0.0));
     };

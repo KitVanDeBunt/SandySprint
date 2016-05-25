@@ -11,10 +11,19 @@ var RoadManager = (function () {
         this.sceneObjects = [];
         this.engine = engine;
         this.scene = scene;
-        this.createRaodPart();
-        this.createRaodPart();
         this.abstractMeshComponetType = new ECS.ComponentAbstractMesh(null, null, null).componentType();
+        // initialize scene object factory
+        this.sceneObjectFactory = new SceneObjectSpawnTemplateSetFactory(this, engine);
+        this.createRaodPart();
+        this.createRaodPart();
     }
+    Object.defineProperty(RoadManager.prototype, "getLanes", {
+        get: function () {
+            return this.lanes;
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * spawns a new road section
      */
@@ -49,22 +58,8 @@ var RoadManager = (function () {
         for (var i = 0; i < 5; i++) {
             this.createLaneObject(roadN, "assets/models/", "pickup_scarab.babylon", CollisionMeshType.scarab, new BABYLON.Vector3(2.5, 2.5, 2.5), new BABYLON.Quaternion(0, 0, 0, 1), new BABYLON.Vector3(0, 0.5, 0), BABYLON.Vector3.Zero(), 0.2, 0.5, this.randomLane());
         }
-        // house
-        this.createSceneObject(roadN, "assets/models/", "house.babylon", new BABYLON.Vector3(0.2, 0.2, 0.2), BABYLON.Quaternion.Identity(), new BABYLON.Vector3(2.5, 0, 0), 1);
-        // house
-        this.createSceneObject(roadN, "assets/models/", "house.babylon", new BABYLON.Vector3(0.2, 0.2, 0.2), BABYLON.Quaternion.Identity(), new BABYLON.Vector3(-2.5, 0, 0), 1);
+        this.sceneObjectFactory.createRandomTemplateSet(roadN);
         this.roadesSpawned++;
-    };
-    RoadManager.prototype.createSceneObject = function (roadN, path, file, scale, rotation, objectDisplacement, lane) {
-        var randomT = Math.random();
-        var sceneObjectEntity = this.engine.createEntity();
-        var sceneObjectTransformComponent = new ECS.ComponentTransform(this.lanes[roadN][lane].getPointAtT(randomT), scale, rotation);
-        sceneObjectTransformComponent.setPosition = sceneObjectTransformComponent.getPosition.add(objectDisplacement);
-        sceneObjectEntity.addComponent(sceneObjectTransformComponent);
-        var sceneObjectMesh = new ECS.ComponentAbstractMesh(sceneObjectTransformComponent, path, file);
-        sceneObjectEntity.addComponent(sceneObjectMesh);
-        var arrayPosition = this.sceneObjects.length;
-        this.sceneObjects[arrayPosition] = new SceneObject(sceneObjectEntity, this.lanes[roadN][lane].getDistanceAtT(randomT));
     };
     /**
      * creates Obstacle or pickup on a lane
