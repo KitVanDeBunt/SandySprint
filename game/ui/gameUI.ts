@@ -82,8 +82,8 @@ class GameUI {
     update(): void {
         this.context2D.clearRect(0, 0, 512, 512);
         if (this.canvas.width > this.canvas.height) {
-      //      this.myMaterial_diffuseTexture.drawText("Score:" + Math.round(this.playerManager.getplayerT()), (this.canvas.height*0.3), 0, "40px Arial", "white", "transparent");
-      //      this.myMaterial_diffuseTexture.drawText("Scarabs:" + this.playerManager.getPickupsCollected(), 0,300-((1842 / this.canvas.width)*100), "40px Arial", "white", "transparent");
+            this.myMaterial_diffuseTexture.drawText("Score:" + Math.round(this.playerManager.getplayerT()), 0, 240-((1842 / this.canvas.width)*100), "25px Arial", "white", "transparent");
+            this.myMaterial_diffuseTexture.drawText("Scarabs:" + this.playerManager.getPickupsCollected(), 0,270-((1842 / this.canvas.width)*100), "25px Arial", "white", "transparent");
         }
         else{
             this.myMaterial_diffuseTexture.drawText("Score:" + Math.round(this.playerManager.getplayerT()), 135-(this.canvas.width*0.18645731108930323846908734052993)+(this.canvas.height*0.14), 100, "30px Arial", "white", "transparent");
