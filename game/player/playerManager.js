@@ -2,7 +2,7 @@
  * PlayerManager
  */
 var PlayerManager = (function () {
-    function PlayerManager(scene, ECSengine, roadManager) {
+    function PlayerManager(scene, ECSengine, roadManager, audioManager) {
         this.playerSpeed = 0.006;
         this.playerT = 0;
         this.animationStarted = false;
@@ -20,6 +20,7 @@ var PlayerManager = (function () {
         this.player.addComponent(this.playerTranslateComponent);
         this.playerMeshComponent = new ECS.ComponentAbstractMesh(this.playerTranslateComponent, "assets/models/", "explorer_rig_running.babylon");
         this.player.addComponent(this.playerMeshComponent);
+        this.audio = audioManager;
         // setup collision
         var mesh = BABYLON.Mesh.CreateBox("CollBox", 0.2, this.scene, false);
         mesh.scaling = new BABYLON.Vector3(1, 2, 1);
@@ -135,13 +136,13 @@ var PlayerManager = (function () {
     PlayerManager.prototype.updatePlayerMovment = function (deltaTime) {
         if (this.playerSpeed != 0) {
             // TODO : add max speed
-            if (deltaTime > 5) {
-                this.playerT += ((5 * (this.playerSpeed + (this.playerT / 280000))));
-                deltaTime -= 5;
+            if (deltaTime > 200) {
+                this.playerT += (200 * this.playerSpeed);
+                deltaTime -= 200;
                 this.updatePlayerMovment(deltaTime);
             }
             else {
-                this.playerT += ((deltaTime * (this.playerSpeed + (this.playerT / 280000))));
+                this.playerT += (deltaTime * this.playerSpeed);
             }
         }
         var laneInputT = (this.playerT - this.currentLane.getStartT) / this.currentLane.getLaneLength();
@@ -183,7 +184,7 @@ var PlayerManager = (function () {
                                     this.playerSpeed = 0;
                                     break;
                                 case CollisionMeshType.scarab:
-                                    console.log("scarab collision");
+                                    this.audio.playSound(Sounds.Pickup);
                                     this.pickupsCollected++;
                                     this.roadManager.obstacles[i].entity.destroy();
                                     this.roadManager.obstacles.splice(i, 1);

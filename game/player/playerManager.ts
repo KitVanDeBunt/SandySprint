@@ -13,6 +13,7 @@ class PlayerManager {
     private roadManager: RoadManager;
     private pickupsCollected: number = 0;
     private jumpManager: ComponentJumpLane;
+    private audio: audioManager;
 
     // lane
     private previousLane: ComponentLaneBase;
@@ -33,7 +34,7 @@ class PlayerManager {
 
     private abstractMeshComponetType: string;
         
-    constructor(scene: BABYLON.Scene, ECSengine: ECS.Engine, roadManager: RoadManager) {
+    constructor(scene: BABYLON.Scene, ECSengine: ECS.Engine, roadManager: RoadManager, audioManager:audioManager) {
         this.roadManager = roadManager;
         this.scene = scene;
         this.player = ECSengine.createEntity();
@@ -41,6 +42,7 @@ class PlayerManager {
         this.player.addComponent(this.playerTranslateComponent);
         this.playerMeshComponent = new ECS.ComponentAbstractMesh(this.playerTranslateComponent, "assets/models/", "explorer_rig_running.babylon");
         this.player.addComponent(this.playerMeshComponent);
+        this.audio = audioManager;
 
         // setup collision
         let mesh: BABYLON.Mesh = BABYLON.Mesh.CreateBox("CollBox", 0.2, this.scene, false);
@@ -181,13 +183,13 @@ class PlayerManager {
     private updatePlayerMovment(deltaTime: number) {
         if (this.playerSpeed != 0) {
             // TODO : add max speed
-            if(deltaTime>5){
-                this.playerT += ((5 * (this.playerSpeed+(this.playerT / 280000))));
-                deltaTime-=5;
+            if(deltaTime>200){
+                this.playerT += (200 * this.playerSpeed);
+                deltaTime-=200;
                 this.updatePlayerMovment(deltaTime);
             }
             else{
-                this.playerT += ((deltaTime * (this.playerSpeed+(this.playerT / 280000))));
+                this.playerT += (deltaTime * this.playerSpeed);
             }
         }
 
@@ -234,7 +236,7 @@ class PlayerManager {
                                     this.playerSpeed = 0;
                                     break;
                                 case CollisionMeshType.scarab:
-                                    console.log("scarab collision");
+                                    this.audio.playSound(Sounds.Pickup);
                                     this.pickupsCollected++;
                                     this.roadManager.obstacles[i].entity.destroy();
                                     this.roadManager.obstacles.splice(i, 1);

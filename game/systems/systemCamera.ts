@@ -36,7 +36,7 @@ class SystemCamera extends ECS.System {
 
                         if (componentCamera.getLayermask != 0) {
                             newCam.layerMask = 0x20000000;
-                            
+                            newCam.mode = BABYLON.Camera.ORTHOGRAPHIC_CAMERA;
                         }
                         else {
                             newCam.cameraRotation = new BABYLON.Vector2(0.03, 0);

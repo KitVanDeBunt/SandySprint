@@ -18,6 +18,7 @@ var game = function () {
     let playerManager: PlayerManager;
     let gameUI: GameUI;
     let skyboxManager: SkyBoxManager;
+    let audio:audioManager;
 
 
     let createScene = function () {
@@ -58,8 +59,9 @@ var game = function () {
         ECSengine.addSystem(cameraSystem);
 
         // create managers (scripts that handel game logic) 
+        audio = new audioManager(scene);
         roadManager = new RoadManager(ECSengine, scene);
-        playerManager = new PlayerManager(scene, ECSengine, roadManager);
+        playerManager = new PlayerManager(scene, ECSengine, roadManager, audio);
         playerCameraManager = new PlayerCameraManager(ECSengine, scene, playerManager);
 
         // create ui
@@ -113,11 +115,15 @@ var game = function () {
         playerManager.onTouchMove(touchEvt);
         gameUI.onTouchMove(touchEvt);
     }
+    
+    function mouseDown(mouseEvt:MouseEvent):void{
+        console.log("awyis");
+        
+    }
 
     // call resize on babylon engine if the windows resizes
     window.addEventListener("resize", function () {
         engine.resize();
-        this.gameUI.rescale();
     });
 
     // add input event listener
@@ -126,15 +132,7 @@ var game = function () {
     window.addEventListener("touchend", onTouchEnd);
     window.addEventListener("touchcancel", onTouchEnd);
     window.addEventListener("touchmove", onTouchMove);
-
+    window.addEventListener("mousedown", mouseDown);
 }
-
-var menu = function () {
-    canvas = <HTMLCanvasElement>document.getElementById("renderCanvas");
-    engine = new BABYLON.Engine(canvas, true);
-    let mainMenu = new MainMenu(canvas,engine);
-}
-
-//menu();
 
 game();

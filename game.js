@@ -14,6 +14,7 @@ var game = function () {
     var playerManager;
     var gameUI;
     var skyboxManager;
+    var audio;
     var createScene = function () {
         // prevent manifest file error warning
         engine.enableOfflineSupport = false;
@@ -38,8 +39,9 @@ var game = function () {
         var cameraSystem = new SystemCamera(canvas);
         ECSengine.addSystem(cameraSystem);
         // create managers (scripts that handel game logic) 
+        audio = new audioManager(scene);
         roadManager = new RoadManager(ECSengine, scene);
-        playerManager = new PlayerManager(scene, ECSengine, roadManager);
+        playerManager = new PlayerManager(scene, ECSengine, roadManager, audio);
         playerCameraManager = new PlayerCameraManager(ECSengine, scene, playerManager);
         // create ui
         this.gameUI = new GameUI(scene, playerManager, ECSengine, canvas);
@@ -79,10 +81,12 @@ var game = function () {
         playerManager.onTouchMove(touchEvt);
         gameUI.onTouchMove(touchEvt);
     }
+    function mouseDown(mouseEvt) {
+        console.log("awyis");
+    }
     // call resize on babylon engine if the windows resizes
     window.addEventListener("resize", function () {
         engine.resize();
-        this.gameUI.rescale();
     });
     // add input event listener
     window.addEventListener("keydown", onKeyDown);
@@ -90,12 +94,7 @@ var game = function () {
     window.addEventListener("touchend", onTouchEnd);
     window.addEventListener("touchcancel", onTouchEnd);
     window.addEventListener("touchmove", onTouchMove);
+    window.addEventListener("mousedown", mouseDown);
 };
-var menu = function () {
-    canvas = document.getElementById("renderCanvas");
-    engine = new BABYLON.Engine(canvas, true);
-    var mainMenu = new MainMenu(canvas, engine);
-};
-//menu();
 game();
 //# sourceMappingURL=game.js.map
