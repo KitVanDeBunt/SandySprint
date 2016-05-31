@@ -1,17 +1,60 @@
+/**
+ * Start of the game.
+ */
+
+/**
+ * the babylon scene of the game.
+ */
 let scene: BABYLON.Scene;
+
+/**
+ * the Entity Component System of the game.
+ * info: http://www.gamedev.net/page/resources/_/technical/game-programming/understanding-component-entity-systems-r3013
+ */
 let ECSengine: ECS.Engine;
+
+/**
+ * the audio Manager of the game.
+ * loads, starts, and stops all sounds.
+ */
 let audio: audioManager;
+
+/**
+ * the roadManager of the game.
+ * Creates environment objects
+ */
 let roadManager: RoadManager;
+
+/**
+ * The HTML-canvas to render upon.
+ */
 let canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("renderCanvas");
+
+/**
+ * the Babylon engine of the game
+ */
 let engine: BABYLON.Engine = new BABYLON.Engine(canvas, true);
+
+/**
+ * the SkyboxManager of the game
+ * creates and updates the skybox
+ */
 let skyboxManager: SkyBoxManager;
-let menu: MainMenu;
+
+/**
+ * The UI of the game
+ * creates UI Camera and UI Elements.
+ */
 let gameUI: GameUI;
 
-
-//create scene and main menu
+/**
+ * creates scene, lighting, ECSengine, and most managers.
+ */
 var mainMenu = function () {
 
+    /**
+     * creates the scene into a variable.
+     */
     let createScene = function () {
 
         // prevent manifest file error warning
@@ -74,14 +117,26 @@ var mainMenu = function () {
         this.gameUI.update();
     });
 
+/**
+ * Event when key gets pressed.
+ * @param keyEvt data about the pressed key
+ */
     function onKeyDown(keyEvt: KeyboardEvent) {
         this.gameUI.onKeyDown(keyEvt);
     }
 
+/**
+ * Event when screen gets touched.
+ * @param touchEvt data about the touch input
+ */
     function onTouchStart(touchEvt: TouchEvent) {
         this.gameUI.onInputStart(new BABYLON.Vector2(touchEvt.touches[0].pageX, touchEvt.touches[0].pageY));
     }
 
+/**
+ * Event when mousebutton gets clicked.
+ * @param mouseEvt data about the mouse input.
+ */
     function mouseDown(mouseEvt: MouseEvent): void {
         this.gameUI.onInputStart(new BABYLON.Vector2(mouseEvt.pageX, mouseEvt.pageY));
     }
@@ -97,10 +152,21 @@ var mainMenu = function () {
     window.addEventListener("mousedown", mouseDown);
 };
 
-//start game
+/**
+ * Creates and updates managers for the player, Sets the UI to InGame-mode, and adds events listeners
+ */
 var game = function () {
 
+/**
+ * the playerManager for the player
+ * creates and updates the playermovement, animation, and collision.
+ */
     let playerManager: PlayerManager;
+    
+    /**
+     * the cameramanager of the player.
+     * creates and updates a camera for the player.
+     */
     let playerCameraManager: PlayerCameraManager;
 
     scene.activeCameras.slice(0, scene.activeCameras.length);
@@ -111,23 +177,42 @@ var game = function () {
     gameUI.setPlayerManager(playerManager);
     gameUI.openInGame();
 
+/**
+ * Event when key gets pressed.
+ * @param keyEvt data about the pressed key
+ */
     function onKeyDown(keyEvt: KeyboardEvent) {
         playerManager.onKeyDown(keyEvt);
     }
 
+/**
+ * Event when screen gets touched.
+ * @param touchEvt data about the touch input
+ */
     function onTouchStart(touchEvt: TouchEvent) {
         playerManager.onTouchStart(touchEvt);
     }
 
+/**
+ * Event when screen stops getting touched.
+ * @param touchEvt data about the touch input
+ */
     function onTouchEnd(touchEvt: TouchEvent) {
         playerManager.onTouchEnd(touchEvt);
     }
 
+/**
+ * Event when the screen gets swiped.
+ * @param touchEvt data about the touch input
+ */
     function onTouchMove(touchEvt: TouchEvent) {
         playerManager.onTouchMove(touchEvt);
     }
 
     engine.runRenderLoop(function () {
+        /**
+         * gets deltatime for the playermanagers
+         */
         let deltaTime: number = engine.getDeltaTime();
 
         // update managers (scripts that handel game logic)
