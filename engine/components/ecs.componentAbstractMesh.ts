@@ -33,8 +33,8 @@ namespace ECS {
         }
 
         destroy() {
-            //this.mesh.dispose();
-            this._meshPoolObject.inUse = false;
+            this._mesh.dispose();
+            //this._meshPoolObject.inUse = false;
             super.destroy();
         }
 
@@ -82,6 +82,7 @@ namespace ECS {
         
         set babylonMesh(mesh: BABYLON.AbstractMesh) {
             this._mesh = mesh;
+            this._mesh.isVisible = true;
         }
     }
 }

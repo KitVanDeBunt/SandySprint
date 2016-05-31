@@ -25,8 +25,8 @@ var ECS;
             this.fileName = fileName;
         }
         ComponentAbstractMesh.prototype.destroy = function () {
-            //this.mesh.dispose();
-            this._meshPoolObject.inUse = false;
+            this._mesh.dispose();
+            //this._meshPoolObject.inUse = false;
             _super.prototype.destroy.call(this);
         };
         ComponentAbstractMesh.prototype.setMeshReadyToLoad = function () {
@@ -81,6 +81,7 @@ var ECS;
             },
             set: function (mesh) {
                 this._mesh = mesh;
+                this._mesh.isVisible = true;
             },
             enumerable: true,
             configurable: true

@@ -106,6 +106,7 @@ namespace ECS {
             let parentNode: BABYLON.Node = new BABYLON.Node("node: " + componentAbstractMesh.fileName, this._scene);
             let i: number = meshDataListIndex;
             let meshFromPool: boolean = false
+            /*
             // get from pool
             for (let k = 0; k < this._meshDataList[i].objectPool.length; k++) {
                 if (!this._meshDataList[i].objectPool[k].inUse) {
@@ -121,7 +122,7 @@ namespace ECS {
                     this._meshDataList[i].objectPool[k].inUse = true;
                 }
             }
-
+            */
             if (!meshFromPool) {
                 // create new pool object
                 componentAbstractMesh.meshPoolObject = new MeshPoolObject(true);
@@ -135,7 +136,7 @@ namespace ECS {
                     componentAbstractMesh.babylonMesh = this._meshDataList[i].meshes[0].clone("mesh clone: " + componentAbstractMesh.fileName, parentNode);
                 }
                 // add pool object to pool
-                this._meshDataList[i].objectPool.push(componentAbstractMesh.meshPoolObject);
+                //this._meshDataList[i].objectPool.push(componentAbstractMesh.meshPoolObject);
             }
             let clonedMehsNodeChilds: BABYLON.AbstractMesh[] = componentAbstractMesh.babylonMesh.parent.getChildMeshes();
             for (let j = 0; j < clonedMehsNodeChilds.length; j++) {

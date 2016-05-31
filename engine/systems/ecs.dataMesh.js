@@ -85,6 +85,9 @@ var ECS;
             get: function () {
                 return this._inUse;
             },
+            set: function (setInUse) {
+                this._inUse = setInUse;
+            },
             enumerable: true,
             configurable: true
         });

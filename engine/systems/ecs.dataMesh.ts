@@ -77,5 +77,9 @@ namespace ECS {
         get inUse():boolean{
             return this._inUse;
         } 
+        
+        set inUse(setInUse:boolean){
+            this._inUse = setInUse;
+        } 
     }
 }

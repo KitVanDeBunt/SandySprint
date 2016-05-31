@@ -100,22 +100,23 @@ var ECS;
             var parentNode = new BABYLON.Node("node: " + componentAbstractMesh.fileName, this._scene);
             var i = meshDataListIndex;
             var meshFromPool = false;
+            /*
             // get from pool
-            for (var k = 0; k < this._meshDataList[i].objectPool.length; k++) {
+            for (let k = 0; k < this._meshDataList[i].objectPool.length; k++) {
                 if (!this._meshDataList[i].objectPool[k].inUse) {
                     meshFromPool = true;
                     this._meshDataList[i].objectPool[k].inUse = true;
                     if (this._meshDataList[i].objectPool[k].skeleton != null) {
                         componentAbstractMesh.babylonMesh = this._meshDataList[i].objectPool[k].meshes[1];
                         componentAbstractMesh.babylonMesh.skeleton = this._meshDataList[i].objectPool[k].skeleton;
-                    }
-                    else {
+                    } else {
                         componentAbstractMesh.babylonMesh = this._meshDataList[i].objectPool[k].meshes[0];
                     }
                     componentAbstractMesh.meshPoolObject = this._meshDataList[i].objectPool[k];
                     this._meshDataList[i].objectPool[k].inUse = true;
                 }
             }
+            */
             if (!meshFromPool) {
                 // create new pool object
                 componentAbstractMesh.meshPoolObject = new ECS.MeshPoolObject(true);
@@ -129,8 +130,6 @@ var ECS;
                 else {
                     componentAbstractMesh.babylonMesh = this._meshDataList[i].meshes[0].clone("mesh clone: " + componentAbstractMesh.fileName, parentNode);
                 }
-                // add pool object to pool
-                this._meshDataList[i].objectPool.push(componentAbstractMesh.meshPoolObject);
             }
             var clonedMehsNodeChilds = componentAbstractMesh.babylonMesh.parent.getChildMeshes();
             for (var j = 0; j < clonedMehsNodeChilds.length; j++) {

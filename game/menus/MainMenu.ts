@@ -30,14 +30,13 @@ class MainMenu {
         }
         this.camera = createCamera();
         
-        let temple: ECS.Entity = this.ECSEngine.createEntity();
-        let templeTranslateComponent: ECS.ComponentTransform = new ECS.ComponentTransform(new BABYLON.Vector3(0, 0, 1),
-            new BABYLON.Vector3(1, 1, 1),
-            BABYLON.Quaternion.Identity()
+        BABYLON.SceneLoader.ImportMesh("", "assets/models/", "game_intro_temple.babylon", scene
+            , function (newMeshes, newParticlesystems, newSkeletons) {
+                newMeshes.forEach(element => {
+                });
+                    newMeshes[0].position = new BABYLON.Vector3(0, 0, 1);
+            }
         );
-        temple.addComponent(templeTranslateComponent);
-        let templeMesh = new ECS.ComponentAbstractMesh(templeTranslateComponent, "assets/models/", "game_intro_temple.babylon");
-        temple.addComponent(templeMesh);
 
         this.StartScreen();
 
