@@ -68,10 +68,16 @@ class SystemCamera extends ECS.System {
         }
     }
 
+    /**
+     * @returns returns name of system as a string
+     */
     returnTypeOfSystem(): string {
         return "TYPE_SYSTEM_CAMERA";
     }
 
+    /**
+     * returns new instance of SystemCamera
+     */
     newOfThis(): SystemCamera {
         return new SystemCamera(this._canvas);
     }

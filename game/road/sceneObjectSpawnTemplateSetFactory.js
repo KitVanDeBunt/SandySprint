@@ -2,6 +2,10 @@
  * SceneObjectSpawnTemplateSetFactory
  */
 var SceneObjectSpawnTemplateSetFactory = (function () {
+    /**
+     * @param roadManager games road manager
+     * @params engine games engine
+     */
     function SceneObjectSpawnTemplateSetFactory(roadManger, engine) {
         this.roadManager = roadManger;
         this.engine = engine;
@@ -66,6 +70,9 @@ var SceneObjectSpawnTemplateSetFactory = (function () {
         this.templatesSetList[listNum].templateList.push(this.templatesList[4]);
         this.templatesSetList[listNum].templateList.push(this.templatesList[7]);
     }
+    /**
+     * creates a new random set of scene objects to spawn around and on the world
+     */
     SceneObjectSpawnTemplateSetFactory.prototype.createRandomTemplateSet = function (roadIndex) {
         var random = Math.floor((Math.random() * this.templatesSetList.length));
         for (var i = 0; i < this.templatesSetList[random].templateList.length; i++) {

@@ -60,9 +60,15 @@ var SystemCamera = (function (_super) {
             }
         }
     };
+    /**
+     * @returns returns name of system as a string
+     */
     SystemCamera.prototype.returnTypeOfSystem = function () {
         return "TYPE_SYSTEM_CAMERA";
     };
+    /**
+     * returns new instance of SystemCamera
+     */
     SystemCamera.prototype.newOfThis = function () {
         return new SystemCamera(this._canvas);
     };

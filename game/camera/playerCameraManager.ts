@@ -23,6 +23,9 @@ class PlayerCameraManager {
         cameraECS.addComponent(new ComponentCamera(this.cameraTranslateComponent, scene));
     }
 
+    /**
+     * updates the players camera
+     */
     update(deltaTime: number) {
         this.cameraTranslateComponent.setPosition = this.playerManager.getplayerPosition().add(new BABYLON.Vector3(0, 0.5, 0.0));
     }

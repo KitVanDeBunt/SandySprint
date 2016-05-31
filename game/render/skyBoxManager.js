@@ -16,8 +16,8 @@ var SkyBoxManager = (function () {
         this._skybox.material = skyboxMaterial;
     }
     /**
-     * set skybox around player
-     * @param cameraPosition is playerPosition
+     * set skybox around camera
+     * @param cameraPosition cameras position
      */
     SkyBoxManager.prototype.update = function (cameraPosition) {
         this._skybox.position = cameraPosition;

@@ -16,46 +16,63 @@ namespace ECS {
             this.componentsTypes = [];
         }
 
-        // set entity to be destroy
+        /**
+         * set entity to be destroy
+         */
         destroy(): void {
             for (let i = 0; i < this.components.length; i++) {
                 this.components[i].destroy();
             }
         }
 
-        // entity ready to be deleted
+        /**
+         * returnes if entity is ready to be deleted by the engine
+         * @returns if ready to be destroyed
+         */
         destroyed(): boolean {
-            if(this.components.length == 0){
+            if (this.components.length == 0) {
                 return false;
             }
             for (let i = 0; i < this.components.length; i++) {
-                if (!this.components[i].destroyed()){
+                if (!this.components[i].destroyed()) {
                     return false;
                 }
             }
             return true;
         }
 
-        // function that exists to ensure generic constarain work
-        // because generic constrains only checks if the methodes and fields are the same not the actual type 
+        /**
+         * function that exists to ensure generic constarain work
+         * because generic constrains only checks if the methodes and fields are the same not the actual type 
+         */
         thisIsAEntity(): void {
         }
 
+        /**
+         * @param newComponent adds component to this entity
+         */
         addComponent(newComponent: Component): void {
             // TODO: add check if component is already added exists
             this.components[this.newComponentID] = newComponent;
             this.componentsTypes[this.newComponentID] = newComponent.componentType();
             this.newComponentID++;
-            
+
             newComponent.setParentEntity = this;
-            //ECS.Component.componentType();
         }
 
+        /**
+         * returns types of all the components attached
+         */
         get getComponentTypes(): string[] {
             return this.componentsTypes;
         }
 
-        getComponent(componentType: string) {
+        /**
+         * retuns a component of a requested type
+         * @param componentType type name of requested component type
+         * @returns returns component of type requested if available else returns null
+         */
+        getComponent(componentType: string): Component {
             for (let i = 0; i < this.components.length; i++) {
                 if (this.components[i].componentType() == componentType) {
                     // return component if found
