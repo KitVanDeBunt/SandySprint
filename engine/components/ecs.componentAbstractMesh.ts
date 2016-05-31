@@ -5,33 +5,36 @@ namespace ECS {
      * ComponentPosition
      */
     export class ComponentAbstractMesh extends Component {
-        private componentTransform: ComponentTransform;
-        private mesh: BABYLON.AbstractMesh;
-        private skeleton: BABYLON.Skeleton;
+        private _componentTransform: ComponentTransform;
+        private _mesh: BABYLON.AbstractMesh;
+        //private skeleton: BABYLON.Skeleton;
         public meshState: MeshLoadState = MeshLoadState.Non;
         public collider: BABYLON.Mesh;
-        private colliderOffset: BABYLON.Vector3 = BABYLON.Vector3.Zero();
+        private _colliderOffset: BABYLON.Vector3 = BABYLON.Vector3.Zero();
 
-        private onsuccess: any;
-        private progressCallBack: any;
-        private onerror: any;
+        private _onsuccess: any;
+        private _progressCallBack: any;
+        private _onerror: any;
+
+        private _meshPoolObject: MeshPoolObject;
 
         path: string;
         fileName: string;
 
         constructor(componentTransform: ComponentTransform, path: string, fileName: string, onsuccess?: (meshes: BABYLON.AbstractMesh[], particleSystems: BABYLON.ParticleSystem[], skeletons: BABYLON.Skeleton[]) => void, progressCallBack?: () => void, onerror?: (scene: BABYLON.Scene, message: string, exception?: any) => void) {
             super();
-            this.onsuccess = onsuccess;
-            this.progressCallBack = onsuccess;
-            this.onerror = onerror;
+            this._onsuccess = onsuccess;
+            this._progressCallBack = onsuccess;
+            this._onerror = onerror;
             this.setMeshReadyToLoad();
-            this.componentTransform = componentTransform;
+            this._componentTransform = componentTransform;
             this.path = path;
             this.fileName = fileName;
         }
-        
-        destroy(){
-            this.mesh.dispose();
+
+        destroy() {
+            //this.mesh.dispose();
+            this._meshPoolObject.inUse = false;
             super.destroy();
         }
 
@@ -39,46 +42,46 @@ namespace ECS {
             this.meshState = MeshLoadState.ReadyToLoad;
         }
 
-        public setCollision(mesh: BABYLON.Mesh){
+        public setCollision(mesh: BABYLON.Mesh) {
             this.collider = mesh;
-            this.collider.updatePhysicsBody;
+            this.collider.updatePhysicsBody; // unneedded !!!!!!
             this.collider.isVisible = false;
         }
-        
+
+        get meshPoolObject(): MeshPoolObject {
+            return this._meshPoolObject;
+        }
+
+        set meshPoolObject(meshPoolObject: MeshPoolObject) {
+            this._meshPoolObject = meshPoolObject;
+        }
+
         /**
          * set the offset of the collider from the mesh
          * @param offset
          */
-        set setColliderOffset(offset:BABYLON.Vector3){
-            this.colliderOffset = offset;
+        set setColliderOffset(offset: BABYLON.Vector3) {
+            this._colliderOffset = offset;
         }
-        
-        updateCollision():void{
-            this.collider.position = this.componentTransform.getPosition.add(this.colliderOffset);
+
+        updateCollision(): void {
+            this.collider.position = this._componentTransform.getPosition.add(this._colliderOffset);
         }
-        
-        get getCollider():BABYLON.Mesh{
+
+        get getCollider(): BABYLON.Mesh {
             return this.collider;
         }
-        
+
         get positionComponent(): ComponentTransform {
-            return this.componentTransform;
+            return this._componentTransform;
         }
 
         get babylonMesh(): BABYLON.AbstractMesh {
-            return this.mesh;
-        }
-        
-        set babylonMesh(mesh: BABYLON.AbstractMesh) {
-            this.mesh = mesh;
-        }
-        
-        get babylonSkeleton(): BABYLON.Skeleton {
-            return this.skeleton;
+            return this._mesh;
         }
 
-        set babylonSkeleton(skeleton: BABYLON.Skeleton) {
-            this.skeleton = skeleton;
+        set babylonMesh(mesh: BABYLON.AbstractMesh) {
+            this._mesh = mesh;
         }
     }
 }
