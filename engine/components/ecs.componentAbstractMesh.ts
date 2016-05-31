@@ -69,6 +69,10 @@ namespace ECS {
             return this.mesh;
         }
         
+        getBabylonMesh(): BABYLON.AbstractMesh {
+            return this.mesh;
+        }
+        
         set babylonMesh(mesh: BABYLON.AbstractMesh) {
             this.mesh = mesh;
         }

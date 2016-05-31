@@ -1,43 +1,107 @@
 var MainMenu = (function () {
-    function MainMenu(canvas, engine) {
-        var camera;
-        var createScene = function () {
-            var scene = new BABYLON.Scene(engine);
-            var createCamera = function () {
-                var camera = new BABYLON.ArcRotateCamera("MenuCam", 0, 1, 100, BABYLON.Vector3.Zero(), scene);
-                scene.activeCameras.push(camera);
-                return camera;
-            };
-            camera = createCamera();
-            // set background color
-            scene.clearColor = new BABYLON.Color3(56 / 255, 71 / 255, 79 / 255);
-            // set ambiant color
-            scene.ambientColor = new BABYLON.Color3(0.9, 0.72, 0.75);
-            //Adding a light
-            var light = new BABYLON.DirectionalLight("MenuLighting", new BABYLON.Vector3(20, -100, -100), scene);
-            var box = BABYLON.Mesh.CreateBox("Background", 10, scene);
-            box.position = BABYLON.Vector3.Zero();
-            return scene;
+    function MainMenu(canvas, ecs, engine, scene, gameUI, audio) {
+        this.movingCam = false;
+        this.targetPosition = new BABYLON.Vector3(0, 0.5, -2);
+        this.targetRotation = new BABYLON.Vector3(0, 0, 0);
+        this.musicPlaying = false;
+        this.objects = [];
+        this.audio = audio;
+        this.gameUI = gameUI;
+        this.ECSEngine = ecs;
+        this.scene = scene;
+        var createCamera = function () {
+            this.camera = new BABYLON.ArcRotateCamera("MenuCam", 0, 0.3, 5, new BABYLON.Vector3(0, 0, -8.5), scene);
+            scene.activeCameras.push(this.camera);
+            return this.camera;
         };
-        var scene = createScene();
-        var createInterface = function () {
-            var createCamera = function () {
-                var interfaceCamera = new BABYLON.FreeCamera("InterfaceCamera", new BABYLON.Vector3(0, 0, -10), scene);
-                interfaceCamera.setTarget(BABYLON.Vector3.Zero());
-                scene.activeCameras.push(interfaceCamera);
-                interfaceCamera.layerMask = 0x20000000;
-            };
-            createCamera();
-            var interfaceBox = BABYLON.Mesh.CreateBox("InterfaceBox", 2, scene);
-            interfaceBox.position = BABYLON.Vector3.Zero();
-            interfaceBox.layerMask = 0x20000000;
-        };
-        //let menuInterface = createInterface();
+        this.camera = createCamera();
+        var temple = this.ECSEngine.createEntity();
+        var templeTranslateComponent = new ECS.ComponentTransform(new BABYLON.Vector3(0, 0, 1), new BABYLON.Vector3(1, 1, 1), BABYLON.Quaternion.Identity());
+        temple.addComponent(templeTranslateComponent);
+        var templeMesh = new ECS.ComponentAbstractMesh(templeTranslateComponent, "assets/models/", "game_intro_temple.babylon");
+        temple.addComponent(templeMesh);
+        this.StartScreen();
         engine.runRenderLoop(function () {
-            camera.alpha -= 0.001;
-            scene.render();
+            this.camera.alpha -= 0.0042;
         });
     }
+    MainMenu.prototype.StartScreen = function () {
+        this.gameUI.menuState = menuState.Start;
+        var startScreenTex = new BABYLON.Texture("/assets/textures/UI textures/logo-final.png", this.scene, true);
+        var logo = gameUI.createImage(new BABYLON.Vector2(0, 400), new BABYLON.Vector2(693 * 0.7, 168 * 0.7), startScreenTex);
+        this.objects.push(logo);
+        startScreenTex = new BABYLON.Texture("/assets/textures/UI textures/play-button.png", this.scene, true);
+        var play = gameUI.createImage(new BABYLON.Vector2(0, -200), new BABYLON.Vector2(80, 80), startScreenTex);
+        this.objects.push(play);
+    };
+    MainMenu.prototype.Move = function () {
+        this.movesToStart = 0;
+        this.flyCam = new BABYLON.FreeCamera("freeCam", this.camera.position, scene);
+        this.flyCam.setTarget(new BABYLON.Vector3(0, 0, -8.5));
+        this.startPos = this.flyCam.position;
+        this.startRot = this.flyCam.rotation;
+        console.log(this.flyCam.rotation);
+        this.camera.dispose();
+        scene.activeCameras.push(this.flyCam);
+        this.movingCam = true;
+    };
+    MainMenu.prototype.onInput = function (inputPos) {
+        switch (this.gameUI.menuState) {
+            case menuState.Start:
+                this.DisposeObjects();
+                this.Move();
+                break;
+            default:
+                break;
+        }
+    };
+    MainMenu.prototype.onKeyDown = function (keyEvt) {
+        switch (this.gameUI.menuState) {
+            case menuState.Start:
+                this.DisposeObjects();
+                this.Move();
+                break;
+            default:
+                break;
+        }
+    };
+    MainMenu.prototype.update = function () {
+        if (this.movingCam) {
+            this.movesToStart += 0.01;
+            this.flyCam.position = BABYLON.Vector3.Lerp(this.startPos, this.targetPosition, this.movesToStart);
+            this.flyCam.rotation = BABYLON.Vector3.Lerp(this.startRot, this.targetRotation, this.movesToStart);
+            if (this.movesToStart > 1) {
+                this.flyCam.position = this.targetPosition;
+                this.flyCam.rotation = this.targetRotation;
+                this.movingCam = false;
+                this.gameUI.preopenInGame();
+            }
+        }
+        if (!this.audio.menuBackgroundSound.isPlaying) {
+            this.audio.playSound(Sounds.MainMenu);
+        }
+    };
+    /*  rescale(): void {
+          if (this.canvas.width > this.canvas.height) {
+              this.box.scaling = new BABYLON.Vector3(350, 350, 1);
+          }
+          else {
+              this.box.scaling = new BABYLON.Vector3(500, 500, 1);
+          }
+      }*/
+    MainMenu.prototype.Dispose = function () {
+        for (var i = 0; i < this.objects.length; i++) {
+            this.objects[i].dispose();
+            this.objects.splice(i, 1);
+        }
+        this.flyCam.dispose();
+    };
+    MainMenu.prototype.DisposeObjects = function () {
+        for (var i = 0; i < this.objects.length; i++) {
+            this.objects[i].dispose();
+            this.objects.splice(i, 1);
+        }
+    };
     return MainMenu;
 }());
 //# sourceMappingURL=MainMenu.js.map

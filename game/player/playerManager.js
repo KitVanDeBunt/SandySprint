@@ -34,6 +34,9 @@ var PlayerManager = (function () {
         this.previousLane = this.roadManager.getStartLane;
         this.abstractMeshComponetType = new ECS.ComponentAbstractMesh(null, null, null).componentType();
     }
+    PlayerManager.prototype.startRunning = function () {
+        this.playerSpeed = 0.006;
+    };
     /**
      * Returns the players interpontation(t or dictance in game).
      * @returns players t
@@ -73,7 +76,7 @@ var PlayerManager = (function () {
             this.playerMovedCurrentTouch = true;
         }
         //swipe up
-        if (this.touchEnd.y - this.touchStart.y < -screen.height * 0.1 && this.jumpManager.jumping == false) {
+        if (this.touchEnd.y - this.touchStart.y < -screen.height * 0.2 && this.jumpManager.jumping == false) {
             this.jumpManager.jump(this.playerT);
         }
     };

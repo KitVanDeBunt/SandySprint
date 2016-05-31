@@ -37,5 +37,6 @@ class ComponentCamera extends ECS.Component {
 
 enum ComponentCameraState {
     None,
+    Menu,
     Spawned
 }

@@ -4,85 +4,138 @@
 class GameUI {
 
     context2D;
-    playerManager: PlayerManager;
     myMaterial_diffuseTexture: BABYLON.DynamicTexture;
     box: BABYLON.Mesh;
     canvas: HTMLCanvasElement;
+    engine: BABYLON.Engine;
+    ecsEngine: ECS.Engine;
+    playerManager: PlayerManager;
+    scene: BABYLON.Scene;
+    menu: MainMenu;
+    inGameUI: InGameUI;
+    cameraECS: ECS.Entity;
+    audio: audioManager;
+    menuState: menuState;
 
-    constructor(scene: BABYLON.Scene, playerManager: PlayerManager, ecs: ECS.Engine, canvas: HTMLCanvasElement) {
-        this.playerManager = playerManager;
+    constructor(scene: BABYLON.Scene, ecs: ECS.Engine, canvas: HTMLCanvasElement, engine: BABYLON.Engine, audioManager: audioManager) {
         this.canvas = canvas;
+        this.engine = engine;
+        this.scene = scene;
+        this.ecsEngine = ecs;
+        this.audio = audioManager;
 
         //Adding light for UI elements
-        var UIlight = new BABYLON.DirectionalLight("UIemit", new BABYLON.Vector3(0, 0, 1), scene);
+        var UIlight = new BABYLON.DirectionalLight("MainMenuEmit", new BABYLON.Vector3(100, 100, 100), scene);
+        UIlight.intensity = 2;
         UIlight.includeOnlyWithLayerMask = 0x20000000;
         var tempLight = new BABYLON.DirectionalLight("UIemit", new BABYLON.Vector3(0, 0, 1), scene);
 
         // create UIcamera entity
-        let cameraECS = ecs.createEntity();
-        let cameraTranslateComponent = new ECS.ComponentTransform(BABYLON.Vector3.Zero(), new BABYLON.Vector3(0.005, 0.005, 0.005), new BABYLON.Quaternion(0, 0, 0, 0));
-        cameraECS.addComponent(cameraTranslateComponent);
+        this.cameraECS = ecs.createEntity();
+        let cameraTranslateComponent = new ECS.ComponentTransform(new BABYLON.Vector3(0, 0, -10), new BABYLON.Vector3(1, 1, 1), new BABYLON.Quaternion(0, 0, 0, 0));
+        this.cameraECS.addComponent(cameraTranslateComponent);
         let UICam = new ComponentCamera(cameraTranslateComponent, scene);
-
         UICam.setLayermask = 0x20000000;
-        cameraECS.addComponent(UICam);
-
-        //Adding UI Element Material
-        var material = new BABYLON.StandardMaterial("textuare1", scene);
-        material.alpha = 1;
-
-        material.diffuseColor = new BABYLON.Color3(1.00, 1.00, 1.00);
-
-        this.myMaterial_diffuseTexture = new BABYLON.DynamicTexture('ScoreTex', 512, scene, true);
-        this.myMaterial_diffuseTexture.hasAlpha = true;
-        material.diffuseTexture = this.myMaterial_diffuseTexture;
-
-        //Adding UI Element
-        this.box = BABYLON.Mesh.CreatePlane("Box", 5, scene, false);
-        this.box.material = material;
-        if (this.canvas.width > this.canvas.height) {
-            this.box.scaling = new BABYLON.Vector3(350, 350, 1);
-        }
-        else {
-            this.box.scaling = new BABYLON.Vector3(500, 500, 1);
-        }
-        this.box.position = new BABYLON.Vector3(0, 0, 500);
-        this.box.layerMask = 0x20000000;
-
-        this.context2D = this.myMaterial_diffuseTexture.getContext();
+        this.cameraECS.addComponent(UICam);
     }
 
-    rescale(): void {
-        if (this.canvas.width > this.canvas.height) {
-            this.box.scaling = new BABYLON.Vector3(350, 350, 1);
-        }
-        else {
-            this.box.scaling = new BABYLON.Vector3(500, 500, 1);
+    onInputStart(inputPos: BABYLON.Vector2) {
+        switch (this.menuState) {
+            case menuState.Start:
+                console.log(inputPos);
+                this.menu.onInput(new BABYLON.Vector2(inputPos.x, inputPos.y));
+                break;
+            default:
+                break;
         }
     }
 
-    onTouchStart(touchEvt: TouchEvent) {
+    onInputEnd(touchEvt: TouchEvent) {
 
     }
 
-    onTouchEnd(touchEvt: TouchEvent) {
+    OnInputMove(touchEvt: TouchEvent) {
 
     }
 
-    onTouchMove(touchEvt: TouchEvent) {
+    onKeyDown(keyEvt: KeyboardEvent) {
+        //this.closeMainMenu();
+        switch (this.menuState) {
+            case menuState.Start:
+                this.menu.onKeyDown(keyEvt);
+                break;
+            default:
+                break;
+        }
+    }
 
+    restartCamera() {
+        this.cameraECS.destroy();
+        this.cameraECS = this.ecsEngine.createEntity();
+        let cameraTranslateComponent = new ECS.ComponentTransform(new BABYLON.Vector3(0, 0, -10), new BABYLON.Vector3(1, 1, 1), new BABYLON.Quaternion(0, 0, 0, 0));
+        this.cameraECS.addComponent(cameraTranslateComponent);
+        let UICam = new ComponentCamera(cameraTranslateComponent, scene);
+        UICam.setLayermask = 0x20000000;
+        this.cameraECS.addComponent(UICam);
     }
 
     update(): void {
-        this.context2D.clearRect(0, 0, 512, 512);
-        if (this.canvas.width > this.canvas.height) {
-            this.myMaterial_diffuseTexture.drawText("Score:" + Math.round(this.playerManager.getplayerT()), -60+(10000/this.canvas.width)*18, 40+(10000/this.canvas.height)*10, "25px Arial", "white", "transparent");
-            this.myMaterial_diffuseTexture.drawText("Scarabs:" + this.playerManager.getPickupsCollected(), -60+(10000/this.canvas.width)*18, 65+(10000/this.canvas.height)*10, "25px Arial", "white", "transparent");
+        switch (this.menuState) {
+            case menuState.Start:
+                this.menu.update();
+                break;
+                case menuState.Game:
+                this.inGameUI.update();
+                break;
+            default:
+                break;
         }
-        else{
-            this.myMaterial_diffuseTexture.drawText("Score:" + Math.round(this.playerManager.getplayerT()), 55+(10000/this.canvas.width)*7, 40+(10000/this.canvas.height)*10, "25px Arial", "white", "transparent");
-            this.myMaterial_diffuseTexture.drawText("Scarabs:" + this.playerManager.getPickupsCollected(), 55+(10000/this.canvas.width)*7,  65+(10000/this.canvas.height)*10, "25px Arial", "white", "transparent");
-        }
-        
+
+
     }
+
+    openMainMenu() {
+        this.menu = new MainMenu(this.canvas, this.ecsEngine, this.engine, this.scene, this, this.audio);
+    }
+
+    closeMainMenu() {
+        this.menu.Move();
+    }
+
+    preopenInGame() {
+        this.menuState = menuState.Game;
+        this.menu.Dispose();
+        game();
+    }
+
+    openInGame() {
+        this.inGameUI = new InGameUI(this.canvas, this.engine, this.scene, this, this.playerManager);
+    }
+
+    closeInGame() {
+        this.inGameUI.Dispose();
+    }
+    
+    setPlayerManager(playerManager:PlayerManager){
+        this.playerManager = playerManager;
+    }
+
+    createImage(position: BABYLON.Vector2, scale: BABYLON.Vector2, image: BABYLON.Texture): BABYLON.Mesh {
+        var logobox = BABYLON.Mesh.CreatePlane("UIBox", 1, this.scene);
+        logobox.scaling = new BABYLON.Vector3(scale.x * 2, scale.y * 2, 0.001);
+        logobox.position = new BABYLON.Vector3(position.x, position.y, 0);
+        var logoMaterial = new BABYLON.StandardMaterial("logoMaterial", this.scene);
+        logoMaterial.diffuseTexture = image;
+        logoMaterial.diffuseTexture.hasAlpha = true;
+        logobox.material = logoMaterial;
+        logobox.layerMask = 0x20000000;
+        return logobox;
+    }
+}
+
+enum menuState {
+    None,
+    Start,
+    Game,
+    Page
 }

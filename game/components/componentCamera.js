@@ -54,6 +54,7 @@ var ComponentCamera = (function (_super) {
 var ComponentCameraState;
 (function (ComponentCameraState) {
     ComponentCameraState[ComponentCameraState["None"] = 0] = "None";
-    ComponentCameraState[ComponentCameraState["Spawned"] = 1] = "Spawned";
+    ComponentCameraState[ComponentCameraState["Menu"] = 1] = "Menu";
+    ComponentCameraState[ComponentCameraState["Spawned"] = 2] = "Spawned";
 })(ComponentCameraState || (ComponentCameraState = {}));
 //# sourceMappingURL=componentCamera.js.map
