@@ -1,5 +1,5 @@
 /**
- * RoadManager
+ * the RoadManager manages road and the lanes and al the objects spawned on and around it
  */
 class RoadManager {
 
@@ -13,10 +13,18 @@ class RoadManager {
     private roadesSpawned = 0;
     private abstractMeshComponetType: string;
     private sceneObjectFactory: SceneObjectSpawnTemplateSetFactory;
-
+    /**
+     * list of obstacles on the road
+     */
     obstacles: RoadObstacle[];
+    /**
+     * list of objects in the scene
+     */
     sceneObjects: SceneObject[];
-
+    
+    /**
+     * @returns returns the lanes currently in game
+     */
     get getLanes(): ComponentStraightLane[][] {
         return this.lanes;
     }
@@ -29,12 +37,10 @@ class RoadManager {
         this.engine = engine;
         this.scene = scene;
 
-
         this.abstractMeshComponetType = new ECS.ComponentAbstractMesh(null, null, null).componentType();
 
         // initialize scene object factory
         this.sceneObjectFactory = new SceneObjectSpawnTemplateSetFactory(this, engine);
-
 
         this.createRaodPart();
         this.createRaodPart();
@@ -153,14 +159,24 @@ class RoadManager {
         this.obstacles[arrayPosition] = new RoadObstacle(obstacleMesh.getCollider, type, obstacle, this.lanes[roadN][lane].getDistanceAtT(randomT));
     }
 
+    /**
+     * returns a random lane of the road
+     */
     private randomLane(): number {
         return Math.floor((Math.random() * 3));
     }
-
+    
+    /**
+     * returns the first lane used in the game
+     */
     public get getStartLane(): ComponentLaneBase {
         return this.lanes[0][1];
     }
 
+    /**
+     * updates the roadMAnager
+     * @param playerT distance the player has traveled
+     */
     update(playerT: number) {
         // spawn road if needed
         if (playerT + 60 > this.lanes[this.lanes.length - 1][1].getEndT()) {

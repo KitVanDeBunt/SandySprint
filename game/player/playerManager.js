@@ -2,6 +2,13 @@
  * PlayerManager
  */
 var PlayerManager = (function () {
+    /**
+     * @param scene the scene which contains the player
+     * @param the games entity component system
+     * @param the games RoadManager
+     * @param the games AudioManager
+     * @param gameUI the games ui
+     */
     function PlayerManager(scene, ECSengine, roadManager, audioManager, gameUI) {
         this.playerSpeed = 0.006;
         this.playerT = 0;
@@ -38,16 +45,23 @@ var PlayerManager = (function () {
         this.previousLane = this.roadManager.getStartLane;
         this.abstractMeshComponetType = new ECS.ComponentAbstractMesh(null, null, null).componentType();
     }
+    /**
+     * starts the player forwared movement by setting its speed
+     */
     PlayerManager.prototype.startRunning = function () {
         this.playerSpeed = 0.006;
     };
     /**
      * Returns the players interpontation(t or dictance in game).
-     * @returns players t
+     * @returns players distance in the game
      */
     PlayerManager.prototype.getplayerT = function () {
         return this.playerT;
     };
+    /**
+     * returns the amout of pickups collected
+     * @returns the amount of pickups collected
+     */
     PlayerManager.prototype.getPickupsCollected = function () {
         return this.pickupsCollected;
     };
@@ -58,15 +72,19 @@ var PlayerManager = (function () {
     PlayerManager.prototype.getplayerPosition = function () {
         return this.playerTranslateComponent.getPosition;
     };
-    //get touch start position
+    /**
+     * get touch start position
+     */
     PlayerManager.prototype.onTouchStart = function (touchEvt) {
         this.playerMovedCurrentTouch = false;
         this.touchStart = new BABYLON.Vector2(touchEvt.touches[0].screenX, touchEvt.touches[0].screenY);
     };
     PlayerManager.prototype.onTouchEnd = function (touchEvt) {
     };
-    //check for swipe
     // TODO : if swipe > screen.width*0.5 move 2 lanes? 
+    /**
+     * check for swipe
+     */
     PlayerManager.prototype.onTouchMove = function (touchEvt) {
         this.touchEnd = new BABYLON.Vector2(touchEvt.touches[0].screenX, touchEvt.touches[0].screenY);
         //swipe right
@@ -84,6 +102,10 @@ var PlayerManager = (function () {
             this.jumpManager.jump(this.playerT);
         }
     };
+    /**
+     * pass the key down event on to the player
+     * @param keyEvent the key down event
+     */
     PlayerManager.prototype.onKeyDown = function (keyEvent) {
         switch (keyEvent.keyCode) {
             case 65:
@@ -117,6 +139,9 @@ var PlayerManager = (function () {
         this.inLaneTween = true;
         this.laneTweenInterpolation = 0;
     };
+    /**
+     * updates the player
+     */
     PlayerManager.prototype.update = function (deltaTime) {
         if (this.playing == true) {
             console.log("updatePLayer");
@@ -160,6 +185,10 @@ var PlayerManager = (function () {
             this.previousLane = this.previousLane.getNextLane;
         }
     };
+    /**
+     * updats the movement of the player
+     * @param deltaTime time delta this update and previous update
+     */
     PlayerManager.prototype.updatePlayerMovment = function (deltaTime) {
         if (this.playerSpeed != 0) {
             // TODO : add max speed

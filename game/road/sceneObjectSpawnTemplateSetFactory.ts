@@ -7,7 +7,11 @@ class SceneObjectSpawnTemplateSetFactory {
     private templatesList: SceneObjectSpawnTemplate[];
     private roadManager: RoadManager;
     private engine: ECS.Engine;
-
+    
+    /**
+     * @param roadManager games road manager
+     * @params engine games engine
+     */
     constructor(roadManger: RoadManager, engine: ECS.Engine) {
 
         this.roadManager = roadManger;
@@ -149,7 +153,10 @@ class SceneObjectSpawnTemplateSetFactory {
         this.templatesSetList[listNum].templateList.push(this.templatesList[4]);
         this.templatesSetList[listNum].templateList.push(this.templatesList[7]);
     }
-
+    
+    /**
+     * creates a new random set of scene objects to spawn around and on the world
+     */
     public createRandomTemplateSet(roadIndex: number) {
 
         let random: number = Math.floor((Math.random() * this.templatesSetList.length));

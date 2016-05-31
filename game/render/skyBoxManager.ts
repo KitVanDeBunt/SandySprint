@@ -20,8 +20,8 @@ class SkyBoxManager {
     }
 
     /**
-     * set skybox around player
-     * @param cameraPosition is playerPosition
+     * set skybox around camera
+     * @param cameraPosition cameras position
      */
     update(cameraPosition: BABYLON.Vector3) {
         this._skybox.position = cameraPosition;

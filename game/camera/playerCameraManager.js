@@ -18,6 +18,9 @@ var PlayerCameraManager = (function () {
         enumerable: true,
         configurable: true
     });
+    /**
+     * updates the players camera
+     */
     PlayerCameraManager.prototype.update = function (deltaTime) {
         this.cameraTranslateComponent.setPosition = this.playerManager.getplayerPosition().add(new BABYLON.Vector3(0, 0.5, 0.0));
     };

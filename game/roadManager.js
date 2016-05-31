@@ -1,5 +1,5 @@
 /**
- * RoadManager
+ * the RoadManager manages road and the lanes and al the objects spawned on and around it
  */
 var RoadManager = (function () {
     function RoadManager(engine, scene) {
@@ -18,6 +18,9 @@ var RoadManager = (function () {
         this.createRaodPart();
     }
     Object.defineProperty(RoadManager.prototype, "getLanes", {
+        /**
+         * @returns returns the lanes currently in game
+         */
         get: function () {
             return this.lanes;
         },
@@ -79,16 +82,26 @@ var RoadManager = (function () {
         var arrayPosition = this.obstacles.length;
         this.obstacles[arrayPosition] = new RoadObstacle(obstacleMesh.getCollider, type, obstacle, this.lanes[roadN][lane].getDistanceAtT(randomT));
     };
+    /**
+     * returns a random lane of the road
+     */
     RoadManager.prototype.randomLane = function () {
         return Math.floor((Math.random() * 3));
     };
     Object.defineProperty(RoadManager.prototype, "getStartLane", {
+        /**
+         * returns the first lane used in the game
+         */
         get: function () {
             return this.lanes[0][1];
         },
         enumerable: true,
         configurable: true
     });
+    /**
+     * updates the roadMAnager
+     * @param playerT distance the player has traveled
+     */
     RoadManager.prototype.update = function (playerT) {
         // spawn road if needed
         if (playerT + 60 > this.lanes[this.lanes.length - 1][1].getEndT()) {

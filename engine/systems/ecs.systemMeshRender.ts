@@ -25,7 +25,11 @@ namespace ECS {
         initRendering(scene: BABYLON.Scene): void {
             this._scene = scene;
         }
-
+        
+        /**
+         * updates this system
+         * @param entities entitys updated
+         */
         Update<T extends Entity>(entities: T[]): void {
             for (let i = 0; i < entities.length; i++) {
                 if (this.checkCompatibleEntity(entities[i])) {
@@ -106,6 +110,7 @@ namespace ECS {
             let parentNode: BABYLON.Node = new BABYLON.Node("node: " + componentAbstractMesh.fileName, this._scene);
             let i: number = meshDataListIndex;
             let meshFromPool: boolean = false
+            // TODO : object pooling
             /*
             // get from pool
             for (let k = 0; k < this._meshDataList[i].objectPool.length; k++) {
@@ -145,15 +150,26 @@ namespace ECS {
             //componentAbstractMesh.babylonMesh.parent.getChildMeshes().isVisible = true;
             componentAbstractMesh.meshState = MeshLoadState.Loaded;
         }
-
+        
+        /**
+         * returns the type name of this system
+         */
         returnTypeOfSystem(): string {
             return "TYPE_SYSTEM_MESH_RENDER";
         }
 
+        /**
+         * returns a new instance of this class
+         */
         newOfThis(): SystemMeshRender {
             return new SystemMeshRender();
         }
-
+        
+        /**
+         * checks if ComponentAbstractMesh and DataMesh use the same model file and path
+         * @param meshData instande of DataMesh
+         * @param meshComponent instande of ComponentAbstractMesh
+         */
         private checkMeshDataMeshComponent(meshData: DataMesh, meshComponent: ComponentAbstractMesh): boolean {
             return (meshData.fileName == meshComponent.fileName && meshData.filePath == meshComponent.path);
         }

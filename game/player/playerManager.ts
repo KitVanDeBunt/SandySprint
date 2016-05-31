@@ -39,6 +39,13 @@ class PlayerManager {
     // frame time correction 24/30
     private ftc = 0.8;
     
+    /**
+     * @param scene the scene which contains the player
+     * @param the games entity component system
+     * @param the games RoadManager
+     * @param the games AudioManager
+     * @param gameUI the games ui
+     */
     constructor(scene: BABYLON.Scene, ECSengine: ECS.Engine, roadManager: RoadManager, audioManager:audioManager, gameUI:GameUI) {
         this.roadManager = roadManager;
         this.gameUI = gameUI;
@@ -70,18 +77,25 @@ class PlayerManager {
         this.abstractMeshComponetType = new ECS.ComponentAbstractMesh(null, null, null).componentType();
     }
     
+    /**
+     * starts the player forwared movement by setting its speed
+     */
     startRunning(){
         this.playerSpeed = 0.006;
     }
 
     /**
      * Returns the players interpontation(t or dictance in game).
-     * @returns players t
+     * @returns players distance in the game
      */
     getplayerT(): number {
         return this.playerT;
     }
 
+    /**
+     * returns the amout of pickups collected
+     * @returns the amount of pickups collected
+     */
     getPickupsCollected(): number {
         return this.pickupsCollected;
     }
@@ -94,7 +108,9 @@ class PlayerManager {
         return this.playerTranslateComponent.getPosition;
     }
 
-    //get touch start position
+    /**
+     * get touch start position
+     */
     onTouchStart(touchEvt: TouchEvent) {
         this.playerMovedCurrentTouch = false;
         this.touchStart = new BABYLON.Vector2(touchEvt.touches[0].screenX, touchEvt.touches[0].screenY);
@@ -104,8 +120,10 @@ class PlayerManager {
 
     }
 
-    //check for swipe
     // TODO : if swipe > screen.width*0.5 move 2 lanes? 
+    /**
+     * check for swipe
+     */
     onTouchMove(touchEvt: TouchEvent) {
         this.touchEnd = new BABYLON.Vector2(touchEvt.touches[0].screenX, touchEvt.touches[0].screenY);
         //swipe right
@@ -124,6 +142,10 @@ class PlayerManager {
         }
     }
 
+    /**
+     * pass the key down event on to the player
+     * @param keyEvent the key down event
+     */
     onKeyDown(keyEvent: KeyboardEvent): void {
 
         switch (keyEvent.keyCode) {
@@ -162,6 +184,9 @@ class PlayerManager {
         this.laneTweenInterpolation = 0;
     }
 
+    /**
+     * updates the player
+     */
     update(deltaTime: number): void {
 
         if(this.playing == true){
@@ -210,8 +235,11 @@ class PlayerManager {
             this.previousLane = this.previousLane.getNextLane;
         }
     }
-
-
+    
+    /**
+     * updats the movement of the player
+     * @param deltaTime time delta this update and previous update
+     */
     private updatePlayerMovment(deltaTime: number) {
         if (this.playerSpeed != 0) {
             // TODO : add max speed

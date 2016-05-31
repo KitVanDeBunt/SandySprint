@@ -14,14 +14,22 @@ namespace ECS{
         
         abstract Update<T extends Entity>(entitys:T[]);
         
-        // function that exists to ensure generic constarain work
-        // because generic constrains only checks if the methodes and fields are the same not the actual type 
+        /**
+         * function that exists to ensure generic constarain work
+         * because generic constrains only checks if the methodes and fields are the same not the actual type 
+         */
         thisIsASystem(): void{
             
         }
         
+        /**
+         * returns the type name of this system
+         */
         abstract returnTypeOfSystem():string;
         
+        /**
+         * return a version of this system
+         */
         abstract newOfThis():System;
         
         protected checkCompatibleEntity(entity: Entity):boolean{

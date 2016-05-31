@@ -23,6 +23,10 @@ var ECS;
         SystemMeshRender.prototype.initRendering = function (scene) {
             this._scene = scene;
         };
+        /**
+         * updates this system
+         * @param entities entitys updated
+         */
         SystemMeshRender.prototype.Update = function (entities) {
             var _loop_1 = function(i) {
                 if (this_1.checkCompatibleEntity(entities[i])) {
@@ -100,6 +104,7 @@ var ECS;
             var parentNode = new BABYLON.Node("node: " + componentAbstractMesh.fileName, this._scene);
             var i = meshDataListIndex;
             var meshFromPool = false;
+            // TODO : object pooling
             /*
             // get from pool
             for (let k = 0; k < this._meshDataList[i].objectPool.length; k++) {
@@ -138,12 +143,23 @@ var ECS;
             //componentAbstractMesh.babylonMesh.parent.getChildMeshes().isVisible = true;
             componentAbstractMesh.meshState = MeshLoadState.Loaded;
         };
+        /**
+         * returns the type name of this system
+         */
         SystemMeshRender.prototype.returnTypeOfSystem = function () {
             return "TYPE_SYSTEM_MESH_RENDER";
         };
+        /**
+         * returns a new instance of this class
+         */
         SystemMeshRender.prototype.newOfThis = function () {
             return new SystemMeshRender();
         };
+        /**
+         * checks if ComponentAbstractMesh and DataMesh use the same model file and path
+         * @param meshData instande of DataMesh
+         * @param meshComponent instande of ComponentAbstractMesh
+         */
         SystemMeshRender.prototype.checkMeshDataMeshComponent = function (meshData, meshComponent) {
             return (meshData.fileName == meshComponent.fileName && meshData.filePath == meshComponent.path);
         };

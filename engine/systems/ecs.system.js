@@ -7,8 +7,10 @@ var ECS;
         function System() {
             this.neededComponents = [];
         }
-        // function that exists to ensure generic constarain work
-        // because generic constrains only checks if the methodes and fields are the same not the actual type 
+        /**
+         * function that exists to ensure generic constarain work
+         * because generic constrains only checks if the methodes and fields are the same not the actual type
+         */
         System.prototype.thisIsASystem = function () {
         };
         System.prototype.checkCompatibleEntity = function (entity) {

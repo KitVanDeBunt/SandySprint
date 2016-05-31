@@ -9,13 +9,18 @@ var ECS;
             this.components = [];
             this.componentsTypes = [];
         }
-        // set entity to be destroy
+        /**
+         * set entity to be destroy
+         */
         Entity.prototype.destroy = function () {
             for (var i = 0; i < this.components.length; i++) {
                 this.components[i].destroy();
             }
         };
-        // entity ready to be deleted
+        /**
+         * returnes if entity is ready to be deleted by the engine
+         * @returns if ready to be destroyed
+         */
         Entity.prototype.destroyed = function () {
             if (this.components.length == 0) {
                 return false;
@@ -27,25 +32,37 @@ var ECS;
             }
             return true;
         };
-        // function that exists to ensure generic constarain work
-        // because generic constrains only checks if the methodes and fields are the same not the actual type 
+        /**
+         * function that exists to ensure generic constarain work
+         * because generic constrains only checks if the methodes and fields are the same not the actual type
+         */
         Entity.prototype.thisIsAEntity = function () {
         };
+        /**
+         * @param newComponent adds component to this entity
+         */
         Entity.prototype.addComponent = function (newComponent) {
             // TODO: add check if component is already added exists
             this.components[this.newComponentID] = newComponent;
             this.componentsTypes[this.newComponentID] = newComponent.componentType();
             this.newComponentID++;
             newComponent.setParentEntity = this;
-            //ECS.Component.componentType();
         };
         Object.defineProperty(Entity.prototype, "getComponentTypes", {
+            /**
+             * returns types of all the components attached
+             */
             get: function () {
                 return this.componentsTypes;
             },
             enumerable: true,
             configurable: true
         });
+        /**
+         * retuns a component of a requested type
+         * @param componentType type name of requested component type
+         * @returns returns component of type requested if available else returns null
+         */
         Entity.prototype.getComponent = function (componentType) {
             for (var i = 0; i < this.components.length; i++) {
                 if (this.components[i].componentType() == componentType) {

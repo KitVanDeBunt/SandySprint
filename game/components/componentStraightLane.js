@@ -58,26 +58,58 @@ var ComponentStraightLane = (function (_super) {
         */
         //var continued = cubicBezierVectors.continue(cubicBezierVectors);
     }
+    /**
+     * returns the end distance of the lane
+     */
     ComponentStraightLane.prototype.getEndT = function () {
         return this.startT + 14;
     };
+    /**
+     * returnes a distance at interpolation value(t)
+     * @param t interpolation value
+     * @returnes distance at interpolation
+     */
     ComponentStraightLane.prototype.getDistanceAtT = function (t) {
         return this.startT + (this.getLaneLength() * t);
     };
+    /**
+     * returnes the length of this lane
+     * @returns the length of this lane
+     */
     ComponentStraightLane.prototype.getLaneLength = function () {
         return 14;
     };
+    /**
+     * returnes a position at interpolation value(t)
+     * @param t interpolation value
+     * @returnes position at interpolation
+     */
     ComponentStraightLane.prototype.getPointAtT = function (t) {
         return Utils.Bezier.GetPoint(this.points[0], this.points[1], this.points[2], this.points[3], t);
     };
+    /**
+     * returnes a rotation at interpolation value(t)
+     * @param t interpolation value
+     * @returnes rotation at interpolation
+     */
     ComponentStraightLane.prototype.getRotationAtT = function (t) {
         return Utils.Bezier.GetPointRotation(this.rotPoints[0], this.rotPoints[1], this.rotPoints[2], this.rotPoints[3], t);
     };
+    /**
+     * returnes a forwared vector at interpolation value(t)
+     * @param t interpolation value
+     * @returnes forwared vector at interpolation
+     */
     ComponentStraightLane.prototype.forwaredVector = function (t) {
         var m = new BABYLON.Matrix();
         this.getRotationAtT(t).toRotationMatrix(m);
         return BABYLON.Vector3.TransformCoordinates(this.forwared, m);
     };
+    /**
+     * returnes a upwards vector at interpolation value(t)
+     * @param t interpolation value
+     * @returnes upwards vector at interpolation
+     */
     ComponentStraightLane.prototype.upVector = function (t) {
         var m = new BABYLON.Matrix();
         this.getRotationAtT(t).toRotationMatrix(m);

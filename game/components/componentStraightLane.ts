@@ -32,6 +32,7 @@ class ComponentStraightLane extends ComponentLaneBase {
         let cubicBezierCurve: BABYLON.LinesMesh = BABYLON.Mesh.CreateLines("cbezier", curve.getPoints(), scene);
         cubicBezierCurve.color = new BABYLON.Color3(1, 0, .5);
         cubicBezierCurve.isVisible = false;
+        
         /*
         //draw lane up
         for (let i = 0; i < 10; i++) {
@@ -57,36 +58,67 @@ class ComponentStraightLane extends ComponentLaneBase {
             cubicBezierCurve.color = new BABYLON.Color3(0, 1, 0);
         }
         */
-        
         //var continued = cubicBezierVectors.continue(cubicBezierVectors);
     }
     
+    /**
+     * returns the end distance of the lane
+     */
     getEndT ():number{
         return this.startT+14;
     }
     
+    /**
+     * returnes a distance at interpolation value(t)
+     * @param t interpolation value
+     * @returnes distance at interpolation
+     */
     getDistanceAtT (t:number):number{
         return this.startT+(this.getLaneLength()*t);
     }
     
+    /**
+     * returnes the length of this lane
+     * @returns the length of this lane
+     */
     getLaneLength ():number{
         return 14;
     }
     
+    /**
+     * returnes a position at interpolation value(t)
+     * @param t interpolation value
+     * @returnes position at interpolation
+     */
     getPointAtT(t: number): BABYLON.Vector3 {
         return Utils.Bezier.GetPoint(this.points[0], this.points[1], this.points[2], this.points[3], t);
     }
     
+    /**
+     * returnes a rotation at interpolation value(t)
+     * @param t interpolation value
+     * @returnes rotation at interpolation
+     */
     getRotationAtT(t: number): BABYLON.Quaternion {
         return Utils.Bezier.GetPointRotation(this.rotPoints[0], this.rotPoints[1], this.rotPoints[2], this.rotPoints[3], t);
     }
 
+    /**
+     * returnes a forwared vector at interpolation value(t)
+     * @param t interpolation value
+     * @returnes forwared vector at interpolation
+     */
     forwaredVector(t:number): BABYLON.Vector3 {
         var m = new BABYLON.Matrix();
 	    this.getRotationAtT(t).toRotationMatrix(m);
         return BABYLON.Vector3.TransformCoordinates(this.forwared,m);
     }
 
+    /**
+     * returnes a upwards vector at interpolation value(t)
+     * @param t interpolation value
+     * @returnes upwards vector at interpolation
+     */
     upVector(t:number): BABYLON.Vector3 {
         var m = new BABYLON.Matrix();
 	    this.getRotationAtT(t).toRotationMatrix(m);

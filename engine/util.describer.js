@@ -1,6 +1,11 @@
 var Describer = (function () {
     function Describer() {
     }
+    /**
+     * returns the type name of a component in a string
+     * @param inputClass class of with you whant the type name
+     * @returns type name in string
+     */
     Describer.getName = function (inputClass) {
         var funcNameRegex = /function (.{1,})\(/;
         var results = (funcNameRegex).exec(inputClass.constructor.toString());

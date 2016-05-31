@@ -10,6 +10,10 @@ var ECS;
             this.systems = [];
             this.entities = [];
         }
+        /**
+         * addes a system to the engine
+         * @param newSystem system added to the engine
+         */
         Engine.prototype.addSystem = function (newSystem) {
             // TODO: add check if system exists
             this.systems[this.newSystemID] = newSystem;
@@ -20,12 +24,18 @@ var ECS;
             this.newEntityID++;
             return this.entities[this.newEntityID - 1];
         };
+        /**
+         * updates a systems that are contained by this entity
+         */
         Engine.prototype.updateSystems = function () {
             for (var i = 0; i < this.systems.length; i++) {
                 this.systems[i].Update(this.entities);
             }
             this.deleteObectsReadyToBeDestroyed();
         };
+        /**
+         * deletes object waiting to be destroyed
+         */
         Engine.prototype.deleteObectsReadyToBeDestroyed = function () {
             for (var i = 0; i < this.entities.length; i++) {
                 if (this.entities[i].destroyed()) {
@@ -37,6 +47,11 @@ var ECS;
                 }
             }
         };
+        /**
+         * a system of the requested type
+         * @param newSystemOfType newSystem of requested system
+         * @returns newSystemOfType system of the requested type
+         */
         Engine.prototype.getSystem = function (newSystemOfType) {
             console.log("systems.length: " + this.systems.length);
             for (var i = 0; i < this.systems.length; i++) {
