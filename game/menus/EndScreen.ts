@@ -1,20 +1,26 @@
+/**
+ * endScreen
+ */ 
 class endScreen{
     
-    private objects: Array<BABYLON.Mesh>;
-    gameUI:GameUI;
+    private _objects: Array<BABYLON.Mesh>;
+    private _gameUI:GameUI;
     
     constructor(gameUI:GameUI) {
-        this.gameUI = gameUI;
+        this._gameUI = gameUI;
         
         this.StartScreen();
     }
     
+    /**
+     * start EndScreen
+     */
     StartScreen(){
-        this.gameUI.menuState = menuState.End;
+        this._gameUI.menuState = menuState.End;
     }
     
     onInput(inputPos: BABYLON.Vector2) {
-        switch (this.gameUI.menuState) {
+        switch (this._gameUI.menuState) {
             case menuState.End:
             this.Dispose();
                 break;
@@ -27,10 +33,13 @@ class endScreen{
         
     }
     
+    /**
+     * remove all UI objects
+     */
     Dispose() {
-        for (var i: number = 0; i < this.objects.length; i++) {
-            this.objects[i].dispose();
-            this.objects.splice(i,1);
+        for (var i: number = 0; i < this._objects.length; i++) {
+            this._objects[i].dispose();
+            this._objects.splice(i,1);
         }
     }
 }

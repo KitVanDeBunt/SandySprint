@@ -1,13 +1,19 @@
+/**
+ * endScreen
+ */
 var endScreen = (function () {
     function endScreen(gameUI) {
-        this.gameUI = gameUI;
+        this._gameUI = gameUI;
         this.StartScreen();
     }
+    /**
+     * start EndScreen
+     */
     endScreen.prototype.StartScreen = function () {
-        this.gameUI.menuState = menuState.End;
+        this._gameUI.menuState = menuState.End;
     };
     endScreen.prototype.onInput = function (inputPos) {
-        switch (this.gameUI.menuState) {
+        switch (this._gameUI.menuState) {
             case menuState.End:
                 this.Dispose();
                 break;
@@ -17,10 +23,13 @@ var endScreen = (function () {
     };
     endScreen.prototype.update = function () {
     };
+    /**
+     * remove all UI objects
+     */
     endScreen.prototype.Dispose = function () {
-        for (var i = 0; i < this.objects.length; i++) {
-            this.objects[i].dispose();
-            this.objects.splice(i, 1);
+        for (var i = 0; i < this._objects.length; i++) {
+            this._objects[i].dispose();
+            this._objects.splice(i, 1);
         }
     };
     return endScreen;

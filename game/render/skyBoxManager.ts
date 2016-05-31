@@ -5,20 +5,25 @@
  */
 class SkyBoxManager {
 
-    private skybox: BABYLON.Mesh;
+    private _skybox: BABYLON.Mesh;
+    
     constructor(scene: BABYLON.Scene, ECSengine: ECS.Engine) {
         // Skybox
-        this.skybox = BABYLON.Mesh.CreateBox("skyBox", 1000.0, scene);
+        this._skybox = BABYLON.Mesh.CreateBox("skyBox", 1000.0, scene);
         var skyboxMaterial = new BABYLON.StandardMaterial("assets/textures/skyBox", scene);
         skyboxMaterial.backFaceCulling = false;
         skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("assets/textures/skybox/skybox", scene);
         skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
         skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
         skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
-        this.skybox.material = skyboxMaterial;
+        this._skybox.material = skyboxMaterial;
     }
 
+    /**
+     * set skybox around player
+     * @param cameraPosition is playerPosition
+     */
     update(cameraPosition: BABYLON.Vector3) {
-        this.skybox.position = cameraPosition;
+        this._skybox.position = cameraPosition;
     }
 }

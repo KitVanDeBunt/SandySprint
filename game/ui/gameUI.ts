@@ -3,47 +3,56 @@
  */
 class GameUI {
 
-    context2D;
-    myMaterial_diffuseTexture: BABYLON.DynamicTexture;
-    box: BABYLON.Mesh;
-    canvas: HTMLCanvasElement;
-    engine: BABYLON.Engine;
-    ecsEngine: ECS.Engine;
-    playerManager: PlayerManager;
-    scene: BABYLON.Scene;
-    menu: MainMenu;
-    inGameUI: InGameUI;
-    endScreen:endScreen;
-    cameraECS: ECS.Entity;
-    audio: audioManager;
-    menuState: menuState;
+    public menuState: menuState;
+
+    private context2D;
+    private _myMaterial_diffuseTexture: BABYLON.DynamicTexture;
+    private _box: BABYLON.Mesh;
+    private _canvas: HTMLCanvasElement;
+    private _engine: BABYLON.Engine;
+    private _ecsEngine: ECS.Engine;
+    private _playerManager: PlayerManager;
+    private _scene: BABYLON.Scene;
+    private _menu: MainMenu;
+    private _inGameUI: InGameUI;
+    private _endScreen: endScreen;
+    private _cameraECS: ECS.Entity;
+    private _audio: audioManager;
 
     constructor(scene: BABYLON.Scene, ecs: ECS.Engine, canvas: HTMLCanvasElement, engine: BABYLON.Engine, audioManager: audioManager) {
-        this.canvas = canvas;
-        this.engine = engine;
-        this.scene = scene;
-        this.ecsEngine = ecs;
-        this.audio = audioManager;
+        this._canvas = canvas;
+        this._engine = engine;
+        this._scene = scene;
+        this._ecsEngine = ecs;
+        this._audio = audioManager;
 
-        //Adding light for UI elements
+        /**
+         * Adding light for UI elements
+         */
         var UIlight = new BABYLON.DirectionalLight("MainMenuEmit", new BABYLON.Vector3(100, 100, 100), scene);
         UIlight.intensity = 2;
         UIlight.includeOnlyWithLayerMask = 0x20000000;
         var tempLight = new BABYLON.DirectionalLight("UIemit", new BABYLON.Vector3(0, 0, 1), scene);
 
-        // create UIcamera entity
-        this.cameraECS = ecs.createEntity();
+        /**
+         * create UIcamera entity
+         */
+        this._cameraECS = ecs.createEntity();
         let cameraTranslateComponent = new ECS.ComponentTransform(new BABYLON.Vector3(0, 0, -10), new BABYLON.Vector3(1, 1, 1), new BABYLON.Quaternion(0, 0, 0, 0));
-        this.cameraECS.addComponent(cameraTranslateComponent);
+        this._cameraECS.addComponent(cameraTranslateComponent);
         let UICam = new ComponentCamera(cameraTranslateComponent, scene);
         UICam.setLayermask = 0x20000000;
-        this.cameraECS.addComponent(UICam);
+        this._cameraECS.addComponent(UICam);
     }
 
+    /**
+     * on Touch or click
+     * @param inputPos (x,y) pos of the touch/click
+     */
     onInputStart(inputPos: BABYLON.Vector2) {
         switch (this.menuState) {
             case menuState.Start:
-                this.menu.onInput(new BABYLON.Vector2(inputPos.x, inputPos.y));
+                this._menu.onInput(new BABYLON.Vector2(inputPos.x, inputPos.y));
                 break;
             default:
                 break;
@@ -59,36 +68,38 @@ class GameUI {
     }
 
     onKeyDown(keyEvt: KeyboardEvent) {
-        //this.closeMainMenu();
         switch (this.menuState) {
             case menuState.Start:
-                this.menu.onKeyDown(keyEvt);
+                this._menu.onKeyDown(keyEvt);
                 break;
             default:
                 break;
         }
     }
 
+    /**
+     * closes camera and makes a new one
+     */
     restartCamera() {
-        this.cameraECS.destroy();
-        this.cameraECS = this.ecsEngine.createEntity();
+        this._cameraECS.destroy();
+        this._cameraECS = this._ecsEngine.createEntity();
         let cameraTranslateComponent = new ECS.ComponentTransform(new BABYLON.Vector3(0, 0, -10), new BABYLON.Vector3(1, 1, 1), new BABYLON.Quaternion(0, 0, 0, 0));
-        this.cameraECS.addComponent(cameraTranslateComponent);
+        this._cameraECS.addComponent(cameraTranslateComponent);
         let UICam = new ComponentCamera(cameraTranslateComponent, scene);
         UICam.setLayermask = 0x20000000;
-        this.cameraECS.addComponent(UICam);
+        this._cameraECS.addComponent(UICam);
     }
 
     update(): void {
         switch (this.menuState) {
             case menuState.Start:
-                this.menu.update();
+                this._menu.update();
                 break;
-                case menuState.Game:
-                this.inGameUI.update();
+            case menuState.Game:
+                this._inGameUI.update();
                 break;
-                case menuState.End:
-                this.endScreen.update();
+            case menuState.End:
+                this._endScreen.update();
                 break;
             default:
                 break;
@@ -98,50 +109,56 @@ class GameUI {
     }
 
     openMainMenu() {
-        this.menu = new MainMenu(this.canvas, this.ecsEngine, this.engine, this.scene, this, this.audio);
+        this._menu = new MainMenu(this._canvas, this._ecsEngine, this._engine, this._scene, this, this._audio);
     }
 
     closeMainMenu() {
-        this.menu.Move();
-        
+        this._menu.Move();
+
     }
 
+    /**
+     * opens the game before the game UI start
+     */
     preopenInGame() {
         this.menuState = menuState.Game;
-        this.audio.stopSound(Sounds.MainMenu);
-        this.audio.playSound(Sounds.Game);
-        this.menu.Dispose();
-        
-      //  this.audio.playSound(Sounds.Game);
+        this._audio.stopSound(Sounds.MainMenu);
+        this._audio.playSound(Sounds.Game);
+        this._menu.Dispose();
         game();
     }
 
     openInGame() {
-        
-        this.inGameUI = new InGameUI(this.canvas, this.engine, this.scene, this, this.playerManager);
+        this._inGameUI = new InGameUI(this._canvas, this._engine, this._scene, this, this._playerManager);
     }
 
     closeInGame() {
-        this.inGameUI.Dispose();
-    }
-    
-    openEndScreen(){
-        this.endScreen = new endScreen(this);
-    }
-    
-    closeEndScreen(){
-        this.endScreen.Dispose();
-    }
-    
-    setPlayerManager(playerManager:PlayerManager){
-        this.playerManager = playerManager;
+        this._inGameUI.Dispose();
     }
 
+    openEndScreen() {
+        this._endScreen = new endScreen(this);
+    }
+
+    closeEndScreen() {
+        this._endScreen.Dispose();
+    }
+
+    setPlayerManager(playerManager: PlayerManager) {
+        this._playerManager = playerManager;
+    }
+
+    /**
+     * function for UI classes to easely create an ui image
+     * @param position the position of the ui image
+     * @param scale the scale of the ui image
+     * @param image this texture of the ui image
+     */
     createImage(position: BABYLON.Vector2, scale: BABYLON.Vector2, image: BABYLON.Texture): BABYLON.Mesh {
-        var logobox = BABYLON.Mesh.CreatePlane("UIBox", 1, this.scene);
+        var logobox = BABYLON.Mesh.CreatePlane("UIBox", 1, this._scene);
         logobox.scaling = new BABYLON.Vector3(scale.x * 2, scale.y * 2, 0.001);
         logobox.position = new BABYLON.Vector3(position.x, position.y, 0);
-        var logoMaterial = new BABYLON.StandardMaterial("logoMaterial", this.scene);
+        var logoMaterial = new BABYLON.StandardMaterial("logoMaterial", this._scene);
         logoMaterial.diffuseTexture = image;
         logoMaterial.diffuseTexture.hasAlpha = true;
         logobox.material = logoMaterial;

@@ -1,27 +1,31 @@
 class audioManager {
 
-    private scene: BABYLON.Scene;
+    private _scene: BABYLON.Scene;
     state: Sounds;
     pickUpSound:BABYLON.Sound;
     menuBackgroundSound:BABYLON.Sound;
     inGameSound:BABYLON.Sound;
 
     constructor(scene: BABYLON.Scene) {
-        this.scene = scene;
+        this._scene = scene;
         
         this.pickUpSound = new BABYLON.Sound("pickup", "../assets/sounds/pickUp.wav",
-                    scene, null, { autoplay: false, loop: false});
+                    this._scene, null, { autoplay: false, loop: false});
         this.pickUpSound.setVolume(2);
         
         this.menuBackgroundSound = new BABYLON.Sound("MenuBackGround", "../assets/sounds/menuSound.mp3",
-                    scene, null, { autoplay: false, loop: true});
+                    this._scene, null, { autoplay: false, loop: true});
         this.menuBackgroundSound.setVolume(0.1);
         
         this.inGameSound = new BABYLON.Sound("MenuBackGround", "../assets/sounds/gameSound.mp3",
-                    scene, null, { autoplay: false, loop: true});
+                    this._scene, null, { autoplay: false, loop: true});
         this.inGameSound.setVolume(1);
     }
 
+    /**
+     * Plays a sound
+     * @param sound plays a sound defined by enum Sound
+     */
     playSound(sound:Sounds) {
         switch (sound) {
             case Sounds.Click:
@@ -44,6 +48,10 @@ class audioManager {
         }
     }
     
+    /**
+     * stop a sound
+     * @param sound stops a sound defined by enum Sounds
+     */
     stopSound(sound:Sounds) {
         switch (sound) {
             case Sounds.Click:
