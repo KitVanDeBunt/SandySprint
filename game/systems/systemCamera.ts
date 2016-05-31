@@ -4,8 +4,10 @@
  */
 class SystemCamera extends ECS.System {
 
-    private canvas: HTMLCanvasElement;
-
+    private _canvas: HTMLCanvasElement;
+    // for debuging
+    private _followPlayer:boolean = true;
+    
     constructor(canvas: HTMLCanvasElement) {
         super();
 
@@ -13,7 +15,7 @@ class SystemCamera extends ECS.System {
         this.neededComponents[0] = new ECS.ComponentTransform(null, null, null).componentType();
         this.neededComponents[1] = new ComponentCamera(null, null).componentType();
 
-        this.canvas = canvas;
+        this._canvas = canvas;
     }
 
     Update<T extends ECS.Entity>(entities: T[]) {
@@ -29,8 +31,10 @@ class SystemCamera extends ECS.System {
                         let newCam: BABYLON.FreeCamera = new BABYLON.FreeCamera("Camera", new BABYLON.Vector3(0, 0.5, -1.5), componentCamera.getScene);
                         componentCamera.getScene.activeCameras.push(newCam);
                         
-                        // attach the  camera to the canvas
-                        //newCam.attachControl(this.canvas, false);
+                        if(!this._followPlayer){
+                            // attach the  camera to the canvas
+                            newCam.attachControl(this._canvas, false);
+                        }
 
                         componentCamera.setCamera = newCam;
 
@@ -41,15 +45,14 @@ class SystemCamera extends ECS.System {
                         else {
                             newCam.cameraRotation = new BABYLON.Vector2(0.03, 0);
                         }
-
-                        //cam.position = new BABYLON.Vector3(0,0,0);
-
                         componentCamera.state = ComponentCameraState.Spawned;
 
                         break;
                     case ComponentCameraState.Spawned:
-                        // update camera position
-                        componentCamera.getCamera.position = componentTransform.getPosition.add(new BABYLON.Vector3(0, 0.5, -1.5));
+                        if(this._followPlayer){
+                            // update camera position
+                            componentCamera.getCamera.position = componentTransform.getPosition.add(new BABYLON.Vector3(0, 0.5, -1.5));
+                        }
                         break;
                     default:
                         break;
@@ -63,6 +66,6 @@ class SystemCamera extends ECS.System {
     }
 
     newOfThis(): SystemCamera {
-        return new SystemCamera(this.canvas);
+        return new SystemCamera(this._canvas);
     }
 }
