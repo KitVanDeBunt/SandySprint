@@ -16,22 +16,24 @@ var SceneObjectSpawnTemplateSetFactory = (function () {
             new SceneObjectSpawnTemplate("assets/models/buildings/", "building_building_002_001_tex01.babylon", new BABYLON.Vector3(0.02, 0.02, 0.02), new BABYLON.Quaternion(0.71, 0, 0, 0.71), new BABYLON.Vector3(2.4, 0, 0), 1, 0.15);
         // house 01 dist 0.75
         this.templatesList[2] =
-            new SceneObjectSpawnTemplate("assets/models/buildings/", "building_building_003_001_tex01.babylon", new BABYLON.Vector3(0.02, 0.02, 0.02), new BABYLON.Quaternion(0.71, 0, 0, 0.71), new BABYLON.Vector3(2.6, 0, 0), 1, 0.65);
+            new SceneObjectSpawnTemplate("assets/models/buildings/", "building_building_003_001_tex01.babylon", new BABYLON.Vector3(0.02, 0.02, 0.02), new BABYLON.Quaternion(0.71, 0, 0, 0.71), new BABYLON.Vector3(2.6, 0, 0), 1, 0.60);
         // house 02 dist 0.75
         this.templatesList[3] =
-            new SceneObjectSpawnTemplate("assets/models/buildings/", "building_building_002_001_tex01.babylon", new BABYLON.Vector3(0.02, 0.02, 0.02), new BABYLON.Quaternion(0.71, 0, 0, 0.71), new BABYLON.Vector3(2.4, 0, 0), 1, 0.65);
+            new SceneObjectSpawnTemplate("assets/models/buildings/", "building_building_002_001_tex01.babylon", new BABYLON.Vector3(0.02, 0.02, 0.02), new BABYLON.Quaternion(0.71, 0, 0, 0.71), new BABYLON.Vector3(2.4, 0, 0), 1, 0.60);
         // house 02 dist 0.75
         this.templatesList[4] =
-            new SceneObjectSpawnTemplate("assets/models/buildings/", "building_building_004_001_tex01.babylon", new BABYLON.Vector3(0.02, 0.02, 0.02), new BABYLON.Quaternion(0.71, 0, 0, 0.71), new BABYLON.Vector3(-2.6, 0, 0), 1, 0.65);
+            new SceneObjectSpawnTemplate("assets/models/buildings/", "building_building_004_001_tex01.babylon", new BABYLON.Vector3(0.02, 0.02, 0.02), new BABYLON.Quaternion(0.71, 0, 0, 0.71), new BABYLON.Vector3(-2.6, 0, 0), 1, 0.60);
         this.templatesList[5] =
-            new SceneObjectSpawnTemplate("assets/models/buildings/", "building_building_001_001_tex01.babylon", new BABYLON.Vector3(0.02, 0.02, 0.02), new BABYLON.Quaternion(0.71, 0, 0, 0.71), new BABYLON.Vector3(-2.4, 0, 0), 1, 0.85);
+            new SceneObjectSpawnTemplate("assets/models/buildings/", "building_building_001_001_tex01.babylon", new BABYLON.Vector3(0.02, 0.02, 0.02), new BABYLON.Quaternion(0.71, 0, 0, 0.71), new BABYLON.Vector3(-2.4, 0, 0), 1, 0.75);
         // house 02 dist 0.25
         this.templatesList[6] =
-            new SceneObjectSpawnTemplate("assets/models/buildings/", "building_building_002_001_tex01.babylon", new BABYLON.Vector3(0.02, 0.02, 0.02), new BABYLON.Quaternion(0.71, 0, 0, 0.71), new BABYLON.Vector3(2.4, 0, 0), 1, 0.85);
+            new SceneObjectSpawnTemplate("assets/models/buildings/", "building_building_002_001_tex01.babylon", new BABYLON.Vector3(0.02, 0.02, 0.02), new BABYLON.Quaternion(0.71, 0, 0, 0.71), new BABYLON.Vector3(2.4, 0, 0), 1, 0.75);
+        this.templatesList[7] =
+            new SceneObjectSpawnTemplate("assets/models/buildings/", "building_buildingbridge_002_002_tex01.babylon", new BABYLON.Vector3(0.02, 0.02, 0.02), new BABYLON.Quaternion(0.71, 0, 0, 0.71), new BABYLON.Vector3(0, 0, 0), 1, 0.85);
         // create scene object spawn template sets
         this.templatesSetList = [];
         var listNum = 0;
-        this.templatesSetList[listNum] = new SceneObjectSpawnTemplateSet();
+        /*this.templatesSetList[listNum] = new SceneObjectSpawnTemplateSet();
         this.templatesSetList[listNum].compatableWithWaterTile = true;
         this.templatesSetList[listNum].templateList.push(this.templatesList[0]);
         this.templatesSetList[listNum].templateList.push(this.templatesList[1]);
@@ -55,6 +57,14 @@ var SceneObjectSpawnTemplateSetFactory = (function () {
         this.templatesSetList[listNum].templateList.push(this.templatesList[4]);
         this.templatesSetList[listNum].templateList.push(this.templatesList[5]);
         this.templatesSetList[listNum].templateList.push(this.templatesList[6]);
+        listNum++;*/
+        this.templatesSetList[listNum] = new SceneObjectSpawnTemplateSet();
+        this.templatesSetList[listNum].compatableWithWaterTile = true;
+        this.templatesSetList[listNum].templateList.push(this.templatesList[0]);
+        this.templatesSetList[listNum].templateList.push(this.templatesList[1]);
+        this.templatesSetList[listNum].templateList.push(this.templatesList[3]);
+        this.templatesSetList[listNum].templateList.push(this.templatesList[4]);
+        this.templatesSetList[listNum].templateList.push(this.templatesList[7]);
     }
     SceneObjectSpawnTemplateSetFactory.prototype.createRandomTemplateSet = function (roadIndex) {
         var random = Math.floor((Math.random() * this.templatesSetList.length));
