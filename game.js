@@ -101,7 +101,6 @@ var game = function () {
         roadManager.update(playerManager.getplayerT());
         playerManager.update(deltaTime);
         playerCameraManager.update(deltaTime);
-        // update game ui
         // update skybox position
         skyboxManager.update(playerCameraManager.cameraPosition);
     });

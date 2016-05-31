@@ -159,7 +159,6 @@ class MainMenu {
     DisposeObjects() {
         for (var i: number = 0; i < this._objects.length; i++) {
             this._objects[i].dispose();
-            this._objects.splice(i, 1);
         }
     }
 

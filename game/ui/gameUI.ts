@@ -54,6 +54,9 @@ class GameUI {
             case menuState.Start:
                 this._menu.onInput(new BABYLON.Vector2(inputPos.x, inputPos.y));
                 break;
+                case menuState.End:
+                this._endScreen.onInput(new BABYLON.Vector2(inputPos.x, inputPos.y));
+                break;
             default:
                 break;
         }
@@ -98,9 +101,6 @@ class GameUI {
             case menuState.Game:
                 this._inGameUI.update();
                 break;
-            case menuState.End:
-                this._endScreen.update();
-                break;
             default:
                 break;
         }
@@ -137,7 +137,7 @@ class GameUI {
     }
 
     openEndScreen() {
-        this._endScreen = new endScreen(this);
+        this._endScreen = new endScreen(this,this._scene);
     }
 
     closeEndScreen() {

@@ -13,6 +13,7 @@ let skyboxManager: SkyBoxManager;
 let menu: MainMenu;
 let gameUI: GameUI;
 
+
 //create scene and main menu
 var mainMenu = function () {
 
@@ -110,8 +111,7 @@ var game = function () {
     scene.activeCameras.slice(0, scene.activeCameras.length);
     playerManager = new PlayerManager(scene, ECSengine, roadManager, audio, gameUI);
     playerCameraManager = new PlayerCameraManager(ECSengine, scene, playerManager);
-
-
+    
     gameUI.restartCamera();
     gameUI.setPlayerManager(playerManager);
     gameUI.openInGame();
@@ -139,9 +139,6 @@ var game = function () {
         roadManager.update(playerManager.getplayerT());
         playerManager.update(deltaTime);
         playerCameraManager.update(deltaTime);
-
-        // update game ui
-          
 
         // update skybox position
         skyboxManager.update(playerCameraManager.cameraPosition);

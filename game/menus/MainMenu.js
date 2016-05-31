@@ -128,7 +128,6 @@ var MainMenu = (function () {
     MainMenu.prototype.DisposeObjects = function () {
         for (var i = 0; i < this._objects.length; i++) {
             this._objects[i].dispose();
-            this._objects.splice(i, 1);
         }
     };
     return MainMenu;

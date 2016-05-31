@@ -34,6 +34,9 @@ var GameUI = (function () {
             case menuState.Start:
                 this._menu.onInput(new BABYLON.Vector2(inputPos.x, inputPos.y));
                 break;
+            case menuState.End:
+                this._endScreen.onInput(new BABYLON.Vector2(inputPos.x, inputPos.y));
+                break;
             default:
                 break;
         }
@@ -71,9 +74,6 @@ var GameUI = (function () {
             case menuState.Game:
                 this._inGameUI.update();
                 break;
-            case menuState.End:
-                this._endScreen.update();
-                break;
             default:
                 break;
         }
@@ -101,7 +101,7 @@ var GameUI = (function () {
         this._inGameUI.Dispose();
     };
     GameUI.prototype.openEndScreen = function () {
-        this._endScreen = new endScreen(this);
+        this._endScreen = new endScreen(this, this._scene);
     };
     GameUI.prototype.closeEndScreen = function () {
         this._endScreen.Dispose();
