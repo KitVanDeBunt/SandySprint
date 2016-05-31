@@ -80,17 +80,7 @@ var ECS;
                 return this._mesh;
             },
             set: function (mesh) {
-                this.mesh = mesh;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        ComponentAbstractMesh.prototype.getBabylonMesh = function () {
-            return this.mesh;
-        };
-        Object.defineProperty(ComponentAbstractMesh.prototype, "babylonSkeleton", {
-            get: function () {
-                return this.skeleton;
+                this._mesh = mesh;
             },
             enumerable: true,
             configurable: true
