@@ -13,18 +13,20 @@ var ECS;
         __extends(ComponentAbstractMesh, _super);
         function ComponentAbstractMesh(componentTransform, path, fileName, onsuccess, progressCallBack, onerror) {
             _super.call(this);
+            //private skeleton: BABYLON.Skeleton;
             this.meshState = ECS.MeshLoadState.Non;
-            this.colliderOffset = BABYLON.Vector3.Zero();
-            this.onsuccess = onsuccess;
-            this.progressCallBack = onsuccess;
-            this.onerror = onerror;
+            this._colliderOffset = BABYLON.Vector3.Zero();
+            this._onsuccess = onsuccess;
+            this._progressCallBack = onsuccess;
+            this._onerror = onerror;
             this.setMeshReadyToLoad();
-            this.componentTransform = componentTransform;
+            this._componentTransform = componentTransform;
             this.path = path;
             this.fileName = fileName;
         }
         ComponentAbstractMesh.prototype.destroy = function () {
-            this.mesh.dispose();
+            this._mesh.dispose();
+            //this._meshPoolObject.inUse = false;
             _super.prototype.destroy.call(this);
         };
         ComponentAbstractMesh.prototype.setMeshReadyToLoad = function () {
@@ -32,22 +34,32 @@ var ECS;
         };
         ComponentAbstractMesh.prototype.setCollision = function (mesh) {
             this.collider = mesh;
-            this.collider.updatePhysicsBody;
+            this.collider.updatePhysicsBody; // unneedded !!!!!!
             this.collider.isVisible = false;
         };
+        Object.defineProperty(ComponentAbstractMesh.prototype, "meshPoolObject", {
+            get: function () {
+                return this._meshPoolObject;
+            },
+            set: function (meshPoolObject) {
+                this._meshPoolObject = meshPoolObject;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(ComponentAbstractMesh.prototype, "setColliderOffset", {
             /**
              * set the offset of the collider from the mesh
              * @param offset
              */
             set: function (offset) {
-                this.colliderOffset = offset;
+                this._colliderOffset = offset;
             },
             enumerable: true,
             configurable: true
         });
         ComponentAbstractMesh.prototype.updateCollision = function () {
-            this.collider.position = this.componentTransform.getPosition.add(this.colliderOffset);
+            this.collider.position = this._componentTransform.getPosition.add(this._colliderOffset);
         };
         Object.defineProperty(ComponentAbstractMesh.prototype, "getCollider", {
             get: function () {
@@ -58,30 +70,18 @@ var ECS;
         });
         Object.defineProperty(ComponentAbstractMesh.prototype, "positionComponent", {
             get: function () {
-                return this.componentTransform;
+                return this._componentTransform;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(ComponentAbstractMesh.prototype, "babylonMesh", {
             get: function () {
-                return this.mesh;
+                return this._mesh;
             },
             set: function (mesh) {
-                this.mesh = mesh;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        ComponentAbstractMesh.prototype.getBabylonMesh = function () {
-            return this.mesh;
-        };
-        Object.defineProperty(ComponentAbstractMesh.prototype, "babylonSkeleton", {
-            get: function () {
-                return this.skeleton;
-            },
-            set: function (skeleton) {
-                this.skeleton = skeleton;
+                this._mesh = mesh;
+                this._mesh.isVisible = true;
             },
             enumerable: true,
             configurable: true

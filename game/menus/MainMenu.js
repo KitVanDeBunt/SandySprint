@@ -15,11 +15,11 @@ var MainMenu = (function () {
             return this.camera;
         };
         this.camera = createCamera();
-        var temple = this.ECSEngine.createEntity();
-        var templeTranslateComponent = new ECS.ComponentTransform(new BABYLON.Vector3(0, 0, 1), new BABYLON.Vector3(1, 1, 1), BABYLON.Quaternion.Identity());
-        temple.addComponent(templeTranslateComponent);
-        var templeMesh = new ECS.ComponentAbstractMesh(templeTranslateComponent, "assets/models/", "game_intro_temple.babylon");
-        temple.addComponent(templeMesh);
+        BABYLON.SceneLoader.ImportMesh("", "assets/models/", "game_intro_temple.babylon", scene, function (newMeshes, newParticlesystems, newSkeletons) {
+            newMeshes.forEach(function (element) {
+            });
+            newMeshes[0].position = new BABYLON.Vector3(0, 0, 1);
+        });
         this.StartScreen();
         engine.runRenderLoop(function () {
             this.camera.alpha -= 0.0042;
