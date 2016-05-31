@@ -9,7 +9,7 @@ class PlayerManager {
     private playerSpeed: number = 0.006;
     private playerT: number = 0;
     private scene: BABYLON.Scene;
-    private animationStarted: boolean = false;
+    private animationState: PlayerAnimationState = PlayerAnimationState.NotStarted;
     private roadManager: RoadManager;
     private pickupsCollected: number = 0;
     private jumpManager: ComponentJumpLane;
@@ -32,14 +32,17 @@ class PlayerManager {
     private touchEnd: BABYLON.Vector2;
 
     private abstractMeshComponetType: string;
-        
+    
+    // frame time correction 24/30
+    private ftc = 0.8;
+
     constructor(scene: BABYLON.Scene, ECSengine: ECS.Engine, roadManager: RoadManager) {
         this.roadManager = roadManager;
         this.scene = scene;
         this.player = ECSengine.createEntity();
         this.playerTranslateComponent = new ECS.ComponentTransform(BABYLON.Vector3.Zero(), new BABYLON.Vector3(0.0013, 0.0013, 0.0013), new BABYLON.Quaternion(0, 1, 0, 0));
         this.player.addComponent(this.playerTranslateComponent);
-        this.playerMeshComponent = new ECS.ComponentAbstractMesh(this.playerTranslateComponent, "assets/models/", "explorer_rig_running.babylon");
+        this.playerMeshComponent = new ECS.ComponentAbstractMesh(this.playerTranslateComponent, "assets/models/", "Explorer_Rig_AllAnimations.babylon");
         this.player.addComponent(this.playerMeshComponent);
 
         // setup collision
@@ -57,7 +60,7 @@ class PlayerManager {
 
         this.currentLane = this.roadManager.getStartLane;
         this.previousLane = this.roadManager.getStartLane;
-        
+
         this.abstractMeshComponetType = new ECS.ComponentAbstractMesh(null, null, null).componentType();
     }
 
@@ -68,8 +71,8 @@ class PlayerManager {
     getplayerT(): number {
         return this.playerT;
     }
-    
-    getPickupsCollected():number{
+
+    getPickupsCollected(): number {
         return this.pickupsCollected;
     }
 
@@ -154,7 +157,7 @@ class PlayerManager {
         this.updateAnimation();
         this.updateRoadLane();
         this.updatePlayerMovment(deltaTime);
-       // this.updateCollision();
+        // this.updateCollision();
 
         if (this.firstFrame) {
             this.firstFrame = false;
@@ -162,10 +165,28 @@ class PlayerManager {
     }
 
     private updateAnimation() {
-        if (!this.animationStarted && this.playerMeshComponent.meshState == ECS.MeshLoadState.Loaded) {
-            this.animationStarted = true;
-            // set run animation
-            this.scene.beginAnimation(this.playerMeshComponent.babylonSkeleton, 0, 21, true, 1);
+        if (this.playerMeshComponent.meshState == ECS.MeshLoadState.Loaded) {
+            switch (this.animationState) {
+                case PlayerAnimationState.NotStarted:
+                    this.scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 0, 21*this.ftc, true, 1);
+                    this.animationState = PlayerAnimationState.Running;
+                    break;
+                case PlayerAnimationState.Running:
+                    if(this.jumpManager.jumping){
+                        this.scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 80*this.ftc, 110*this.ftc, true, 1);
+                        this.animationState = PlayerAnimationState.Jumping;
+                    }
+                    break;
+                case PlayerAnimationState.Jumping:
+                    if(!this.jumpManager.jumping){
+                        this.scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 0*this.ftc, 21*this.ftc, true, 1);
+                        this.animationState = PlayerAnimationState.Running;
+                    }
+                    break;
+
+                default:
+                    break;
+            }
         }
     }
 
@@ -181,23 +202,23 @@ class PlayerManager {
     private updatePlayerMovment(deltaTime: number) {
         if (this.playerSpeed != 0) {
             // TODO : add max speed
-            if(deltaTime>5){
-                this.playerT += ((5 * (this.playerSpeed+(this.playerT / 280000))));
-                deltaTime-=5;
+            if (deltaTime > 5) {
+                this.playerT += ((5 * (this.playerSpeed + (this.playerT / 280000))));
+                deltaTime -= 5;
                 this.updatePlayerMovment(deltaTime);
             }
-            else{
-                this.playerT += ((deltaTime * (this.playerSpeed+(this.playerT / 280000))));
+            else {
+                this.playerT += ((deltaTime * (this.playerSpeed + (this.playerT / 280000))));
             }
         }
 
         let laneInputT: number = (this.playerT - this.currentLane.getStartT) / this.currentLane.getLaneLength();
         let pos: BABYLON.Vector3 = this.currentLane.getPointAtT(laneInputT);
-        
+
         // lane switch interpolation
-        if (this.inLaneTween){
-            this.laneTweenInterpolation += deltaTime*this.laneSwitchSpeed;
-            if(this.laneTweenInterpolation > 1){
+        if (this.inLaneTween) {
+            this.laneTweenInterpolation += deltaTime * this.laneSwitchSpeed;
+            if (this.laneTweenInterpolation > 1) {
                 this.laneTweenInterpolation = 1;
                 this.inLaneTween = false;
             }
@@ -205,16 +226,16 @@ class PlayerManager {
             let previousLanePosition: BABYLON.Vector3 = this.previousLane.getPointAtT(laneInputT);
             pos = BABYLON.Vector3.Lerp(previousLanePosition, targetLanePosition, this.laneTweenInterpolation);
         }
-        
+
         // jumping
         if (this.jumpManager.jumping) {
-            let jumpInputT: number = (this.playerT - this.jumpManager.getT()) / (this.jumpManager.getLaneLength()/2.5);
+            let jumpInputT: number = (this.playerT - this.jumpManager.getT()) / (this.jumpManager.getLaneLength() / 2.5);
             if (jumpInputT > 1) {
                 this.jumpManager.done();
             }
             pos = pos.add(this.jumpManager.getPointAtT(jumpInputT));
         }
-        
+
         this.playerTranslateComponent.setPosition = pos;
         this.updateCollision();
     }
@@ -249,4 +270,13 @@ class PlayerManager {
         }
     }
 
+}
+
+enum PlayerAnimationState {
+    NotStarted,
+    Running,
+    Sliding,
+    Jumping,
+    Idle,
+    Falling
 }

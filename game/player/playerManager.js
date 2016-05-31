@@ -5,7 +5,7 @@ var PlayerManager = (function () {
     function PlayerManager(scene, ECSengine, roadManager) {
         this.playerSpeed = 0.006;
         this.playerT = 0;
-        this.animationStarted = false;
+        this.animationState = PlayerAnimationState.NotStarted;
         this.pickupsCollected = 0;
         // lane tween
         this.inLaneTween = false;
@@ -13,12 +13,14 @@ var PlayerManager = (function () {
         this.laneSwitchSpeed = 0.01;
         // collision
         this.firstFrame = true;
+        // frame time correction 24/30
+        this.ftc = 0.8;
         this.roadManager = roadManager;
         this.scene = scene;
         this.player = ECSengine.createEntity();
         this.playerTranslateComponent = new ECS.ComponentTransform(BABYLON.Vector3.Zero(), new BABYLON.Vector3(0.0013, 0.0013, 0.0013), new BABYLON.Quaternion(0, 1, 0, 0));
         this.player.addComponent(this.playerTranslateComponent);
-        this.playerMeshComponent = new ECS.ComponentAbstractMesh(this.playerTranslateComponent, "assets/models/", "explorer_rig_running.babylon");
+        this.playerMeshComponent = new ECS.ComponentAbstractMesh(this.playerTranslateComponent, "assets/models/", "Explorer_Rig_AllAnimations.babylon");
         this.player.addComponent(this.playerMeshComponent);
         // setup collision
         var mesh = BABYLON.Mesh.CreateBox("CollBox", 0.2, this.scene, false);
@@ -119,10 +121,27 @@ var PlayerManager = (function () {
         }
     };
     PlayerManager.prototype.updateAnimation = function () {
-        if (!this.animationStarted && this.playerMeshComponent.meshState == ECS.MeshLoadState.Loaded) {
-            this.animationStarted = true;
-            // set run animation
-            this.scene.beginAnimation(this.playerMeshComponent.babylonSkeleton, 0, 21, true, 1);
+        if (this.playerMeshComponent.meshState == ECS.MeshLoadState.Loaded) {
+            switch (this.animationState) {
+                case PlayerAnimationState.NotStarted:
+                    this.scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 0, 21 * this.ftc, true, 1);
+                    this.animationState = PlayerAnimationState.Running;
+                    break;
+                case PlayerAnimationState.Running:
+                    if (this.jumpManager.jumping) {
+                        this.scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 80 * this.ftc, 110 * this.ftc, true, 1);
+                        this.animationState = PlayerAnimationState.Jumping;
+                    }
+                    break;
+                case PlayerAnimationState.Jumping:
+                    if (!this.jumpManager.jumping) {
+                        this.scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 0 * this.ftc, 21 * this.ftc, true, 1);
+                        this.animationState = PlayerAnimationState.Running;
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
     };
     PlayerManager.prototype.updateRoadLane = function () {
@@ -199,4 +218,13 @@ var PlayerManager = (function () {
     };
     return PlayerManager;
 }());
+var PlayerAnimationState;
+(function (PlayerAnimationState) {
+    PlayerAnimationState[PlayerAnimationState["NotStarted"] = 0] = "NotStarted";
+    PlayerAnimationState[PlayerAnimationState["Running"] = 1] = "Running";
+    PlayerAnimationState[PlayerAnimationState["Sliding"] = 2] = "Sliding";
+    PlayerAnimationState[PlayerAnimationState["Jumping"] = 3] = "Jumping";
+    PlayerAnimationState[PlayerAnimationState["Idle"] = 4] = "Idle";
+    PlayerAnimationState[PlayerAnimationState["Falling"] = 5] = "Falling";
+})(PlayerAnimationState || (PlayerAnimationState = {}));
 //# sourceMappingURL=playerManager.js.map
