@@ -13,6 +13,7 @@ class PlayerManager {
     private roadManager: RoadManager;
     private pickupsCollected: number = 0;
     private jumpManager: ComponentJumpLane;
+    private audio: audioManager;
 
     // lane
     private previousLane: ComponentLaneBase;
@@ -32,11 +33,10 @@ class PlayerManager {
     private touchEnd: BABYLON.Vector2;
 
     private abstractMeshComponetType: string;
-    
     // frame time correction 24/30
     private ftc = 0.8;
 
-    constructor(scene: BABYLON.Scene, ECSengine: ECS.Engine, roadManager: RoadManager) {
+    constructor(scene: BABYLON.Scene, ECSengine: ECS.Engine, roadManager: RoadManager, audioManager:audioManager) {
         this.roadManager = roadManager;
         this.scene = scene;
         this.player = ECSengine.createEntity();
@@ -44,6 +44,7 @@ class PlayerManager {
         this.player.addComponent(this.playerTranslateComponent);
         this.playerMeshComponent = new ECS.ComponentAbstractMesh(this.playerTranslateComponent, "assets/models/", "Explorer_Rig_AllAnimations.babylon");
         this.player.addComponent(this.playerMeshComponent);
+        this.audio = audioManager;
 
         // setup collision
         let mesh: BABYLON.Mesh = BABYLON.Mesh.CreateBox("CollBox", 0.2, this.scene, false);
@@ -62,6 +63,10 @@ class PlayerManager {
         this.previousLane = this.roadManager.getStartLane;
 
         this.abstractMeshComponetType = new ECS.ComponentAbstractMesh(null, null, null).componentType();
+    }
+    
+    startRunning(){
+        this.playerSpeed = 0.006;
     }
 
     /**
@@ -109,7 +114,7 @@ class PlayerManager {
             this.playerMovedCurrentTouch = true;
         }
         //swipe up
-        if (this.touchEnd.y - this.touchStart.y < -screen.height * 0.1 && this.jumpManager.jumping == false) {
+        if (this.touchEnd.y - this.touchStart.y < -screen.height * 0.2 && this.jumpManager.jumping == false) {
             this.jumpManager.jump(this.playerT);
         }
     }
@@ -202,13 +207,13 @@ class PlayerManager {
     private updatePlayerMovment(deltaTime: number) {
         if (this.playerSpeed != 0) {
             // TODO : add max speed
-            if (deltaTime > 5) {
-                this.playerT += ((5 * (this.playerSpeed + (this.playerT / 280000))));
-                deltaTime -= 5;
+            if(deltaTime>200){
+                this.playerT += (200 * this.playerSpeed);
+                deltaTime-=200;
                 this.updatePlayerMovment(deltaTime);
             }
-            else {
-                this.playerT += ((deltaTime * (this.playerSpeed + (this.playerT / 280000))));
+            else{
+                this.playerT += (deltaTime * this.playerSpeed);
             }
         }
 
@@ -255,7 +260,7 @@ class PlayerManager {
                                     this.playerSpeed = 0;
                                     break;
                                 case CollisionMeshType.scarab:
-                                    console.log("scarab collision");
+                                    this.audio.playSound(Sounds.Pickup);
                                     this.pickupsCollected++;
                                     this.roadManager.obstacles[i].entity.destroy();
                                     this.roadManager.obstacles.splice(i, 1);

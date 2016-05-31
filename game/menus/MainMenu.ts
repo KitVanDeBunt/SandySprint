@@ -1,50 +1,140 @@
 class MainMenu {
-    constructor(canvas: HTMLCanvasElement, engine: BABYLON.Engine) {
-        let camera: BABYLON.ArcRotateCamera;
-        let createScene = function () {
-            let scene: BABYLON.Scene = new BABYLON.Scene(engine);
-            let createCamera = function () {
-                let camera = new BABYLON.ArcRotateCamera("MenuCam", 0, 1, 100, BABYLON.Vector3.Zero(), scene);
-                scene.activeCameras.push(camera);
-                return camera;
-            }
-            camera = createCamera();
-            // set background color
-            scene.clearColor = new BABYLON.Color3(56 / 255, 71 / 255, 79 / 255);
-            // set ambiant color
-            scene.ambientColor = new BABYLON.Color3(0.9, 0.72, 0.75);
-            //Adding a light
-            let light: BABYLON.DirectionalLight = new BABYLON.DirectionalLight(
-                "MenuLighting"
-                , new BABYLON.Vector3(20, -100, -100)
-                , scene
-            );
-            var box = BABYLON.Mesh.CreateBox("Background", 10, scene);
-            box.position = BABYLON.Vector3.Zero();
-            return scene;
+
+    private objects: Array<BABYLON.Mesh>;
+   // logo: BABYLON.Mesh;
+    audio: audioManager;
+    camera: BABYLON.ArcRotateCamera;
+    flyCam: BABYLON.FreeCamera;
+    gameUI: GameUI;
+    ECSEngine: ECS.Engine;
+    scene: BABYLON.Scene;
+    movesToStart: number;
+    startPos: BABYLON.Vector3;
+    startRot: BABYLON.Vector3;
+    movingCam: boolean = false;
+    targetPosition: BABYLON.Vector3 = new BABYLON.Vector3(0, 0.5, -2);
+    targetRotation: BABYLON.Vector3 = new BABYLON.Vector3(0, 0, 0);
+    musicPlaying: boolean = false;
+
+    constructor(canvas: HTMLCanvasElement, ecs: ECS.Engine, engine: BABYLON.Engine, scene: BABYLON.Scene, gameUI: GameUI, audio: audioManager) {
+        this.objects = [];
+        this.audio = audio;
+        this.gameUI = gameUI;
+        this.ECSEngine = ecs;
+        this.scene = scene;
+
+        let createCamera = function () {
+            this.camera = new BABYLON.ArcRotateCamera("MenuCam", 0, 0.3, 5, new BABYLON.Vector3(0, 0, -8.5), scene);
+            scene.activeCameras.push(this.camera);
+            return this.camera;
         }
-        let scene = createScene();
+        this.camera = createCamera();
+        
+        let temple: ECS.Entity = this.ECSEngine.createEntity();
+        let templeTranslateComponent: ECS.ComponentTransform = new ECS.ComponentTransform(new BABYLON.Vector3(0, 0, 1),
+            new BABYLON.Vector3(1, 1, 1),
+            BABYLON.Quaternion.Identity()
+        );
+        temple.addComponent(templeTranslateComponent);
+        let templeMesh = new ECS.ComponentAbstractMesh(templeTranslateComponent, "assets/models/", "game_intro_temple.babylon");
+        temple.addComponent(templeMesh);
 
-        let createInterface = function () {
-            let createCamera = function () {
-                let interfaceCamera = new BABYLON.FreeCamera("InterfaceCamera", new BABYLON.Vector3(0, 0, -10), scene);
-                interfaceCamera.setTarget(BABYLON.Vector3.Zero());
-                scene.activeCameras.push(interfaceCamera);
-                interfaceCamera.layerMask = 0x20000000;
-            }
-            createCamera();
-            var interfaceBox = BABYLON.Mesh.CreateBox("InterfaceBox", 2, scene);
-            interfaceBox.position = BABYLON.Vector3.Zero();
-            interfaceBox.layerMask = 0x20000000;
-
-        }
-
-        //let menuInterface = createInterface();
+        this.StartScreen();
 
         engine.runRenderLoop(function () {
-            camera.alpha-=0.001;
-            scene.render();
+            this.camera.alpha -= 0.0042;
         });
     }
+
+    StartScreen() {
+        this.gameUI.menuState = menuState.Start;
+        var startScreenTex = new BABYLON.Texture("/assets/textures/UI textures/logo-final.png", this.scene, true);
+        var logo = gameUI.createImage(new BABYLON.Vector2(0, 400), new BABYLON.Vector2(693 * 0.7, 168 * 0.7), startScreenTex);
+        this.objects.push(logo);
+        
+        startScreenTex = new BABYLON.Texture("/assets/textures/UI textures/play-button.png", this.scene, true);
+        var play = gameUI.createImage(new BABYLON.Vector2(0, -200), new BABYLON.Vector2(80, 80), startScreenTex);
+        this.objects.push(play);
+    }
+
+
+    Move() {
+        this.movesToStart = 0;
+        this.flyCam = new BABYLON.FreeCamera("freeCam", this.camera.position, scene);
+        this.flyCam.setTarget(new BABYLON.Vector3(0, 0, -8.5));
+        this.startPos = this.flyCam.position;
+        this.startRot = this.flyCam.rotation;
+        console.log(this.flyCam.rotation);
+        this.camera.dispose();
+        scene.activeCameras.push(this.flyCam);
+        this.movingCam = true;
+
+    }
+
+    onInput(inputPos: BABYLON.Vector2) {
+        switch (this.gameUI.menuState) {
+            case menuState.Start:
+            this.DisposeObjects();
+                this.Move();
+                break;
+            default:
+                break;
+        }
+    }
+    
+    onKeyDown(keyEvt:KeyboardEvent){
+        switch (this.gameUI.menuState) {
+            case menuState.Start:
+                this.DisposeObjects();
+                this.Move();
+                break;
+            default:
+                break;
+        }
+    }
+
+    update() {
+        if (this.movingCam) {
+            this.movesToStart += 0.01;
+
+            this.flyCam.position = BABYLON.Vector3.Lerp(this.startPos, this.targetPosition, this.movesToStart);
+            this.flyCam.rotation = BABYLON.Vector3.Lerp(this.startRot, this.targetRotation, this.movesToStart);
+            if (this.movesToStart > 1) {
+                this.flyCam.position = this.targetPosition;
+                this.flyCam.rotation = this.targetRotation;
+                this.movingCam = false;
+                this.gameUI.preopenInGame();
+            }
+        }
+        if (!this.audio.menuBackgroundSound.isPlaying) {
+            this.audio.playSound(Sounds.MainMenu);
+        }
+    }
+
+    /*  rescale(): void {
+          if (this.canvas.width > this.canvas.height) {
+              this.box.scaling = new BABYLON.Vector3(350, 350, 1);
+          }
+          else {
+              this.box.scaling = new BABYLON.Vector3(500, 500, 1);
+          }
+      }*/
+
+    Dispose() {
+        for (var i: number = 0; i < this.objects.length; i++) {
+            this.objects[i].dispose();
+            this.objects.splice(i,1);
+        }
+        this.flyCam.dispose();
+    }
+    
+    DisposeObjects(){
+        for (var i: number = 0; i < this.objects.length; i++) {
+            this.objects[i].dispose();
+            this.objects.splice(i,1);
+        }
+    }
+    
+    
 }
 
