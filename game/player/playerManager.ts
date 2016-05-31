@@ -14,6 +14,8 @@ class PlayerManager {
     private pickupsCollected: number = 0;
     private jumpManager: ComponentJumpLane;
     private audio: audioManager;
+    private gameUI:GameUI;
+    private playing:boolean;
 
     // lane
     private previousLane: ComponentLaneBase;
@@ -34,8 +36,9 @@ class PlayerManager {
 
     private abstractMeshComponetType: string;
         
-    constructor(scene: BABYLON.Scene, ECSengine: ECS.Engine, roadManager: RoadManager, audioManager:audioManager) {
+    constructor(scene: BABYLON.Scene, ECSengine: ECS.Engine, roadManager: RoadManager, audioManager:audioManager, gameUI:GameUI) {
         this.roadManager = roadManager;
+        this.gameUI = gameUI;
         this.scene = scene;
         this.player = ECSengine.createEntity();
         this.playerTranslateComponent = new ECS.ComponentTransform(BABYLON.Vector3.Zero(), new BABYLON.Vector3(0.0013, 0.0013, 0.0013), new BABYLON.Quaternion(0, 1, 0, 0));
@@ -43,6 +46,7 @@ class PlayerManager {
         this.playerMeshComponent = new ECS.ComponentAbstractMesh(this.playerTranslateComponent, "assets/models/", "explorer_rig_running.babylon");
         this.player.addComponent(this.playerMeshComponent);
         this.audio = audioManager;
+        this.playing = true;
 
         // setup collision
         let mesh: BABYLON.Mesh = BABYLON.Mesh.CreateBox("CollBox", 0.2, this.scene, false);
@@ -157,9 +161,12 @@ class PlayerManager {
 
     update(deltaTime: number): void {
 
+        if(this.playing == true){
+            console.log("updatePLayer");
         this.updateAnimation();
         this.updateRoadLane();
         this.updatePlayerMovment(deltaTime);
+        }
        // this.updateCollision();
 
         if (this.firstFrame) {
@@ -237,7 +244,9 @@ class PlayerManager {
                         if (coll) {
                             switch (this.roadManager.obstacles[i].meshType) {
                                 case CollisionMeshType.pillar:
-                                    this.playerSpeed = 0;
+                                     this.gameUI.closeInGame();
+                                    this.gameUI.openEndScreen();
+                                    this.playing = false;
                                     break;
                                 case CollisionMeshType.scarab:
                                     this.audio.playSound(Sounds.Pickup);

@@ -24,7 +24,6 @@ var GameUI = (function () {
     GameUI.prototype.onInputStart = function (inputPos) {
         switch (this.menuState) {
             case menuState.Start:
-                console.log(inputPos);
                 this.menu.onInput(new BABYLON.Vector2(inputPos.x, inputPos.y));
                 break;
             default:
@@ -62,6 +61,9 @@ var GameUI = (function () {
             case menuState.Game:
                 this.inGameUI.update();
                 break;
+            case menuState.End:
+                this.endScreen.update();
+                break;
             default:
                 break;
         }
@@ -74,7 +76,10 @@ var GameUI = (function () {
     };
     GameUI.prototype.preopenInGame = function () {
         this.menuState = menuState.Game;
+        this.audio.stopSound(Sounds.MainMenu);
+        this.audio.playSound(Sounds.Game);
         this.menu.Dispose();
+        //  this.audio.playSound(Sounds.Game);
         game();
     };
     GameUI.prototype.openInGame = function () {
@@ -82,6 +87,12 @@ var GameUI = (function () {
     };
     GameUI.prototype.closeInGame = function () {
         this.inGameUI.Dispose();
+    };
+    GameUI.prototype.openEndScreen = function () {
+        this.endScreen = new endScreen(this);
+    };
+    GameUI.prototype.closeEndScreen = function () {
+        this.endScreen.Dispose();
     };
     GameUI.prototype.setPlayerManager = function (playerManager) {
         this.playerManager = playerManager;
@@ -105,5 +116,6 @@ var menuState;
     menuState[menuState["Start"] = 1] = "Start";
     menuState[menuState["Game"] = 2] = "Game";
     menuState[menuState["Page"] = 3] = "Page";
+    menuState[menuState["End"] = 4] = "End";
 })(menuState || (menuState = {}));
 //# sourceMappingURL=gameUI.js.map

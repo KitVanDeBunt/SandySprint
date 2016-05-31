@@ -48,8 +48,10 @@ var MainMenu = (function () {
     MainMenu.prototype.onInput = function (inputPos) {
         switch (this.gameUI.menuState) {
             case menuState.Start:
+                if (this.movingCam == false) {
+                    this.Move();
+                }
                 this.DisposeObjects();
-                this.Move();
                 break;
             default:
                 break;
@@ -58,8 +60,10 @@ var MainMenu = (function () {
     MainMenu.prototype.onKeyDown = function (keyEvt) {
         switch (this.gameUI.menuState) {
             case menuState.Start:
+                if (this.movingCam == false) {
+                    this.Move();
+                }
                 this.DisposeObjects();
-                this.Move();
                 break;
             default:
                 break;
@@ -78,7 +82,12 @@ var MainMenu = (function () {
             }
         }
         if (!this.audio.menuBackgroundSound.isPlaying) {
-            this.audio.playSound(Sounds.MainMenu);
+            if (this.musicPlaying == false) {
+                this.audio.playSound(Sounds.MainMenu);
+            }
+        }
+        else {
+            this.musicPlaying = true;
         }
     };
     /*  rescale(): void {

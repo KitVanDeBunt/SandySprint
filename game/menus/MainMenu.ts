@@ -1,7 +1,7 @@
 class MainMenu {
 
     private objects: Array<BABYLON.Mesh>;
-   // logo: BABYLON.Mesh;
+    // logo: BABYLON.Mesh;
     audio: audioManager;
     camera: BABYLON.ArcRotateCamera;
     flyCam: BABYLON.FreeCamera;
@@ -29,7 +29,7 @@ class MainMenu {
             return this.camera;
         }
         this.camera = createCamera();
-        
+
         let temple: ECS.Entity = this.ECSEngine.createEntity();
         let templeTranslateComponent: ECS.ComponentTransform = new ECS.ComponentTransform(new BABYLON.Vector3(0, 0, 1),
             new BABYLON.Vector3(1, 1, 1),
@@ -51,7 +51,7 @@ class MainMenu {
         var startScreenTex = new BABYLON.Texture("/assets/textures/UI textures/logo-final.png", this.scene, true);
         var logo = gameUI.createImage(new BABYLON.Vector2(0, 400), new BABYLON.Vector2(693 * 0.7, 168 * 0.7), startScreenTex);
         this.objects.push(logo);
-        
+
         startScreenTex = new BABYLON.Texture("/assets/textures/UI textures/play-button.png", this.scene, true);
         var play = gameUI.createImage(new BABYLON.Vector2(0, -200), new BABYLON.Vector2(80, 80), startScreenTex);
         this.objects.push(play);
@@ -74,19 +74,23 @@ class MainMenu {
     onInput(inputPos: BABYLON.Vector2) {
         switch (this.gameUI.menuState) {
             case menuState.Start:
-            this.DisposeObjects();
-                this.Move();
+                if (this.movingCam == false) {
+                    this.Move();
+                }
+                this.DisposeObjects();
                 break;
             default:
                 break;
         }
     }
-    
-    onKeyDown(keyEvt:KeyboardEvent){
+
+    onKeyDown(keyEvt: KeyboardEvent) {
         switch (this.gameUI.menuState) {
             case menuState.Start:
+                if (this.movingCam == false) {
+                    this.Move();
+                }
                 this.DisposeObjects();
-                this.Move();
                 break;
             default:
                 break;
@@ -107,8 +111,15 @@ class MainMenu {
             }
         }
         if (!this.audio.menuBackgroundSound.isPlaying) {
-            this.audio.playSound(Sounds.MainMenu);
+            if(this.musicPlaying==false){
+                this.audio.playSound(Sounds.MainMenu);
+            }
         }
+        else{
+            this.musicPlaying = true;
+            
+        }
+        
     }
 
     /*  rescale(): void {
@@ -123,18 +134,18 @@ class MainMenu {
     Dispose() {
         for (var i: number = 0; i < this.objects.length; i++) {
             this.objects[i].dispose();
-            this.objects.splice(i,1);
+            this.objects.splice(i, 1);
         }
         this.flyCam.dispose();
     }
-    
-    DisposeObjects(){
+
+    DisposeObjects() {
         for (var i: number = 0; i < this.objects.length; i++) {
             this.objects[i].dispose();
-            this.objects.splice(i,1);
+            this.objects.splice(i, 1);
         }
     }
-    
-    
+
+
 }
 

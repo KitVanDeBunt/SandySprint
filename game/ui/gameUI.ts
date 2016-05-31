@@ -13,6 +13,7 @@ class GameUI {
     scene: BABYLON.Scene;
     menu: MainMenu;
     inGameUI: InGameUI;
+    endScreen:endScreen;
     cameraECS: ECS.Entity;
     audio: audioManager;
     menuState: menuState;
@@ -42,7 +43,6 @@ class GameUI {
     onInputStart(inputPos: BABYLON.Vector2) {
         switch (this.menuState) {
             case menuState.Start:
-                console.log(inputPos);
                 this.menu.onInput(new BABYLON.Vector2(inputPos.x, inputPos.y));
                 break;
             default:
@@ -87,6 +87,9 @@ class GameUI {
                 case menuState.Game:
                 this.inGameUI.update();
                 break;
+                case menuState.End:
+                this.endScreen.update();
+                break;
             default:
                 break;
         }
@@ -100,20 +103,34 @@ class GameUI {
 
     closeMainMenu() {
         this.menu.Move();
+        
     }
 
     preopenInGame() {
         this.menuState = menuState.Game;
+        this.audio.stopSound(Sounds.MainMenu);
+        this.audio.playSound(Sounds.Game);
         this.menu.Dispose();
+        
+      //  this.audio.playSound(Sounds.Game);
         game();
     }
 
     openInGame() {
+        
         this.inGameUI = new InGameUI(this.canvas, this.engine, this.scene, this, this.playerManager);
     }
 
     closeInGame() {
         this.inGameUI.Dispose();
+    }
+    
+    openEndScreen(){
+        this.endScreen = new endScreen(this);
+    }
+    
+    closeEndScreen(){
+        this.endScreen.Dispose();
     }
     
     setPlayerManager(playerManager:PlayerManager){
@@ -137,5 +154,6 @@ enum menuState {
     None,
     Start,
     Game,
-    Page
+    Page,
+    End
 }

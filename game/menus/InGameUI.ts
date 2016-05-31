@@ -1,25 +1,36 @@
-class InGameUI{
-    
+class InGameUI {
+
     private objects: Array<BABYLON.Mesh>;
-    private gameUI:GameUI;
-        myMaterial_diffuseTexture: BABYLON.DynamicTexture;
+    private gameUI: GameUI;
+    myMaterial_diffuseTexture: BABYLON.DynamicTexture;
     box: BABYLON.Mesh;
     canvas: HTMLCanvasElement;
     context2D;
-    playerManager:PlayerManager;
-    
-    constructor(canvas: HTMLCanvasElement, engine: BABYLON.Engine, scene: BABYLON.Scene, gameUI:GameUI, playerManager:PlayerManager) {
+    scene:BABYLON.Scene;
+    playerManager: PlayerManager;
+
+    constructor(canvas: HTMLCanvasElement, engine: BABYLON.Engine, scene: BABYLON.Scene, gameUI: GameUI, playerManager: PlayerManager) {
         this.gameUI = gameUI;
         this.canvas = canvas;
         this.playerManager = playerManager;
-        
+        this.objects = [];
+        this.scene = scene;
+
         this.CreateUI();
     }
-    
-    CreateUI(){
+
+    CreateUI() {
         this.gameUI.menuState = menuState.Game;
         
-         var material = new BABYLON.StandardMaterial("textuare1", scene);
+        var startScreenTex = new BABYLON.Texture("/assets/textures/UI textures/highscore-bar.png", this.scene, true);
+        var logo = this.gameUI.createImage(new BABYLON.Vector2(-440,415),new BABYLON.Vector2(580/2,51/2),startScreenTex);
+        this.objects.push(logo);
+
+        startScreenTex = new BABYLON.Texture("/assets/textures/UI textures/treasure-bar.png", this.scene, true);
+        var logo = this.gameUI.createImage(new BABYLON.Vector2(-440,357),new BABYLON.Vector2(580/2,51/2),startScreenTex);
+        this.objects.push(logo);
+
+        var material = new BABYLON.StandardMaterial("textuare1", scene);
         material.alpha = 1;
 
         material.diffuseColor = new BABYLON.Color3(1.00, 1.00, 1.00);
@@ -31,28 +42,21 @@ class InGameUI{
         //Adding UI Element
         this.box = BABYLON.Mesh.CreatePlane("Box", 5, scene, false);
         this.box.material = material;
-            this.box.scaling = new BABYLON.Vector3(200, 200, 1);
-            
-        console.log("" + "WxH:" + this.canvas.width + "x" + this.canvas.height)
+        this.box.scaling = new BABYLON.Vector3(200, 200, 1);
         this.box.layerMask = 0x20000000;
+        this.objects.push(this.box);
 
         this.context2D = this.myMaterial_diffuseTexture.getContext();
     }
-    
-    update(){
-         this.context2D.clearRect(0, 0, 512, 512);
-       // if (this.canvas.width > this.canvas.height) {
-            this.myMaterial_diffuseTexture.drawText("Score:" + Math.round(this.playerManager.getplayerT()), 0, /*240-((1842 / this.canvas.width)*100)*/50, "25px Cooper Std Black", "white", "transparent");
-            this.myMaterial_diffuseTexture.drawText("Scarabs:" + this.playerManager.getPickupsCollected(), 0,/*270-((1842 / this.canvas.width)*100)*/80, "25px Cooper Std Black", "white", "transparent");
-      /*  }
-        else{
-            this.myMaterial_diffuseTexture.drawText("Score:" + Math.round(this.playerManager.getplayerT()), 135-(this.canvas.width*0.18645731108930323846908734052993)+(this.canvas.height*0.14), 100, "30px Arial", "white", "transparent");
-            this.myMaterial_diffuseTexture.drawText("Scarabs:" + this.playerManager.getPickupsCollected(), 135-(this.canvas.width*0.18645731108930323846908734052993)+(this.canvas.height*0.14),  140, "30px Arial", "white", "transparent");
-        }*/
+
+    update() {
+        this.context2D.clearRect(0, 0, 512, 512);
+        this.myMaterial_diffuseTexture.drawText(""+Math.round(this.playerManager.getplayerT()), 0, /*240-((1842 / this.canvas.width)*100)*/50, "25px Cooper Std Black", "black", "transparent");
+        this.myMaterial_diffuseTexture.drawText("" + this.playerManager.getPickupsCollected(), 0,/*270-((1842 / this.canvas.width)*100)*/80, "25px Cooper Std Black", "black", "transparent")
     }
-    
-    Dispose(){
-        for(var i:number=0;i<this.objects.length;i++){
+
+    Dispose() {
+        for (var i: number = 0; i < this.objects.length; i++) {
             this.objects[i].dispose();
         }
     }

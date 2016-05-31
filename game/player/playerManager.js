@@ -2,7 +2,7 @@
  * PlayerManager
  */
 var PlayerManager = (function () {
-    function PlayerManager(scene, ECSengine, roadManager, audioManager) {
+    function PlayerManager(scene, ECSengine, roadManager, audioManager, gameUI) {
         this.playerSpeed = 0.006;
         this.playerT = 0;
         this.animationStarted = false;
@@ -14,6 +14,7 @@ var PlayerManager = (function () {
         // collision
         this.firstFrame = true;
         this.roadManager = roadManager;
+        this.gameUI = gameUI;
         this.scene = scene;
         this.player = ECSengine.createEntity();
         this.playerTranslateComponent = new ECS.ComponentTransform(BABYLON.Vector3.Zero(), new BABYLON.Vector3(0.0013, 0.0013, 0.0013), new BABYLON.Quaternion(0, 1, 0, 0));
@@ -21,6 +22,7 @@ var PlayerManager = (function () {
         this.playerMeshComponent = new ECS.ComponentAbstractMesh(this.playerTranslateComponent, "assets/models/", "explorer_rig_running.babylon");
         this.player.addComponent(this.playerMeshComponent);
         this.audio = audioManager;
+        this.playing = true;
         // setup collision
         var mesh = BABYLON.Mesh.CreateBox("CollBox", 0.2, this.scene, false);
         mesh.scaling = new BABYLON.Vector3(1, 2, 1);
@@ -114,9 +116,12 @@ var PlayerManager = (function () {
         this.laneTweenInterpolation = 0;
     };
     PlayerManager.prototype.update = function (deltaTime) {
-        this.updateAnimation();
-        this.updateRoadLane();
-        this.updatePlayerMovment(deltaTime);
+        if (this.playing == true) {
+            console.log("updatePLayer");
+            this.updateAnimation();
+            this.updateRoadLane();
+            this.updatePlayerMovment(deltaTime);
+        }
         // this.updateCollision();
         if (this.firstFrame) {
             this.firstFrame = false;
@@ -184,7 +189,9 @@ var PlayerManager = (function () {
                         if (coll) {
                             switch (this.roadManager.obstacles[i].meshType) {
                                 case CollisionMeshType.pillar:
-                                    this.playerSpeed = 0;
+                                    this.gameUI.closeInGame();
+                                    this.gameUI.openEndScreen();
+                                    this.playing = false;
                                     break;
                                 case CollisionMeshType.scarab:
                                     this.audio.playSound(Sounds.Pickup);

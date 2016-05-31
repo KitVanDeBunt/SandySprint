@@ -78,7 +78,7 @@ var game = function () {
     var playerManager;
     var playerCameraManager;
     scene.activeCameras.slice(0, scene.activeCameras.length);
-    playerManager = new PlayerManager(scene, ECSengine, roadManager, audio);
+    playerManager = new PlayerManager(scene, ECSengine, roadManager, audio, gameUI);
     playerCameraManager = new PlayerCameraManager(ECSengine, scene, playerManager);
     gameUI.restartCamera();
     gameUI.setPlayerManager(playerManager);
