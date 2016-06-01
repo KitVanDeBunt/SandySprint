@@ -40,7 +40,7 @@ var ECS;
                                 for (var j = 0; j < this_1._meshDataList.length; j++) {
                                     // check if mesh laoded or loading
                                     if (this_1.checkMeshDataMeshComponent(this_1._meshDataList[j], componentAbstractMesh_1)) {
-                                        console.log("m c:" + this_1.checkMeshDataMeshComponent(this_1._meshDataList[j], componentAbstractMesh_1));
+                                        //console.log("m c:" + this.checkMeshDataMeshComponent(this._meshDataList[j], componentAbstractMesh));
                                         meshLoadingOrLoaden = true;
                                         // file is in meshDataList(list of meshes that are loading, loaded or need to be loaded)
                                         if (this_1._meshDataList[j].meshLoaded) {

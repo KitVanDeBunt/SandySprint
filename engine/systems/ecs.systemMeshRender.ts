@@ -45,7 +45,7 @@ namespace ECS {
                                 for (let j = 0; j < this._meshDataList.length; j++) {
                                     // check if mesh laoded or loading
                                     if (this.checkMeshDataMeshComponent(this._meshDataList[j], componentAbstractMesh)) {
-                                        console.log("m c:" + this.checkMeshDataMeshComponent(this._meshDataList[j], componentAbstractMesh));
+                                        //console.log("m c:" + this.checkMeshDataMeshComponent(this._meshDataList[j], componentAbstractMesh));
                                         meshLoadingOrLoaden = true;
                                         // file is in meshDataList(list of meshes that are loading, loaded or need to be loaded)
                                         if (this._meshDataList[j].meshLoaded) {

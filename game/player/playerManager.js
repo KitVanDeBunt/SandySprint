@@ -144,7 +144,7 @@ var PlayerManager = (function () {
      */
     PlayerManager.prototype.update = function (deltaTime) {
         if (this.playing == true) {
-            console.log("updatePLayer");
+            //console.log("updatePLayer");
             this.updateAnimation();
             this.updateRoadLane();
             this.updatePlayerMovment(deltaTime);

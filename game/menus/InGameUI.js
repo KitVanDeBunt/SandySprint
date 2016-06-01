@@ -15,10 +15,10 @@ var InGameUI = (function () {
      */
     InGameUI.prototype.CreateUI = function () {
         this._gameUI.menuState = menuState.Game;
-        var scoreBarTex = new BABYLON.Texture("/assets/textures/UI textures/highscore-bar.png", this._scene, true);
+        var scoreBarTex = new BABYLON.Texture("assets/textures/ui_textures/highscore-bar.png", this._scene, true);
         var scoreBar = this._gameUI.createImage(new BABYLON.Vector2(-440, 400), new BABYLON.Vector2(580 / 2, 51 / 2), scoreBarTex);
         this._objects.push(scoreBar);
-        var treasureBarTex = new BABYLON.Texture("/assets/textures/UI textures/treasure-bar.png", this._scene, true);
+        var treasureBarTex = new BABYLON.Texture("assets/textures/ui_textures/treasure-bar.png", this._scene, true);
         var treasureBar = this._gameUI.createImage(new BABYLON.Vector2(-440, 342), new BABYLON.Vector2(580 / 2, 51 / 2), treasureBarTex);
         this._objects.push(treasureBar);
         var material = new BABYLON.StandardMaterial("textuare1", scene);

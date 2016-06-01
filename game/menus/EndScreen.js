@@ -14,10 +14,10 @@ var endScreen = (function () {
     endScreen.prototype.StartScreen = function () {
         this._objects = [];
         this._gameUI.menuState = menuState.End;
-        var backgroundTex = new BABYLON.Texture("/assets/textures/UI textures/ui-background.png", this._scene, true);
+        var backgroundTex = new BABYLON.Texture("assets/textures/ui_textures/ui-background.png", this._scene, true);
         var background = this._gameUI.createImage(new BABYLON.Vector2(0, 0), new BABYLON.Vector2(337 * 0.7, 403 * 0.7), backgroundTex);
         this._objects.push(background);
-        backgroundTex = new BABYLON.Texture("/assets/textures/UI textures/restart-button.png", this._scene, true);
+        backgroundTex = new BABYLON.Texture("assets/textures/ui_textures/restart-button.png", this._scene, true);
         var play = this._gameUI.createImage(new BABYLON.Vector2(0, -200), new BABYLON.Vector2(99, 99), backgroundTex);
         this._objects.push(play);
     };

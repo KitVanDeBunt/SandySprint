@@ -190,10 +190,10 @@ class PlayerManager {
     update(deltaTime: number): void {
 
         if(this.playing == true){
-            console.log("updatePLayer");
-        this.updateAnimation();
-        this.updateRoadLane();
-        this.updatePlayerMovment(deltaTime);
+            //console.log("updatePLayer");
+            this.updateAnimation();
+            this.updateRoadLane();
+            this.updatePlayerMovment(deltaTime);
         }
         // this.updateCollision();
 

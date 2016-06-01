@@ -61,11 +61,11 @@ class MainMenu {
      */
     private StartScreen() {
         this._gameUI.menuState = menuState.Start;
-        var startScreenTex = new BABYLON.Texture("/assets/textures/UI textures/logo-final.png", this._scene, true);
+        var startScreenTex = new BABYLON.Texture("assets/textures/ui_textures/logo-final.png", this._scene, true);
         var logo = gameUI.createImage(new BABYLON.Vector2(0, 400), new BABYLON.Vector2(693 * 0.7, 168 * 0.7), startScreenTex);
         this._objects.push(logo);
 
-        startScreenTex = new BABYLON.Texture("/assets/textures/UI textures/play-button.png", this._scene, true);
+        startScreenTex = new BABYLON.Texture("assets/textures/ui_textures/play-button.png", this._scene, true);
         var play = gameUI.createImage(new BABYLON.Vector2(0, -200), new BABYLON.Vector2(80, 80), startScreenTex);
         this._objects.push(play);
     }
