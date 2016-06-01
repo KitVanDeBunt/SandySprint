@@ -3,6 +3,7 @@
  */
 var GameUI = (function () {
     function GameUI(scene, ecs, canvas, engine, audioManager) {
+        this._playerToffset = 0;
         this._canvas = canvas;
         this._engine = engine;
         this._scene = scene;
@@ -125,6 +126,19 @@ var GameUI = (function () {
         logobox.material = logoMaterial;
         logobox.layerMask = 0x20000000;
         return logobox;
+    };
+    /**
+     * sets playerTOffset for restrating
+     * @param PlayerT the playerT where there player died previous round.
+     */
+    GameUI.prototype.setPlayerTOffset = function (PlayerT) {
+        this._playerToffset = PlayerT;
+    };
+    /**
+     * get playerTOffset
+     */
+    GameUI.prototype.getPlayerTOffset = function () {
+        return this._playerToffset;
     };
     return GameUI;
 }());

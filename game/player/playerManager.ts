@@ -91,6 +91,14 @@ class PlayerManager {
     getplayerT(): number {
         return this.playerT;
     }
+    
+    /**
+     * Sets the players interpontation(t or dictance in game).
+     * @param T T to be set
+     */
+    setplayerT(T:number): void {
+        this.playerT = T;
+    }
 
     /**
      * returns the amout of pickups collected

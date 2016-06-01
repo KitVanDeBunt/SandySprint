@@ -24,6 +24,9 @@ var PlayerCameraManager = (function () {
     PlayerCameraManager.prototype.update = function (deltaTime) {
         this.cameraTranslateComponent.setPosition = this.playerManager.getplayerPosition().add(new BABYLON.Vector3(0, 0.5, 0.0));
     };
+    PlayerCameraManager.prototype.getCameraComponent = function () {
+        return this.cameraComponent;
+    };
     return PlayerCameraManager;
 }());
 //# sourceMappingURL=playerCameraManager.js.map

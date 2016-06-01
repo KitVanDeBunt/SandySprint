@@ -25,6 +25,7 @@ var endScreen = (function () {
         switch (this._gameUI.menuState) {
             case menuState.End:
                 this.Dispose();
+                game();
                 //TO DO:Restart Game
                 //this._gameUI.preopenInGame();
                 break;

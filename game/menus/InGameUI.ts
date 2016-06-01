@@ -60,8 +60,8 @@ class InGameUI {
      */
     update() {
         this.context2D.clearRect(0, 0, 512, 512);
-        this._myMaterial_diffuseTexture.drawText("" + Math.round(this._playerManager.getplayerT()), 0, 57, "25px Cooper Std Black", "black", "transparent");
-        this._myMaterial_diffuseTexture.drawText("" + this._playerManager.getPickupsCollected(), 0, 87, "25px Cooper Std Black", "black", "transparent")
+        this._myMaterial_diffuseTexture.drawText("" + Math.round(this._playerManager.getplayerT() - this._gameUI.getPlayerTOffset()), 0, 58, "25px Cooper Std Black", "black", "transparent");
+        this._myMaterial_diffuseTexture.drawText("" + this._playerManager.getPickupsCollected(), 0, 88, "25px Cooper Std Black", "black", "transparent")
     }
 
     /**

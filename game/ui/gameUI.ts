@@ -18,6 +18,7 @@ class GameUI {
     private _endScreen: endScreen;
     private _cameraECS: ECS.Entity;
     private _audio: audioManager;
+    private _playerToffset:number = 0;
 
     constructor(scene: BABYLON.Scene, ecs: ECS.Engine, canvas: HTMLCanvasElement, engine: BABYLON.Engine, audioManager: audioManager) {
         this._canvas = canvas;
@@ -164,6 +165,21 @@ class GameUI {
         logobox.material = logoMaterial;
         logobox.layerMask = 0x20000000;
         return logobox;
+    }
+    
+    /**
+     * sets playerTOffset for restrating
+     * @param PlayerT the playerT where there player died previous round.
+     */
+    setPlayerTOffset(PlayerT:number){
+        this._playerToffset = PlayerT;
+    }
+    
+    /**
+     * get playerTOffset
+     */
+    getPlayerTOffset():number{
+        return this._playerToffset;
     }
 }
 

@@ -34,6 +34,16 @@ var engine = new BABYLON.Engine(canvas, true);
  */
 var skyboxManager;
 /**
+  * the playerManager for the player
+  * creates and updates the playermovement, animation, and collision.
+  */
+var playerManager;
+/**
+ * the cameramanager of the player.
+ * creates and updates a camera for the player.
+ */
+var playerCameraManager;
+/**
  * The UI of the game
  * creates UI Camera and UI Elements.
  */
@@ -60,7 +70,7 @@ var mainMenu = function () {
         //Adding a light
         var light = new BABYLON.DirectionalLight("Omni", new BABYLON.Vector3(20, -100, -100), scene);
         // create entity component system
-        ECSengine = new ECS.Engine();
+        this.ECSengine = new ECS.Engine();
         // add render system
         var ECSrenderSystem = new ECS.SystemMeshRender();
         ECSrenderSystem.initRendering(scene);
@@ -70,7 +80,7 @@ var mainMenu = function () {
         ECSengine.addSystem(cameraSystem);
         // create managers (scripts that handel game logic) 
         this.audio = new audioManager(scene);
-        roadManager = new RoadManager(ECSengine, scene);
+        this.roadManager = new RoadManager(ECSengine, scene);
         //starting main menu
         this.gameUI = new GameUI(scene, ECSengine, canvas, engine, audio);
         this.gameUI.openMainMenu();
@@ -81,9 +91,9 @@ var mainMenu = function () {
     scene = createScene();
     engine.runRenderLoop(function () {
         // update entity component system
-        ECSengine.updateSystems();
+        this.ECSengine.updateSystems();
         // update babylon
-        scene.render();
+        this.scene.render();
         //update Gameui
         this.gameUI.update();
     });
@@ -121,22 +131,43 @@ var mainMenu = function () {
  * Creates and updates managers for the player, Sets the UI to InGame-mode, and adds events listeners
  */
 var game = function () {
-    /**
-     * the playerManager for the player
-     * creates and updates the playermovement, animation, and collision.
-     */
-    var playerManager;
-    /**
-     * the cameramanager of the player.
-     * creates and updates a camera for the player.
-     */
-    var playerCameraManager;
-    scene.activeCameras.slice(0, scene.activeCameras.length);
-    playerManager = new PlayerManager(scene, ECSengine, roadManager, audio, gameUI);
-    playerCameraManager = new PlayerCameraManager(ECSengine, scene, playerManager);
-    gameUI.restartCamera();
-    gameUI.setPlayerManager(playerManager);
-    gameUI.openInGame();
+    if (this.playerManager != null) {
+        console.log("restart");
+        /**
+         * get the playerT from where the player died
+         */
+        var playerT = this.playerManager.getplayerT();
+        playerManager = null;
+        playerCameraManager = null;
+        playerManager = new PlayerManager(scene, ECSengine, roadManager, audio, gameUI);
+        playerCameraManager = new PlayerCameraManager(ECSengine, scene, playerManager);
+        playerManager.setplayerT(playerT);
+        this.gameUI.setPlayerTOffset(playerT);
+    }
+    else {
+        playerManager = new PlayerManager(scene, ECSengine, roadManager, audio, gameUI);
+        playerCameraManager = new PlayerCameraManager(ECSengine, scene, playerManager);
+        engine.runRenderLoop(function () {
+            /**
+             * gets deltatime for the playermanagers
+             */
+            var deltaTime = engine.getDeltaTime();
+            // update managers (scripts that handel game logic)
+            roadManager.update(playerManager.getplayerT());
+            playerManager.update(deltaTime);
+            playerCameraManager.update(deltaTime);
+            // update skybox position
+            skyboxManager.update(this.playerCameraManager.cameraPosition);
+        });
+        window.addEventListener("keydown", onKeyDown);
+        window.addEventListener("touchstart", onTouchStart);
+        window.addEventListener("touchend", onTouchEnd);
+        window.addEventListener("touchcancel", onTouchEnd);
+        window.addEventListener("touchmove", onTouchMove);
+    }
+    this.gameUI.restartCamera();
+    this.gameUI.setPlayerManager(this.playerManager);
+    this.gameUI.openInGame();
     /**
      * Event when key gets pressed.
      * @param keyEvt data about the pressed key
@@ -165,23 +196,6 @@ var game = function () {
     function onTouchMove(touchEvt) {
         playerManager.onTouchMove(touchEvt);
     }
-    engine.runRenderLoop(function () {
-        /**
-         * gets deltatime for the playermanagers
-         */
-        var deltaTime = engine.getDeltaTime();
-        // update managers (scripts that handel game logic)
-        roadManager.update(playerManager.getplayerT());
-        playerManager.update(deltaTime);
-        playerCameraManager.update(deltaTime);
-        // update skybox position
-        skyboxManager.update(playerCameraManager.cameraPosition);
-    });
-    window.addEventListener("keydown", onKeyDown);
-    window.addEventListener("touchstart", onTouchStart);
-    window.addEventListener("touchend", onTouchEnd);
-    window.addEventListener("touchcancel", onTouchEnd);
-    window.addEventListener("touchmove", onTouchMove);
 };
 mainMenu();
 //# sourceMappingURL=game.js.map

@@ -42,6 +42,18 @@ let engine: BABYLON.Engine = new BABYLON.Engine(canvas, true);
 let skyboxManager: SkyBoxManager;
 
 /**
+  * the playerManager for the player
+  * creates and updates the playermovement, animation, and collision.
+  */
+let playerManager: PlayerManager;
+
+/**
+ * the cameramanager of the player.
+ * creates and updates a camera for the player.
+ */
+let playerCameraManager: PlayerCameraManager;
+
+/**
  * The UI of the game
  * creates UI Camera and UI Elements.
  */
@@ -81,7 +93,7 @@ var mainMenu = function () {
         );
 
         // create entity component system
-        ECSengine = new ECS.Engine();
+        this.ECSengine = new ECS.Engine();
 
         // add render system
         let ECSrenderSystem: ECS.SystemMeshRender = new ECS.SystemMeshRender();
@@ -94,10 +106,10 @@ var mainMenu = function () {
 
         // create managers (scripts that handel game logic) 
         this.audio = new audioManager(scene);
-        roadManager = new RoadManager(ECSengine, scene);
+        this.roadManager = new RoadManager(ECSengine, scene);
 
         //starting main menu
-        this.gameUI = new GameUI(scene, ECSengine, canvas, engine,audio);
+        this.gameUI = new GameUI(scene, ECSengine, canvas, engine, audio);
         this.gameUI.openMainMenu();
 
         // create skybox managers
@@ -110,33 +122,33 @@ var mainMenu = function () {
 
     engine.runRenderLoop(function () {
         // update entity component system
-        ECSengine.updateSystems();
+        this.ECSengine.updateSystems();
         // update babylon
-        scene.render();
+        this.scene.render();
         //update Gameui
         this.gameUI.update();
     });
 
-/**
- * Event when key gets pressed.
- * @param keyEvt data about the pressed key
- */
+    /**
+     * Event when key gets pressed.
+     * @param keyEvt data about the pressed key
+     */
     function onKeyDown(keyEvt: KeyboardEvent) {
         this.gameUI.onKeyDown(keyEvt);
     }
 
-/**
- * Event when screen gets touched.
- * @param touchEvt data about the touch input
- */
+    /**
+     * Event when screen gets touched.
+     * @param touchEvt data about the touch input
+     */
     function onTouchStart(touchEvt: TouchEvent) {
         this.gameUI.onInputStart(new BABYLON.Vector2(touchEvt.touches[0].pageX, touchEvt.touches[0].pageY));
     }
 
-/**
- * Event when mousebutton gets clicked.
- * @param mouseEvt data about the mouse input.
- */
+    /**
+     * Event when mousebutton gets clicked.
+     * @param mouseEvt data about the mouse input.
+     */
     function mouseDown(mouseEvt: MouseEvent): void {
         this.gameUI.onInputStart(new BABYLON.Vector2(mouseEvt.pageX, mouseEvt.pageY));
     }
@@ -156,79 +168,88 @@ var mainMenu = function () {
  * Creates and updates managers for the player, Sets the UI to InGame-mode, and adds events listeners
  */
 var game = function () {
-
-/**
- * the playerManager for the player
- * creates and updates the playermovement, animation, and collision.
- */
-    let playerManager: PlayerManager;
     
+    if (this.playerManager != null) {
+        console.log("restart");
+        /**
+         * get the playerT from where the player died
+         */
+        let playerT = this.playerManager.getplayerT();
+        playerManager = null;
+        playerCameraManager = null;
+        playerManager = new PlayerManager(scene, ECSengine, roadManager, audio, gameUI);
+        playerCameraManager = new PlayerCameraManager(ECSengine, scene, playerManager);
+        playerManager.setplayerT(playerT);
+        this.gameUI.setPlayerTOffset(playerT);
+        /*engine.runRenderLoop(function () {
+            roadManager.update(playerManager.getplayerT());
+        });*/
+    }
+    else {
+        playerManager = new PlayerManager(scene, ECSengine, roadManager, audio, gameUI);
+        playerCameraManager = new PlayerCameraManager(ECSengine, scene, playerManager);
+        
+
+        engine.runRenderLoop(function () {
+            /**
+             * gets deltatime for the playermanagers
+             */
+            let deltaTime: number = engine.getDeltaTime();
+
+            // update managers (scripts that handel game logic)
+            roadManager.update(playerManager.getplayerT());
+            playerManager.update(deltaTime);
+            playerCameraManager.update(deltaTime);
+
+            // update skybox position
+            skyboxManager.update(this.playerCameraManager.cameraPosition);
+        });
+        window.addEventListener("keydown", onKeyDown);
+        window.addEventListener("touchstart", onTouchStart);
+        window.addEventListener("touchend", onTouchEnd);
+        window.addEventListener("touchcancel", onTouchEnd);
+        window.addEventListener("touchmove", onTouchMove);
+    }
+
+    this.gameUI.restartCamera();
+    this.gameUI.setPlayerManager(this.playerManager);
+    this.gameUI.openInGame();
+
     /**
-     * the cameramanager of the player.
-     * creates and updates a camera for the player.
+     * Event when key gets pressed.
+     * @param keyEvt data about the pressed key
      */
-    let playerCameraManager: PlayerCameraManager;
-
-    scene.activeCameras.slice(0, scene.activeCameras.length);
-    playerManager = new PlayerManager(scene, ECSengine, roadManager, audio, gameUI);
-    playerCameraManager = new PlayerCameraManager(ECSengine, scene, playerManager);
-    
-    gameUI.restartCamera();
-    gameUI.setPlayerManager(playerManager);
-    gameUI.openInGame();
-
-/**
- * Event when key gets pressed.
- * @param keyEvt data about the pressed key
- */
     function onKeyDown(keyEvt: KeyboardEvent) {
         playerManager.onKeyDown(keyEvt);
     }
 
-/**
- * Event when screen gets touched.
- * @param touchEvt data about the touch input
- */
+    /**
+     * Event when screen gets touched.
+     * @param touchEvt data about the touch input
+     */
     function onTouchStart(touchEvt: TouchEvent) {
         playerManager.onTouchStart(touchEvt);
     }
 
-/**
- * Event when screen stops getting touched.
- * @param touchEvt data about the touch input
- */
+    /**
+     * Event when screen stops getting touched.
+     * @param touchEvt data about the touch input
+     */
     function onTouchEnd(touchEvt: TouchEvent) {
         playerManager.onTouchEnd(touchEvt);
     }
 
-/**
- * Event when the screen gets swiped.
- * @param touchEvt data about the touch input
- */
+    /**
+     * Event when the screen gets swiped.
+     * @param touchEvt data about the touch input
+     */
     function onTouchMove(touchEvt: TouchEvent) {
         playerManager.onTouchMove(touchEvt);
     }
 
-    engine.runRenderLoop(function () {
-        /**
-         * gets deltatime for the playermanagers
-         */
-        let deltaTime: number = engine.getDeltaTime();
 
-        // update managers (scripts that handel game logic)
-        roadManager.update(playerManager.getplayerT());
-        playerManager.update(deltaTime);
-        playerCameraManager.update(deltaTime);
 
-        // update skybox position
-        skyboxManager.update(playerCameraManager.cameraPosition);
-    });
 
-    window.addEventListener("keydown", onKeyDown);
-    window.addEventListener("touchstart", onTouchStart);
-    window.addEventListener("touchend", onTouchEnd);
-    window.addEventListener("touchcancel", onTouchEnd);
-    window.addEventListener("touchmove", onTouchMove);
 }
 
 mainMenu();

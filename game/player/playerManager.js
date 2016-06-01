@@ -59,6 +59,13 @@ var PlayerManager = (function () {
         return this.playerT;
     };
     /**
+     * Sets the players interpontation(t or dictance in game).
+     * @param T T to be set
+     */
+    PlayerManager.prototype.setplayerT = function (T) {
+        this.playerT = T;
+    };
+    /**
      * returns the amout of pickups collected
      * @returns the amount of pickups collected
      */
