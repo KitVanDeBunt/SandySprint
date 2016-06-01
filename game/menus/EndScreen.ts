@@ -38,12 +38,12 @@ class endScreen {
         this._objects.push(background);
 
         backgroundTex = new BABYLON.Texture("assets/textures/ui_textures/restart-button.png", this._scene, true);
-        var play = this._gameUI.createImage(new BABYLON.Vector2(-200, -270), new BABYLON.Vector2(50, 50), backgroundTex);
+        var play = this._gameUI.createImage(new BABYLON.Vector2(0, -270), new BABYLON.Vector2(50, 50), backgroundTex);
         this._objects.push(play);
 
-        backgroundTex = new BABYLON.Texture("assets/textures/ui_textures/exit-button.png", this._scene, true);
+      /*  backgroundTex = new BABYLON.Texture("assets/textures/ui_textures/exit-button.png", this._scene, true);
         var play = this._gameUI.createImage(new BABYLON.Vector2(200, -270), new BABYLON.Vector2(50, 50), backgroundTex);
-        this._objects.push(play);
+        this._objects.push(play);*/
 
         var material = new BABYLON.StandardMaterial("textuare1", scene);
         material.alpha = 1;
@@ -94,6 +94,7 @@ class endScreen {
 
     onInput(inputPos: BABYLON.Vector2) {
         if (!this._count) {
+            this.Dispose();
             game();
         }
     }

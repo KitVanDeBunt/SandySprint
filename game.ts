@@ -171,22 +171,27 @@ var mainMenu = function () {
 var game = function () {
     
     if (this.playerManager != null) {
-        console.log("restart");
         /**
          * get the playerT from where the player died
          */
         let playerT = this.playerManager.getplayerT();
+        
+        /**
+         * restart game
+         */
+        playerCameraManager.getCameraComponent().getCamera.dispose();
         playerManager = null;
         playerCameraManager = null;
         playerManager = new PlayerManager(scene, ECSengine, roadManager, audio, gameUI);
         playerCameraManager = new PlayerCameraManager(ECSengine, scene, playerManager);
         playerManager.setplayerT(playerT);
         this.gameUI.setPlayerTOffset(playerT);
-        /*engine.runRenderLoop(function () {
-            roadManager.update(playerManager.getplayerT());
-        });*/
     }
     else {
+        /**
+         * first start
+         */
+        
         playerManager = new PlayerManager(scene, ECSengine, roadManager, audio, gameUI);
         playerCameraManager = new PlayerCameraManager(ECSengine, scene, playerManager);
         
