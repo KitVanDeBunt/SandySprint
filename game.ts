@@ -85,12 +85,13 @@ var mainMenu = function () {
         //enable physcis for collision
         scene.enablePhysics();
 
-        //Adding a light
+        //Adding lighting
         let light: BABYLON.DirectionalLight = new BABYLON.DirectionalLight(
             "Omni"
             , new BABYLON.Vector3(20, -100, -100)
             , scene
         );
+        var tempLight = new BABYLON.DirectionalLight("UIemit", new BABYLON.Vector3(0, 0, 1), scene);
 
         // create entity component system
         this.ECSengine = new ECS.Engine();
