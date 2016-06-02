@@ -20,7 +20,8 @@ class PlayerCameraManager {
         this.cameraTranslateComponent = new ECS.ComponentTransform(BABYLON.Vector3.Zero(), new BABYLON.Vector3(0.005, 0.005, 0.005), BABYLON.Quaternion.Identity());
         this.cameraTranslateComponent.setPosition = this.cameraTranslateComponent.getPosition.add(new BABYLON.Vector3(0, 0, 5));
         cameraECS.addComponent(this.cameraTranslateComponent);
-        cameraECS.addComponent(new ComponentCamera(this.cameraTranslateComponent, scene));
+        this.cameraComponent = new ComponentCamera(this.cameraTranslateComponent, scene);
+        cameraECS.addComponent(this.cameraComponent);
     }
 
     /**
@@ -28,5 +29,9 @@ class PlayerCameraManager {
      */
     update(deltaTime: number) {
         this.cameraTranslateComponent.setPosition = this.playerManager.getplayerPosition().add(new BABYLON.Vector3(0, 0.5, 0.0));
+    }
+    
+    getCameraComponent():ComponentCamera{
+        return this.cameraComponent;
     }
 }

@@ -91,6 +91,14 @@ class PlayerManager {
     getplayerT(): number {
         return this.playerT;
     }
+    
+    /**
+     * Sets the players interpontation(t or dictance in game).
+     * @param T T to be set
+     */
+    setplayerT(T:number): void {
+        this.playerT = T;
+    }
 
     /**
      * returns the amout of pickups collected
@@ -242,10 +250,9 @@ class PlayerManager {
      */
     private updatePlayerMovment(deltaTime: number) {
         if (this.playerSpeed != 0) {
-            // TODO : add max speed
-            if (deltaTime > 200) {
-                this.playerT += (200 * this.playerSpeed);
-                deltaTime -= 200;
+            if(deltaTime>100){
+                this.playerT += (100 * this.playerSpeed);
+                deltaTime-=100;
                 this.updatePlayerMovment(deltaTime);
             }
             else {

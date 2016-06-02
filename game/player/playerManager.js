@@ -59,6 +59,13 @@ var PlayerManager = (function () {
         return this.playerT;
     };
     /**
+     * Sets the players interpontation(t or dictance in game).
+     * @param T T to be set
+     */
+    PlayerManager.prototype.setplayerT = function (T) {
+        this.playerT = T;
+    };
+    /**
      * returns the amout of pickups collected
      * @returns the amount of pickups collected
      */
@@ -191,10 +198,9 @@ var PlayerManager = (function () {
      */
     PlayerManager.prototype.updatePlayerMovment = function (deltaTime) {
         if (this.playerSpeed != 0) {
-            // TODO : add max speed
-            if (deltaTime > 200) {
-                this.playerT += (200 * this.playerSpeed);
-                deltaTime -= 200;
+            if (deltaTime > 100) {
+                this.playerT += (100 * this.playerSpeed);
+                deltaTime -= 100;
                 this.updatePlayerMovment(deltaTime);
             }
             else {

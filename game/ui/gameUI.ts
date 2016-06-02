@@ -18,6 +18,7 @@ class GameUI {
     private _endScreen: endScreen;
     private _cameraECS: ECS.Entity;
     private _audio: audioManager;
+    private _playerToffset: number = 0;
 
     constructor(scene: BABYLON.Scene, ecs: ECS.Engine, canvas: HTMLCanvasElement, engine: BABYLON.Engine, audioManager: audioManager) {
         this._canvas = canvas;
@@ -29,10 +30,10 @@ class GameUI {
         /**
          * Adding light for UI elements
          */
-        var UIlight = new BABYLON.DirectionalLight("MainMenuEmit", new BABYLON.Vector3(100, 100, 100), scene);
-        UIlight.intensity = 2;
+        var UIlight = new BABYLON.DirectionalLight("MainMenuEmit", new BABYLON.Vector3(0, 0, 0), scene);
+        UIlight.intensity = 1;
         UIlight.includeOnlyWithLayerMask = 0x20000000;
-        var tempLight = new BABYLON.DirectionalLight("UIemit", new BABYLON.Vector3(0, 0, 1), scene);
+        // var tempLight = new BABYLON.DirectionalLight("UIemit", new BABYLON.Vector3(0, 0, 1), scene);
 
         /**
          * create UIcamera entity
@@ -54,7 +55,7 @@ class GameUI {
             case menuState.Start:
                 this._menu.onInput(new BABYLON.Vector2(inputPos.x, inputPos.y));
                 break;
-                case menuState.End:
+            case menuState.End:
                 this._endScreen.onInput(new BABYLON.Vector2(inputPos.x, inputPos.y));
                 break;
             default:
@@ -101,6 +102,9 @@ class GameUI {
             case menuState.Game:
                 this._inGameUI.update();
                 break;
+            case menuState.End:
+                this._endScreen.update();
+                break;
             default:
                 break;
         }
@@ -137,7 +141,9 @@ class GameUI {
     }
 
     openEndScreen() {
-        this._endScreen = new endScreen(this,this._scene);
+        this._endScreen = new endScreen(this, this._scene);
+        this._endScreen.setScore(playerManager.getplayerT() - this.getPlayerTOffset());
+        this._endScreen.setScarabs(playerManager.getPickupsCollected());
     }
 
     closeEndScreen() {
@@ -157,13 +163,28 @@ class GameUI {
     createImage(position: BABYLON.Vector2, scale: BABYLON.Vector2, image: BABYLON.Texture): BABYLON.Mesh {
         var logobox = BABYLON.Mesh.CreatePlane("UIBox", 1, this._scene);
         logobox.scaling = new BABYLON.Vector3(scale.x * 2, scale.y * 2, 0.001);
-        logobox.position = new BABYLON.Vector3(position.x, position.y, 0);
+        logobox.position = new BABYLON.Vector3(position.x, position.y, 1);
         var logoMaterial = new BABYLON.StandardMaterial("logoMaterial", this._scene);
         logoMaterial.diffuseTexture = image;
         logoMaterial.diffuseTexture.hasAlpha = true;
         logobox.material = logoMaterial;
         logobox.layerMask = 0x20000000;
         return logobox;
+    }
+
+    /**
+     * sets playerTOffset for restrating
+     * @param PlayerT the playerT where there player died previous round.
+     */
+    setPlayerTOffset(PlayerT: number) {
+        this._playerToffset = PlayerT;
+    }
+
+    /**
+     * get playerTOffset
+     */
+    getPlayerTOffset(): number {
+        return this._playerToffset;
     }
 }
 
