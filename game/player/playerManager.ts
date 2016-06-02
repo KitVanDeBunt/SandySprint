@@ -14,8 +14,8 @@ class PlayerManager {
     private pickupsCollected: number = 0;
     private jumpManager: ComponentJumpLane;
     private audio: audioManager;
-    private gameUI:GameUI;
-    private playing:boolean;
+    private gameUI: GameUI;
+    private playing: boolean;
 
     // lane
     private previousLane: ComponentLaneBase;
@@ -35,10 +35,10 @@ class PlayerManager {
     private touchEnd: BABYLON.Vector2;
 
     private abstractMeshComponetType: string;
-        
+
     // frame time correction 24/30
     private ftc = 0.8;
-    
+
     /**
      * @param scene the scene which contains the player
      * @param the games entity component system
@@ -46,7 +46,7 @@ class PlayerManager {
      * @param the games AudioManager
      * @param gameUI the games ui
      */
-    constructor(scene: BABYLON.Scene, ECSengine: ECS.Engine, roadManager: RoadManager, audioManager:audioManager, gameUI:GameUI) {
+    constructor(scene: BABYLON.Scene, ECSengine: ECS.Engine, roadManager: RoadManager, audioManager: audioManager, gameUI: GameUI) {
         this.roadManager = roadManager;
         this.gameUI = gameUI;
         this.scene = scene;
@@ -76,11 +76,11 @@ class PlayerManager {
 
         this.abstractMeshComponetType = new ECS.ComponentAbstractMesh(null, null, null).componentType();
     }
-    
+
     /**
      * starts the player forwared movement by setting its speed
      */
-    startRunning(){
+    startRunning() {
         this.playerSpeed = 0.006;
     }
 
@@ -189,7 +189,7 @@ class PlayerManager {
      */
     update(deltaTime: number): void {
 
-        if(this.playing == true){
+        if (this.playing == true) {
             //console.log("updatePLayer");
             this.updateAnimation();
             this.updateRoadLane();
@@ -206,18 +206,18 @@ class PlayerManager {
         if (this.playerMeshComponent.meshState == ECS.MeshLoadState.Loaded) {
             switch (this.animationState) {
                 case PlayerAnimationState.NotStarted:
-                    this.scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 0, 21*this.ftc, true, 1);
+                    this.scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 0, 21 * this.ftc, true, 1.4);
                     this.animationState = PlayerAnimationState.Running;
                     break;
                 case PlayerAnimationState.Running:
-                    if(this.jumpManager.jumping){
-                        this.scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 80*this.ftc, 110*this.ftc, true, 1);
+                    if (this.jumpManager.jumping) {
+                        this.scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 80 * this.ftc, 110 * this.ftc, true, 1);
                         this.animationState = PlayerAnimationState.Jumping;
                     }
                     break;
                 case PlayerAnimationState.Jumping:
-                    if(!this.jumpManager.jumping){
-                        this.scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 0*this.ftc, 21*this.ftc, true, 1);
+                    if (!this.jumpManager.jumping) {
+                        this.scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 0 * this.ftc, 21 * this.ftc, true, 1.4);
                         this.animationState = PlayerAnimationState.Running;
                     }
                     break;
@@ -235,7 +235,7 @@ class PlayerManager {
             this.previousLane = this.previousLane.getNextLane;
         }
     }
-    
+
     /**
      * updats the movement of the player
      * @param deltaTime time delta this update and previous update
@@ -243,12 +243,12 @@ class PlayerManager {
     private updatePlayerMovment(deltaTime: number) {
         if (this.playerSpeed != 0) {
             // TODO : add max speed
-            if(deltaTime>200){
+            if (deltaTime > 200) {
                 this.playerT += (200 * this.playerSpeed);
-                deltaTime-=200;
+                deltaTime -= 200;
                 this.updatePlayerMovment(deltaTime);
             }
-            else{
+            else {
                 this.playerT += (deltaTime * this.playerSpeed);
             }
         }
@@ -293,7 +293,7 @@ class PlayerManager {
                         if (coll) {
                             switch (this.roadManager.obstacles[i].meshType) {
                                 case CollisionMeshType.pillar:
-                                     this.gameUI.closeInGame();
+                                    this.gameUI.closeInGame();
                                     this.gameUI.openEndScreen();
                                     this.playing = false;
                                     break;
@@ -305,6 +305,28 @@ class PlayerManager {
                                     break;
                                 default:
                                     break;
+                            }
+                        }
+                    }
+                }
+            }
+            for (var i: number = 0; i < this.roadManager.sceneObjects.length; i++) {
+
+                if (roadManager.sceneObjects[i].hasCollider) {
+                    let meshLoaded: boolean = ((<ECS.ComponentAbstractMesh>this.roadManager.sceneObjects[i].entity.getComponent(this.abstractMeshComponetType)).meshState == ECS.MeshLoadState.Loaded);
+                    if (meshLoaded) {
+                        if (this.roadManager.sceneObjects[i] != null) {
+                            var coll: boolean = this.playerMeshComponent.getCollider.intersectsMesh(this.roadManager.sceneObjects[i].meshCollider);
+                            if (coll) {
+                                switch (this.roadManager.sceneObjects[i].meshType) {
+                                    case CollisionMeshType.pillar:
+                                        this.gameUI.closeInGame();
+                                        this.gameUI.openEndScreen();
+                                        this.playing = false;
+                                        break;
+                                    default:
+                                        break;
+                                }
                             }
                         }
                     }

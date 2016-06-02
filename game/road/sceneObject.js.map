@@ -1,1 +1,1 @@
-{"version":3,"file":"sceneObject.js","sourceRoot":"","sources":["sceneObject.ts"],"names":[],"mappings":"AAAA;;GAEG;AACH;IAMI,qBAAY,MAAkB,EAAE,aAAqB;QACjD,IAAI,CAAC,MAAM,GAAG,MAAM,CAAC;QACrB,IAAI,CAAC,aAAa,GAAG,aAAa,CAAC;IACvC,CAAC;IACL,kBAAC;AAAD,CAAC,AAVD,IAUC"}
+{"version":3,"file":"sceneObject.js","sourceRoot":"","sources":["sceneObject.ts"],"names":[],"mappings":"AAAA;;GAEG;AACH;IASI,qBAAY,MAAkB,EAAE,aAAqB;QAFrD,gBAAW,GAAY,KAAK,CAAC;QAGzB,IAAI,CAAC,MAAM,GAAG,MAAM,CAAC;QACrB,IAAI,CAAC,aAAa,GAAG,aAAa,CAAC;IACvC,CAAC;IACL,kBAAC;AAAD,CAAC,AAbD,IAaC"}

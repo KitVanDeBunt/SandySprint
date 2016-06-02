@@ -35,7 +35,13 @@ var RoadManager = (function () {
         var road = this.engine.createEntity();
         var roadPositionComponent = new ECS.ComponentTransform(new BABYLON.Vector3(0, 0, this.roadesSpawned * 14), new BABYLON.Vector3(1, 1, 1), BABYLON.Quaternion.Identity());
         road.addComponent(roadPositionComponent);
-        this.roadMeshes[roadN] = new ECS.ComponentAbstractMesh(roadPositionComponent, "assets/models/", "road_river.babylon");
+        var randomRoad = Math.random();
+        if (randomRoad > 0.7) {
+            this.roadMeshes[roadN] = new ECS.ComponentAbstractMesh(roadPositionComponent, "assets/models/", "road_plain.babylon");
+        }
+        else {
+            this.roadMeshes[roadN] = new ECS.ComponentAbstractMesh(roadPositionComponent, "assets/models/", "road_river.babylon");
+        }
         road.addComponent(this.roadMeshes[roadN]);
         this.lanes[roadN] = [
             new ComponentStraightLane(this.roadMeshes[roadN], new BABYLON.Vector3(-0.25, 0, this.roadesSpawned * 14), BABYLON.Vector3.Zero(), this.scene, this.roadesSpawned * 14),
@@ -61,7 +67,7 @@ var RoadManager = (function () {
         for (var i = 0; i < 5; i++) {
             this.createLaneObject(roadN, "assets/models/", "pickup_scarab.babylon", CollisionMeshType.scarab, new BABYLON.Vector3(2.5, 2.5, 2.5), new BABYLON.Quaternion(0, 0, 0, 1), new BABYLON.Vector3(0, 0.5, 0), BABYLON.Vector3.Zero(), 0.2, 0.5, this.randomLane());
         }
-        this.sceneObjectFactory.createRandomTemplateSet(roadN);
+        this.sceneObjectFactory.createRandomTemplateSet(roadN, this.scene);
         this.roadesSpawned++;
     };
     /**

@@ -158,7 +158,7 @@ var PlayerManager = (function () {
         if (this.playerMeshComponent.meshState == ECS.MeshLoadState.Loaded) {
             switch (this.animationState) {
                 case PlayerAnimationState.NotStarted:
-                    this.scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 0, 21 * this.ftc, true, 1);
+                    this.scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 0, 21 * this.ftc, true, 1.4);
                     this.animationState = PlayerAnimationState.Running;
                     break;
                 case PlayerAnimationState.Running:
@@ -169,7 +169,7 @@ var PlayerManager = (function () {
                     break;
                 case PlayerAnimationState.Jumping:
                     if (!this.jumpManager.jumping) {
-                        this.scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 0 * this.ftc, 21 * this.ftc, true, 1);
+                        this.scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 0 * this.ftc, 21 * this.ftc, true, 1.4);
                         this.animationState = PlayerAnimationState.Running;
                     }
                     break;
@@ -249,6 +249,27 @@ var PlayerManager = (function () {
                                     break;
                                 default:
                                     break;
+                            }
+                        }
+                    }
+                }
+            }
+            for (var i = 0; i < this.roadManager.sceneObjects.length; i++) {
+                if (roadManager.sceneObjects[i].hasCollider) {
+                    var meshLoaded = (this.roadManager.sceneObjects[i].entity.getComponent(this.abstractMeshComponetType).meshState == ECS.MeshLoadState.Loaded);
+                    if (meshLoaded) {
+                        if (this.roadManager.sceneObjects[i] != null) {
+                            var coll = this.playerMeshComponent.getCollider.intersectsMesh(this.roadManager.sceneObjects[i].meshCollider);
+                            if (coll) {
+                                switch (this.roadManager.sceneObjects[i].meshType) {
+                                    case CollisionMeshType.pillar:
+                                        this.gameUI.closeInGame();
+                                        this.gameUI.openEndScreen();
+                                        this.playing = false;
+                                        break;
+                                    default:
+                                        break;
+                                }
                             }
                         }
                     }
