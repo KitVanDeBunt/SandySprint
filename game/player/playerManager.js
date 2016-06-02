@@ -115,10 +115,10 @@ var PlayerManager = (function () {
      */
     PlayerManager.prototype.onKeyDown = function (keyEvent) {
         switch (keyEvent.keyCode) {
-            case 65:
+            case 37:
                 this.movePlayerLeft();
                 break;
-            case 68:
+            case 39:
                 this.movePlayerRight();
                 break;
             case 32:
