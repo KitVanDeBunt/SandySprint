@@ -9,15 +9,15 @@ class audioManager {
     constructor(scene: BABYLON.Scene) {
         this._scene = scene;
         
-        this.pickUpSound = new BABYLON.Sound("pickup", "../assets/sounds/pickUp.wav",
+        this.pickUpSound = new BABYLON.Sound("pickup", "assets/sounds/pickUp.wav",
                     this._scene, null, { autoplay: false, loop: false});
         this.pickUpSound.setVolume(2);
         
-        this.menuBackgroundSound = new BABYLON.Sound("MenuBackGround", "../assets/sounds/menuSound.mp3",
+        this.menuBackgroundSound = new BABYLON.Sound("MenuBackGround", "assets/sounds/menuSound.mp3",
                     this._scene, null, { autoplay: false, loop: true});
         this.menuBackgroundSound.setVolume(0.1);
         
-        this.inGameSound = new BABYLON.Sound("MenuBackGround", "../assets/sounds/gameSound.mp3",
+        this.inGameSound = new BABYLON.Sound("MenuBackGround", "assets/sounds/gameSound.mp3",
                     this._scene, null, { autoplay: false, loop: true});
         this.inGameSound.setVolume(1);
     }

@@ -61,12 +61,7 @@ class RoadManager {
         );
 
         road.addComponent(roadPositionComponent);
-        let randomRoad:number = Math.random();
-        if(randomRoad>0.7){            
-            this.roadMeshes[roadN] = new ECS.ComponentAbstractMesh(roadPositionComponent, "assets/models/", "road_plain.babylon");
-        }else{
-            this.roadMeshes[roadN] = new ECS.ComponentAbstractMesh(roadPositionComponent, "assets/models/", "road_river.babylon");
-        }
+        this.roadMeshes[roadN] = new ECS.ComponentAbstractMesh(roadPositionComponent, "assets/models/", "road_plain.babylon");
         
         road.addComponent(this.roadMeshes[roadN]);
 

@@ -1,11 +1,11 @@
 var audioManager = (function () {
     function audioManager(scene) {
         this._scene = scene;
-        this.pickUpSound = new BABYLON.Sound("pickup", "../assets/sounds/pickUp.wav", this._scene, null, { autoplay: false, loop: false });
+        this.pickUpSound = new BABYLON.Sound("pickup", "assets/sounds/pickUp.wav", this._scene, null, { autoplay: false, loop: false });
         this.pickUpSound.setVolume(2);
-        this.menuBackgroundSound = new BABYLON.Sound("MenuBackGround", "../assets/sounds/menuSound.mp3", this._scene, null, { autoplay: false, loop: true });
+        this.menuBackgroundSound = new BABYLON.Sound("MenuBackGround", "assets/sounds/menuSound.mp3", this._scene, null, { autoplay: false, loop: true });
         this.menuBackgroundSound.setVolume(0.1);
-        this.inGameSound = new BABYLON.Sound("MenuBackGround", "../assets/sounds/gameSound.mp3", this._scene, null, { autoplay: false, loop: true });
+        this.inGameSound = new BABYLON.Sound("MenuBackGround", "assets/sounds/gameSound.mp3", this._scene, null, { autoplay: false, loop: true });
         this.inGameSound.setVolume(1);
     }
     /**
