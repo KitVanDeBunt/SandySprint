@@ -63,7 +63,7 @@ var endScreen = (function () {
         }
         this.context2D.clearRect(0, 0, 512, 512);
         this._endscreentexture.drawText("Score: " + Math.round(this._scorecount), 150, 260, "30px Cooper Std Black", "black", "transparent");
-        this._endscreentexture.drawText("Scarabs: " + this._scarabcount + " *3", 150, 290, "30px Cooper Std Black", "black", "transparent");
+        this._endscreentexture.drawText("Scarabs: " + this._scarabcount + "  x 3", 150, 290, "30px Cooper Std Black", "black", "transparent");
         this._endscreentexture.drawText("Total: " + Math.round(this._scorecount + (this._scarabcount * 3)), 150, 330, "30px Cooper Std Black", "black", "transparent");
     };
     endScreen.prototype.onInput = function (inputPos) {
