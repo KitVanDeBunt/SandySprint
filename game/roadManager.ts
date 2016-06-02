@@ -61,7 +61,13 @@ class RoadManager {
         );
 
         road.addComponent(roadPositionComponent);
-        this.roadMeshes[roadN] = new ECS.ComponentAbstractMesh(roadPositionComponent, "assets/models/", "road_river.babylon");
+        let randomRoad:number = Math.random();
+        if(randomRoad>0.7){            
+            this.roadMeshes[roadN] = new ECS.ComponentAbstractMesh(roadPositionComponent, "assets/models/", "road_plain.babylon");
+        }else{
+            this.roadMeshes[roadN] = new ECS.ComponentAbstractMesh(roadPositionComponent, "assets/models/", "road_river.babylon");
+        }
+        
         road.addComponent(this.roadMeshes[roadN]);
 
         this.lanes[roadN] = [
@@ -101,6 +107,7 @@ class RoadManager {
             , 2
             , this.randomLane()
         );
+        
         for (var i = 0; i < 5; i++) {
             this.createLaneObject(
                 roadN
@@ -117,7 +124,7 @@ class RoadManager {
             );
         }
 
-        this.sceneObjectFactory.createRandomTemplateSet(roadN);
+        this.sceneObjectFactory.createRandomTemplateSet(roadN,this.scene);
 
         this.roadesSpawned++;
     }

@@ -10,6 +10,7 @@ var RoadObstacle = (function (_super) {
     __extends(RoadObstacle, _super);
     function RoadObstacle(meshCollider, meshType, entity, spawnDistance) {
         _super.call(this, entity, spawnDistance);
+        this.hasCollider = true;
         this.meshCollider = meshCollider;
         this.meshType = meshType;
     }
