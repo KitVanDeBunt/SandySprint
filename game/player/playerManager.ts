@@ -157,10 +157,10 @@ class PlayerManager {
     onKeyDown(keyEvent: KeyboardEvent): void {
 
         switch (keyEvent.keyCode) {
-            case 65: //'A'
+            case 37: //'Left'
                 this.movePlayerLeft();
                 break;
-            case 68: //'D'
+            case 39: //'Right'
                 this.movePlayerRight();
                 break;
             case 32: //'Space'
