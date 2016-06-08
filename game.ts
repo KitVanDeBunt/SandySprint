@@ -119,7 +119,7 @@ var mainMenu = function () {
         return scene;
     }
 
-    scene = createScene();
+    this.scene = createScene();
 
     engine.runRenderLoop(function () {
         // update entity component system

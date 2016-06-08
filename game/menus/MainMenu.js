@@ -54,13 +54,13 @@ var MainMenu = (function () {
      */
     MainMenu.prototype.Move = function () {
         this._movesToStart = 0;
-        this._flyCam = new BABYLON.FreeCamera("freeCam", this._camera.position, scene);
+        this._flyCam = new BABYLON.FreeCamera("freeCam", this._camera.position, this._scene);
         this._flyCam.setTarget(new BABYLON.Vector3(0, 0, -8.5));
         this._startPos = this._flyCam.position;
         this._startRot = this._flyCam.rotation;
         console.log(this._flyCam.rotation);
         this._camera.dispose();
-        scene.activeCameras.push(this._flyCam);
+        this._scene.activeCameras.push(this._flyCam);
         this._movingCam = true;
     };
     MainMenu.prototype.onInput = function (inputPos) {
