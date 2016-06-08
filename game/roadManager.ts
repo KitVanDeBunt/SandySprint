@@ -16,12 +16,12 @@ class RoadManager {
     /**
      * list of obstacles on the road
      */
-    obstacles: RoadObstacle[];
+    //obstacles: RoadObstacle[];
     /**
      * list of objects in the scene
      */
     sceneObjects: SceneObject[];
-    
+
     /**
      * @returns returns the lanes currently in game
      */
@@ -32,7 +32,7 @@ class RoadManager {
     constructor(engine: ECS.Engine, scene: BABYLON.Scene) {
         this._lanes = [];
         this._roadMeshes = [];
-        this.obstacles = [];
+        //this.obstacles = [];
         this.sceneObjects = [];
         this._engine = engine;
         this._scene = scene;
@@ -62,7 +62,7 @@ class RoadManager {
 
         road.addComponent(roadPositionComponent);
         this._roadMeshes[roadN] = new ECS.ComponentAbstractMesh(roadPositionComponent, "assets/models/", "road_river.babylon");
-        
+
         road.addComponent(this._roadMeshes[roadN]);
 
         this._lanes[roadN] = [
@@ -101,8 +101,9 @@ class RoadManager {
             , 0.2
             , 2
             , this.randomLane()
+            , Math.random()
         );
-        
+
         this.createLaneObject(
             roadN
             , "assets/models/"
@@ -115,9 +116,10 @@ class RoadManager {
             , 0.2
             , 0.5
             , this.randomLane()
+            , Math.random()
         );
-        
-        
+
+
         for (var i = 0; i < 5; i++) {
             this.createLaneObject(
                 roadN
@@ -131,10 +133,11 @@ class RoadManager {
                 , 0.2
                 , 0.5
                 , this.randomLane()
+                , Math.random()
             );
         }
 
-        this._sceneObjectFactory.createRandomTemplateSet(roadN,this._scene);
+        this._sceneObjectFactory.createRandomTemplateSet(roadN, this._scene);
 
         this._roadesSpawned++;
     }
@@ -154,11 +157,11 @@ class RoadManager {
         , colliderWidth: number
         , colliderHeight: number
         , lane: number
+        , tOnLane: number
     ) {
-        let randomT: number = Math.random();
         let obstacle: ECS.Entity = this._engine.createEntity();
         let obstacleTransformComponent: ECS.ComponentTransform = new ECS.ComponentTransform(
-            this._lanes[roadN][lane].getPointAtT(randomT)
+            this._lanes[roadN][lane].getPointAtT(tOnLane)
             , scale
             , rotation
         );
@@ -172,8 +175,10 @@ class RoadManager {
         obstacleMesh.setColliderOffset = collisionMeshOffset;
         obstacleMesh.updateCollision();
 
-        let arrayPosition: number = this.obstacles.length;
-        this.obstacles[arrayPosition] = new RoadObstacle(obstacleMesh.getCollider, type, obstacle, this._lanes[roadN][lane].getDistanceAtT(randomT));
+        let arrayPosition: number = this.sceneObjects.length;
+        this.sceneObjects[arrayPosition] = new SceneObject(obstacle, this._lanes[roadN][lane].getDistanceAtT(tOnLane));
+        this.sceneObjects[arrayPosition].meshCollider = obstacleMesh.getCollider;
+        this.sceneObjects[arrayPosition].meshType = type;
     }
 
     /**
@@ -182,7 +187,7 @@ class RoadManager {
     private randomLane(): number {
         return Math.floor((Math.random() * 3));
     }
-    
+
     /**
      * returns the first lane used in the game
      */
@@ -208,7 +213,7 @@ class RoadManager {
             }
         }
         // delete obstacles if out of view
-        for (var i = 0; i < this.obstacles.length; i++) {
+        /*for (var i = 0; i < this.obstacles.length; i++) {
             if (this.obstacles[i].spawnDistance < playerT - 10) {
                 // check if object mesh is loaded before destroying it
                 let meshLoaded: boolean = ((<ECS.ComponentAbstractMesh>this.obstacles[i].entity.getComponent(this._abstractMeshComponetType)).meshState == ECS.MeshLoadState.Loaded);
@@ -217,7 +222,7 @@ class RoadManager {
                     this.obstacles.splice(i, 1);
                 }
             }
-        }
+        }*/
         // delete sceneObjects if out of view
         for (var i = 0; i < this.sceneObjects.length; i++) {
             if (this.sceneObjects[i].spawnDistance < playerT - 5) {

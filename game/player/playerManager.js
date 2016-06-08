@@ -237,31 +237,6 @@ var PlayerManager = (function () {
     PlayerManager.prototype.updateCollision = function () {
         this.playerMeshComponent.updateCollision();
         if (!this.firstFrame) {
-            for (var i = 0; i < this.roadManager.obstacles.length; i++) {
-                var meshLoaded = (this.roadManager.obstacles[i].entity.getComponent(this.abstractMeshComponetType).meshState == ECS.MeshLoadState.Loaded);
-                if (meshLoaded) {
-                    if (this.roadManager.obstacles[i] != null) {
-                        var coll = this.playerMeshComponent.getCollider.intersectsMesh(this.roadManager.obstacles[i].meshCollider);
-                        if (coll) {
-                            switch (this.roadManager.obstacles[i].meshType) {
-                                case CollisionMeshType.pillar || CollisionMeshType.spike:
-                                    this.gameUI.closeInGame();
-                                    this.gameUI.openEndScreen();
-                                    this.playing = false;
-                                    break;
-                                case CollisionMeshType.scarab:
-                                    this.audio.playSound(Sounds.Pickup);
-                                    this.pickupsCollected++;
-                                    this.roadManager.obstacles[i].entity.destroy();
-                                    this.roadManager.obstacles.splice(i, 1);
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                    }
-                }
-            }
             for (var i = 0; i < this.roadManager.sceneObjects.length; i++) {
                 if (this.roadManager.sceneObjects[i].hasCollider) {
                     var meshLoaded = (this.roadManager.sceneObjects[i].entity.getComponent(this.abstractMeshComponetType).meshState == ECS.MeshLoadState.Loaded);
@@ -270,10 +245,16 @@ var PlayerManager = (function () {
                             var coll = this.playerMeshComponent.getCollider.intersectsMesh(this.roadManager.sceneObjects[i].meshCollider);
                             if (coll) {
                                 switch (this.roadManager.sceneObjects[i].meshType) {
-                                    case CollisionMeshType.pillar:
+                                    case CollisionMeshType.pillar || CollisionMeshType.spike:
                                         this.gameUI.closeInGame();
                                         this.gameUI.openEndScreen();
                                         this.playing = false;
+                                        break;
+                                    case CollisionMeshType.scarab:
+                                        this.audio.playSound(Sounds.Pickup);
+                                        this.pickupsCollected++;
+                                        this.roadManager.sceneObjects[i].entity.destroy();
+                                        this.roadManager.sceneObjects.splice(i, 1);
                                         break;
                                     default:
                                         break;

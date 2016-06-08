@@ -10,16 +10,9 @@ var RoadObstacle = (function (_super) {
     __extends(RoadObstacle, _super);
     function RoadObstacle(meshCollider, meshType, entity, spawnDistance) {
         _super.call(this, entity, spawnDistance);
-        this.hasCollider = true;
-        this.meshCollider = meshCollider;
         this.meshType = meshType;
+        this.meshCollider = meshCollider;
     }
     return RoadObstacle;
 }(SceneObject));
-var CollisionMeshType;
-(function (CollisionMeshType) {
-    CollisionMeshType[CollisionMeshType["spike"] = 0] = "spike";
-    CollisionMeshType[CollisionMeshType["pillar"] = 1] = "pillar";
-    CollisionMeshType[CollisionMeshType["scarab"] = 2] = "scarab";
-})(CollisionMeshType || (CollisionMeshType = {}));
 //# sourceMappingURL=obstacle.js.map
