@@ -24,17 +24,14 @@ var endScreen = (function () {
         backgroundTex = new BABYLON.Texture("assets/textures/ui_textures/restart-button.png", this._scene, true);
         var play = this._gameUI.createImage(new BABYLON.Vector2(0, -270), new BABYLON.Vector2(50, 50), backgroundTex);
         this._objects.push(play);
-        /*  backgroundTex = new BABYLON.Texture("assets/textures/ui_textures/exit-button.png", this._scene, true);
-          var play = this._gameUI.createImage(new BABYLON.Vector2(200, -270), new BABYLON.Vector2(50, 50), backgroundTex);
-          this._objects.push(play);*/
-        var material = new BABYLON.StandardMaterial("textuare1", scene);
+        var material = new BABYLON.StandardMaterial("textuare1", this._scene);
         material.alpha = 1;
         material.diffuseColor = new BABYLON.Color3(1.00, 1.00, 1.00);
-        this._endscreentexture = new BABYLON.DynamicTexture('ScoreTex', 512, scene, true);
+        this._endscreentexture = new BABYLON.DynamicTexture('ScoreTex', 512, this._scene, true);
         this._endscreentexture.hasAlpha = true;
         material.diffuseTexture = this._endscreentexture;
         //Adding UI Element
-        this._box = BABYLON.Mesh.CreatePlane("Box", 5, scene, false);
+        this._box = BABYLON.Mesh.CreatePlane("Box", 5, this._scene, false);
         this._box.material = material;
         this._box.scaling = new BABYLON.Vector3(200, 200, 1);
         this._box.layerMask = 0x20000000;

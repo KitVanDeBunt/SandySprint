@@ -21,14 +21,14 @@ var InGameUI = (function () {
         var treasureBarTex = new BABYLON.Texture("assets/textures/ui_textures/treasure-bar.png", this._scene, true);
         var treasureBar = this._gameUI.createImage(new BABYLON.Vector2(-440, 342), new BABYLON.Vector2(580 / 2, 51 / 2), treasureBarTex);
         this._objects.push(treasureBar);
-        var material = new BABYLON.StandardMaterial("textuare1", scene);
+        var material = new BABYLON.StandardMaterial("textuare1", this._scene);
         material.alpha = 1;
         material.diffuseColor = new BABYLON.Color3(1.00, 1.00, 1.00);
-        this._myMaterial_diffuseTexture = new BABYLON.DynamicTexture('ScoreTex', 512, scene, true);
+        this._myMaterial_diffuseTexture = new BABYLON.DynamicTexture('ScoreTex', 512, this._scene, true);
         this._myMaterial_diffuseTexture.hasAlpha = true;
         material.diffuseTexture = this._myMaterial_diffuseTexture;
         //Adding UI Element
-        this._box = BABYLON.Mesh.CreatePlane("Box", 5, scene, false);
+        this._box = BABYLON.Mesh.CreatePlane("Box", 5, this._scene, false);
         this._box.material = material;
         this._box.scaling = new BABYLON.Vector3(200, 200, 1);
         this._box.layerMask = 0x20000000;

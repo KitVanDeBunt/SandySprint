@@ -1,7 +1,15 @@
 /**
  * GameUI
+ * Creates a camera for UI elements, and opens/closes the menus.
  */
 var GameUI = (function () {
+    /**
+     * @param scene the scene of the game.
+     * @param ecs the Entity Component System Engine.
+     * @param canvas the canvas of the game.
+     * @param engine the Babylon Engine of the game.
+     * @param audioManager the audioManager to play/stop sounds.
+     */
     function GameUI(scene, ecs, canvas, engine, audioManager) {
         this._playerToffset = 0;
         this._canvas = canvas;
@@ -9,20 +17,16 @@ var GameUI = (function () {
         this._scene = scene;
         this._ecsEngine = ecs;
         this._audio = audioManager;
-        /**
-         * Adding light for UI elements
-         */
-        var UIlight = new BABYLON.DirectionalLight("MainMenuEmit", new BABYLON.Vector3(0, 0, 0), scene);
+        var UIlight = new BABYLON.DirectionalLight("MainMenuEmit", new BABYLON.Vector3(0, 0, 0), this._scene);
         UIlight.intensity = 1;
         UIlight.includeOnlyWithLayerMask = 0x20000000;
-        // var tempLight = new BABYLON.DirectionalLight("UIemit", new BABYLON.Vector3(0, 0, 1), scene);
         /**
          * create UIcamera entity
          */
         this._cameraECS = ecs.createEntity();
         var cameraTranslateComponent = new ECS.ComponentTransform(new BABYLON.Vector3(0, 0, -10), new BABYLON.Vector3(1, 1, 1), new BABYLON.Quaternion(0, 0, 0, 0));
         this._cameraECS.addComponent(cameraTranslateComponent);
-        var UICam = new ComponentCamera(cameraTranslateComponent, scene);
+        var UICam = new ComponentCamera(cameraTranslateComponent, this._scene);
         UICam.setLayermask = 0x20000000;
         this._cameraECS.addComponent(UICam);
     }

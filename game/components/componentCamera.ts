@@ -1,37 +1,43 @@
 /**
  * ComponentCamera
+ * A component that contains a camera.
+ * Managed by SystemCamera.
  */
 class ComponentCamera extends ECS.Component {
 
     state: ComponentCameraState;
-    private camera: BABYLON.FreeCamera;
-    private scene: BABYLON.Scene;
-    private layer: number = 0;
+    private _camera: BABYLON.FreeCamera;
+    private _scene: BABYLON.Scene;
+    private _layer: number = 0;
 
+    /**
+     * @param transformComponent the ComponentTransform attached to the entity.
+     * @param scene the scene of the game.
+     */
     constructor(transformComponent: ECS.ComponentTransform, scene: BABYLON.Scene) {
         super();
         this.state = ComponentCameraState.None;
-        this.scene = scene;
+        this._scene = scene;
     }
 
     public get getScene(): BABYLON.Scene {
-        return this.scene;
+        return this._scene;
     }
 
     public get getCamera(): BABYLON.FreeCamera {
-        return this.camera;
+        return this._camera;
     }
     
     public get getLayermask() : number {
-        return this.layer;
+        return this._layer;
     }
 
     public set setCamera(camera: BABYLON.FreeCamera) {
-        this.camera = camera;
+        this._camera = camera;
     }
     
     public set setLayermask(layer: number) {
-        this.layer = layer;   
+        this._layer = layer;   
     }
 }
 

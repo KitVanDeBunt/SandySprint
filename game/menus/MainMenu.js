@@ -16,15 +16,15 @@ var MainMenu = (function () {
          *  create camera for main menu screne
          */
         var createCamera = function () {
-            this.camera = new BABYLON.ArcRotateCamera("MenuCam", 0, 0.3, 5, new BABYLON.Vector3(0, 0, -8.5), scene);
-            scene.activeCameras.push(this.camera);
+            this.camera = new BABYLON.ArcRotateCamera("MenuCam", 0, 0.3, 5, new BABYLON.Vector3(0, 0, -8.5), this._scene);
+            this._scene.activeCameras.push(this.camera);
             return this.camera;
         };
         this._camera = createCamera();
         /**
          * create temple for main menu scene
          */
-        BABYLON.SceneLoader.ImportMesh("", "assets/models/", "game_intro_temple.babylon", scene, function (newMeshes, newParticlesystems, newSkeletons) {
+        BABYLON.SceneLoader.ImportMesh("", "assets/models/", "game_intro_temple.babylon", this._scene, function (newMeshes, newParticlesystems, newSkeletons) {
             newMeshes.forEach(function (element) {
             });
             newMeshes[0].position = new BABYLON.Vector3(0, 0, 1);

@@ -5,46 +5,52 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 /**
  * ComponentCamera
+ * A component that contains a camera.
+ * Managed by SystemCamera.
  */
 var ComponentCamera = (function (_super) {
     __extends(ComponentCamera, _super);
+    /**
+     * @param transformComponent the ComponentTransform attached to the entity.
+     * @param scene the scene of the game.
+     */
     function ComponentCamera(transformComponent, scene) {
         _super.call(this);
-        this.layer = 0;
+        this._layer = 0;
         this.state = ComponentCameraState.None;
-        this.scene = scene;
+        this._scene = scene;
     }
     Object.defineProperty(ComponentCamera.prototype, "getScene", {
         get: function () {
-            return this.scene;
+            return this._scene;
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(ComponentCamera.prototype, "getCamera", {
         get: function () {
-            return this.camera;
+            return this._camera;
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(ComponentCamera.prototype, "getLayermask", {
         get: function () {
-            return this.layer;
+            return this._layer;
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(ComponentCamera.prototype, "setCamera", {
         set: function (camera) {
-            this.camera = camera;
+            this._camera = camera;
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(ComponentCamera.prototype, "setLayermask", {
         set: function (layer) {
-            this.layer = layer;
+            this._layer = layer;
         },
         enumerable: true,
         configurable: true
