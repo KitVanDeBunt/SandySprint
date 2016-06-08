@@ -11,7 +11,7 @@ var audioManager = (function () {
         this._pickUpSound = this.addSound("Pickup", "../assets/sounds/pickUp.wav", false, 2);
         this.menuBackgroundSound = this.addSound("MenuBackGround", "../assets/sounds/menuSound.mp3", true, 0.1);
         this._inGameSound = this.addSound("InGameSound", "../assets/sounds/gameSound.mp3", true, 1);
-        this._jumpSound = this.addSound("Jumpsound", "../assets/sounds/jump.mp3", false, 1);
+        this._jumpSound = this.addSound("Jumpsound", "../assets/sounds/jump.wav", false, 0.5);
         this._jumpLandSound = this.addSound("JumpLandSound", "../assets/sounds/jumpland.mp3", false, 1);
         this._startSound = this.addSound("StartSound", "../assets/sounds/start.wav", false, 2);
         this._stopSound = this.addSound("StopSound", "../assets/sounds/stop.mp3", false, 2);
@@ -26,9 +26,9 @@ var audioManager = (function () {
      * @param volume volume of the sound
      */
     audioManager.prototype.addSound = function (name, url, loop, volume) {
-        var variable = new BABYLON.Sound(name, url, this._scene, null, { autoplay: false, loop: loop });
-        variable.setVolume(volume);
-        return variable;
+        var sound = new BABYLON.Sound(name, url, this._scene, null, { autoplay: false, loop: loop });
+        sound.setVolume(volume);
+        return sound;
     };
     /**
      * Plays a sound
@@ -46,6 +46,7 @@ var audioManager = (function () {
                 this._inGameSound.play();
                 break;
             case Sounds.Jump:
+                this._jumpSound.setPlaybackRate(1 + (Math.random() * 0.2));
                 this._jumpSound.play();
                 break;
             case Sounds.JumpLand:
