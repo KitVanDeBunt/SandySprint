@@ -115,7 +115,6 @@ class Game {
         // create managers (scripts that handel game logic) 
         this._audio = new audioManager(scene);
         this._roadManager = new RoadManager(this._ECSengine, scene);
-
         //starting main menu
         this._gameUI = new GameUI(scene, this._ECSengine, this._canvas, this._engine, this._audio);
         this._gameUI.openMainMenu();
@@ -124,6 +123,7 @@ class Game {
         this._skyboxManager = new SkyBoxManager(scene, this._ECSengine);
 
         return scene;
+        
     }
 
     /**

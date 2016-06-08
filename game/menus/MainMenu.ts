@@ -1,5 +1,6 @@
 /**
  * MainMenu
+ * Creates 
  */ 
 class MainMenu {
 
@@ -25,19 +26,13 @@ class MainMenu {
         this._ECSEngine = ecs;
         this._scene = scene;
 
-        /**
-         *  create camera for main menu screne
-         */
         let createCamera = function () {
-            this.camera = new BABYLON.ArcRotateCamera("MenuCam", 0, 0.3, 5, new BABYLON.Vector3(0, 0, -8.5), this._scene);
-            this._scene.activeCameras.push(this.camera);
-            return this.camera;
+            this._camera = new BABYLON.ArcRotateCamera("MenuCam", 0, 0.3, 5, new BABYLON.Vector3(0, 0, -8.5), scene);
+            scene.activeCameras.push(this._camera);
+            return this._camera;
         }
         this._camera = createCamera();
 
-        /**
-         * create temple for main menu scene
-         */
         BABYLON.SceneLoader.ImportMesh("", "assets/models/", "game_intro_temple.babylon", this._scene
             , function (newMeshes, newParticlesystems, newSkeletons) {
                 newMeshes.forEach(element => {
@@ -48,17 +43,11 @@ class MainMenu {
 
         this.StartScreen();
 
-        /**
-         * rotate camera slowly
-         */
         engine.runRenderLoop(function () {
-            this.camera.alpha -= 0.0042;
+            this._camera.alpha -= 0.0042;
         });
     }
 
-    /**
-     * creates startscreen
-     */
     private StartScreen() {
         this._gameUI.menuState = menuState.Start;
         var startScreenTex = new BABYLON.Texture("assets/textures/ui_textures/logo-final.png", this._scene, true);
@@ -80,11 +69,9 @@ class MainMenu {
         this._flyCam.setTarget(new BABYLON.Vector3(0, 0, -8.5));
         this._startPos = this._flyCam.position;
         this._startRot = this._flyCam.rotation;
-        console.log(this._flyCam.rotation);
         this._camera.dispose();
         this._scene.activeCameras.push(this._flyCam);
         this._movingCam = true;
-
     }
 
     onInput(inputPos: BABYLON.Vector2) {
