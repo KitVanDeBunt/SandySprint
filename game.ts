@@ -1,78 +1,85 @@
 /**
- * Start of the game.
+ * This class runs the game
  */
+class Game {
 
-/**
- * the babylon scene of the game.
- */
-let scene: BABYLON.Scene;
+    /**
+     * the babylon scene of the game.
+     */
+    private _scene: BABYLON.Scene;
 
-/**
- * the Entity Component System of the game.
- * info: http://www.gamedev.net/page/resources/_/technical/game-programming/understanding-component-entity-systems-r3013
- */
-let ECSengine: ECS.Engine;
+    /**
+     * the Entity Component System of the game.
+     * info: http://www.gamedev.net/page/resources/_/technical/game-programming/understanding-component-entity-systems-r3013
+     */
+    private _ECSengine: ECS.Engine;
 
-/**
- * the audio Manager of the game.
- * loads, starts, and stops all sounds.
- */
-let audio: audioManager;
+    /**
+     * the audio Manager of the game.
+     * loads, starts, and stops all sounds.
+     */
+    private _audio: audioManager;
 
-/**
- * the roadManager of the game.
- * Creates environment objects
- */
-let roadManager: RoadManager;
+    /**
+     * the roadManager of the game.
+     * Creates environment objects
+     */
+    private _roadManager: RoadManager;
 
-/**
- * The HTML-canvas to render upon.
- */
-let canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("renderCanvas");
+    /**
+     * The HTML-canvas to render upon.
+     */
+    private _canvas: HTMLCanvasElement;
 
-/**
- * the Babylon engine of the game
- */
-let engine: BABYLON.Engine = new BABYLON.Engine(canvas, true);
+    /**
+     * the Babylon engine of the game
+     */
+    private _engine: BABYLON.Engine;
 
-/**
- * the SkyboxManager of the game
- * creates and updates the skybox
- */
-let skyboxManager: SkyBoxManager;
+    /**
+     * the SkyboxManager of the game
+     * creates and updates the skybox
+     */
+    private _skyboxManager: SkyBoxManager;
 
-/**
-  * the playerManager for the player
-  * creates and updates the playermovement, animation, and collision.
-  */
-let playerManager: PlayerManager;
+    /**
+      * the playerManager for the player
+      * creates and updates the playermovement, animation, and collision.
+      */
+    private _playerManager: PlayerManager;
 
-/**
- * the cameramanager of the player.
- * creates and updates a camera for the player.
- */
-let playerCameraManager: PlayerCameraManager;
+    /**
+     * the cameramanager of the player.
+     * creates and updates a camera for the player.
+     */
+    private _playerCameraManager: PlayerCameraManager;
 
-/**
- * The UI of the game
- * creates UI Camera and UI Elements.
- */
-let gameUI: GameUI;
+    /**
+     * The UI of the game
+     * creates UI Camera and UI Elements.
+     */
+    private _gameUI: GameUI;
 
-/**
- * creates scene, lighting, ECSengine, and most managers.
- */
-var mainMenu = function () {
+
+    get gameUI(): GameUI {
+        return this._gameUI;
+    }
+
+    constructor() {
+        this._canvas = <HTMLCanvasElement>document.getElementById("renderCanvas");
+        this._engine = new BABYLON.Engine(this._canvas, true);
+        this.mainMenu();
+    }
 
     /**
      * creates the scene into a variable.
      */
-    let createScene = function () {
+    private createScene() {
 
         // prevent manifest file error warning
-        engine.enableOfflineSupport = false;
+        this._engine.enableOfflineSupport = false;
 
-        let scene: BABYLON.Scene = new BABYLON.Scene(engine);
+        let scene: BABYLON.Scene = new BABYLON.Scene(this._engine);
 
         //enable collision
         scene.collisionsEnabled = true;
@@ -94,168 +101,174 @@ var mainMenu = function () {
         var tempLight = new BABYLON.DirectionalLight("UIemit", new BABYLON.Vector3(0, 0, 1), scene);
 
         // create entity component system
-        this.ECSengine = new ECS.Engine();
+        this._ECSengine = new ECS.Engine();
 
         // add render system
         let ECSrenderSystem: ECS.SystemMeshRender = new ECS.SystemMeshRender();
         ECSrenderSystem.initRendering(scene);
-        ECSengine.addSystem(ECSrenderSystem);
+        this._ECSengine.addSystem(ECSrenderSystem);
 
         // add camera system
-        let cameraSystem: SystemCamera = new SystemCamera(canvas);
-        ECSengine.addSystem(cameraSystem);
+        let cameraSystem: SystemCamera = new SystemCamera(this._canvas);
+        this._ECSengine.addSystem(cameraSystem);
 
         // create managers (scripts that handel game logic) 
-        this.audio = new audioManager(scene);
-        this.roadManager = new RoadManager(ECSengine, scene);
+        this._audio = new audioManager(scene);
+        this._roadManager = new RoadManager(this._ECSengine, scene);
 
         //starting main menu
-        this.gameUI = new GameUI(scene, ECSengine, canvas, engine, audio);
-        this.gameUI.openMainMenu();
+        this._gameUI = new GameUI(scene, this._ECSengine, this._canvas, this._engine, this._audio);
+        this._gameUI.openMainMenu();
 
         // create skybox managers
-        skyboxManager = new SkyBoxManager(scene, ECSengine);
+        this._skyboxManager = new SkyBoxManager(scene, this._ECSengine);
 
         return scene;
     }
 
-    this.scene = createScene();
-
-    engine.runRenderLoop(function () {
-        // update entity component system
-        this.ECSengine.updateSystems();
-        // update babylon
-        this.scene.render();
-        //update Gameui
-        this.gameUI.update();
-    });
-
     /**
-     * Event when key gets pressed.
-     * @param keyEvt data about the pressed key
+     * creates scene, lighting, ECSengine, and most managers.
      */
-    function onKeyDown(keyEvt: KeyboardEvent) {
-        this.gameUI.onKeyDown(keyEvt);
-    }
+    private mainMenu() {
 
-    /**
-     * Event when screen gets touched.
-     * @param touchEvt data about the touch input
-     */
-    function onTouchStart(touchEvt: TouchEvent) {
-        this.gameUI.onInputStart(new BABYLON.Vector2(touchEvt.touches[0].pageX, touchEvt.touches[0].pageY));
-    }
+        console.log("mainMenu 1");
 
-    /**
-     * Event when mousebutton gets clicked.
-     * @param mouseEvt data about the mouse input.
-     */
-    function mouseDown(mouseEvt: MouseEvent): void {
-        this.gameUI.onInputStart(new BABYLON.Vector2(mouseEvt.pageX, mouseEvt.pageY));
-    }
+        this._scene = this.createScene();
 
-    // call resize on babylon engine if the windows resizes
-    window.addEventListener("resize", function () {
-        engine.resize();
-    });
-
-    // add input event listener
-    window.addEventListener("keydown", onKeyDown);
-    window.addEventListener("touchstart", onTouchStart);
-    window.addEventListener("mousedown", mouseDown);
-};
-
-/**
- * Creates and updates managers for the player, Sets the UI to InGame-mode, and adds events listeners
- */
-var game = function () {
-    
-    if (this.playerManager != null) {
-        /**
-         * get the playerT from where the player died
-         */
-        let playerT = this.playerManager.getplayerT();
-        
-        /**
-         * restart game
-         */
-        playerCameraManager.getCameraComponent().getCamera.dispose();
-        playerManager = null;
-        playerCameraManager = null;
-        playerManager = new PlayerManager(scene, ECSengine, roadManager, audio, gameUI);
-        playerCameraManager = new PlayerCameraManager(ECSengine, scene, playerManager);
-        playerManager.setplayerT(playerT);
-        this.gameUI.setPlayerTOffset(playerT);
-    }
-    else {
-        /**
-         * first start
-         */
-        
-        playerManager = new PlayerManager(scene, ECSengine, roadManager, audio, gameUI);
-        playerCameraManager = new PlayerCameraManager(ECSengine, scene, playerManager);
-        
-
-        engine.runRenderLoop(function () {
-            /**
-             * gets deltatime for the playermanagers
-             */
-            let deltaTime: number = engine.getDeltaTime();
-
-            // update managers (scripts that handel game logic)
-            roadManager.update(playerManager.getplayerT());
-            playerManager.update(deltaTime);
-            playerCameraManager.update(deltaTime);
-
-            // update skybox position
-            skyboxManager.update(this.playerCameraManager.cameraPosition);
+        this._engine.runRenderLoop(function () {
+            // update entity component system
+            this.ECSengine.updateSystems();
+            // update babylon
+            this.scene.render();
+            //update Gameui
+            this._gameUI.update();
         });
+
+        /**
+         * Event when key gets pressed.
+         * @param keyEvt data about the pressed key
+         */
+        function onKeyDown(keyEvt: KeyboardEvent) {
+            this._gameUI.onKeyDown(keyEvt);
+        }
+
+        /**
+         * Event when screen gets touched.
+         * @param touchEvt data about the touch input
+         */
+        function onTouchStart(touchEvt: TouchEvent) {
+            this._gameUI.onInputStart(new BABYLON.Vector2(touchEvt.touches[0].pageX, touchEvt.touches[0].pageY));
+        }
+
+        /**
+         * Event when mousebutton gets clicked.
+         * @param mouseEvt data about the mouse input.
+         */
+        function mouseDown(mouseEvt: MouseEvent): void {
+            this._gameUI.onInputStart(new BABYLON.Vector2(mouseEvt.pageX, mouseEvt.pageY));
+        }
+
+        // call resize on babylon engine if the windows resizes
+        window.addEventListener("resize", function () {
+            this._engine.resize();
+        });
+
+        // add input event listener
         window.addEventListener("keydown", onKeyDown);
         window.addEventListener("touchstart", onTouchStart);
-        window.addEventListener("touchend", onTouchEnd);
-        window.addEventListener("touchcancel", onTouchEnd);
-        window.addEventListener("touchmove", onTouchMove);
-    }
-
-    this.gameUI.restartCamera();
-    this.gameUI.setPlayerManager(this.playerManager);
-    this.gameUI.openInGame();
+        window.addEventListener("mousedown", mouseDown);
+    };
 
     /**
-     * Event when key gets pressed.
-     * @param keyEvt data about the pressed key
+     * Creates and updates managers for the player, Sets the UI to InGame-mode, and adds events listeners
      */
-    function onKeyDown(keyEvt: KeyboardEvent) {
-        playerManager.onKeyDown(keyEvt);
+    game() {
+
+        if (this._playerManager != null) {
+            /**
+             * get the playerT from where the player died
+             */
+            let playerT = this._playerManager.getplayerT();
+
+            /**
+             * restart game
+             */
+            this._playerCameraManager.getCameraComponent().getCamera.dispose();
+            this._playerManager = null;
+            this._playerCameraManager = null;
+            this._playerManager = new PlayerManager(this._scene, this._ECSengine, this._roadManager, this._audio, this._gameUI);
+            this._playerCameraManager = new PlayerCameraManager(this._ECSengine, this._scene, this._playerManager);
+            this._playerManager.setplayerT(playerT);
+            this._gameUI.setPlayerTOffset(playerT);
+        }
+        else {
+            /**
+             * first start
+             */
+
+            this._playerManager = new PlayerManager(this._scene, this._ECSengine, this._roadManager, this._audio, this._gameUI);
+            this._playerCameraManager = new PlayerCameraManager(this._ECSengine, this._scene, this._playerManager);
+
+
+            this._engine.runRenderLoop(function () {
+                /**
+                 * gets deltatime for the playermanagers
+                 */
+                let deltaTime: number = this._engine.getDeltaTime();
+
+                // update managers (scripts that handel game logic)
+                this._roadManager.update(this._playerManager.getplayerT());
+                this._playerManager.update(deltaTime);
+                this._playerCameraManager.update(deltaTime);
+
+                // update skybox position
+                this._skyboxManager.update(this.playerCameraManager.cameraPosition);
+            });
+            window.addEventListener("keydown", onKeyDown);
+            window.addEventListener("touchstart", onTouchStart);
+            window.addEventListener("touchend", onTouchEnd);
+            window.addEventListener("touchcancel", onTouchEnd);
+            window.addEventListener("touchmove", onTouchMove);
+        }
+
+        this._gameUI.restartCamera();
+        this._gameUI.setPlayerManager(this._playerManager);
+        this._gameUI.openInGame();
+
+        /**
+         * Event when key gets pressed.
+         * @param keyEvt data about the pressed key
+         */
+        function onKeyDown(keyEvt: KeyboardEvent) {
+            this._playerManager.onKeyDown(keyEvt);
+        }
+
+        /**
+         * Event when screen gets touched.
+         * @param touchEvt data about the touch input
+         */
+        function onTouchStart(touchEvt: TouchEvent) {
+            this._playerManager.onTouchStart(touchEvt);
+        }
+
+        /**
+         * Event when screen stops getting touched.
+         * @param touchEvt data about the touch input
+         */
+        function onTouchEnd(touchEvt: TouchEvent) {
+            this._playerManager.onTouchEnd(touchEvt);
+        }
+
+        /**
+         * Event when the screen gets swiped.
+         * @param touchEvt data about the touch input
+         */
+        function onTouchMove(touchEvt: TouchEvent) {
+            this._playerManager.onTouchMove(touchEvt);
+        }
+
+
+
+
     }
-
-    /**
-     * Event when screen gets touched.
-     * @param touchEvt data about the touch input
-     */
-    function onTouchStart(touchEvt: TouchEvent) {
-        playerManager.onTouchStart(touchEvt);
-    }
-
-    /**
-     * Event when screen stops getting touched.
-     * @param touchEvt data about the touch input
-     */
-    function onTouchEnd(touchEvt: TouchEvent) {
-        playerManager.onTouchEnd(touchEvt);
-    }
-
-    /**
-     * Event when the screen gets swiped.
-     * @param touchEvt data about the touch input
-     */
-    function onTouchMove(touchEvt: TouchEvent) {
-        playerManager.onTouchMove(touchEvt);
-    }
-
-
-
-
 }
-
-mainMenu();

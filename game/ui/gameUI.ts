@@ -133,7 +133,7 @@ class GameUI {
         this._audio.stopSound(Sounds.MainMenu);
         this._audio.playSound(Sounds.Game);
         this._menu.Dispose();
-        game();
+        main.game();
     }
 
     openInGame() {
@@ -146,8 +146,8 @@ class GameUI {
 
     openEndScreen() {
         this._endScreen = new endScreen(this, this._scene);
-        this._endScreen.setScore(playerManager.getplayerT() - this.getPlayerTOffset());
-        this._endScreen.setScarabs(playerManager.getPickupsCollected());
+        this._endScreen.setScore(this._playerManager.getplayerT() - this.getPlayerTOffset());
+        this._endScreen.setScarabs(this._playerManager.getPickupsCollected());
     }
 
     closeEndScreen() {

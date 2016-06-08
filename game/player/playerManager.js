@@ -244,7 +244,7 @@ var PlayerManager = (function () {
                         var coll = this.playerMeshComponent.getCollider.intersectsMesh(this.roadManager.obstacles[i].meshCollider);
                         if (coll) {
                             switch (this.roadManager.obstacles[i].meshType) {
-                                case CollisionMeshType.pillar:
+                                case CollisionMeshType.pillar || CollisionMeshType.spike:
                                     this.gameUI.closeInGame();
                                     this.gameUI.openEndScreen();
                                     this.playing = false;
@@ -263,7 +263,7 @@ var PlayerManager = (function () {
                 }
             }
             for (var i = 0; i < this.roadManager.sceneObjects.length; i++) {
-                if (roadManager.sceneObjects[i].hasCollider) {
+                if (this.roadManager.sceneObjects[i].hasCollider) {
                     var meshLoaded = (this.roadManager.sceneObjects[i].entity.getComponent(this.abstractMeshComponetType).meshState == ECS.MeshLoadState.Loaded);
                     if (meshLoaded) {
                         if (this.roadManager.sceneObjects[i] != null) {
