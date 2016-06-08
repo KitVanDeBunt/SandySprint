@@ -8,7 +8,7 @@ class PlayerManager {
     private playerMeshComponent: ECS.ComponentAbstractMesh;
     private playerSpeed: number = 0.006;
     private playerT: number = 0;
-    private scene: BABYLON.Scene;
+    private _scene: BABYLON.Scene;
     private animationState: PlayerAnimationState = PlayerAnimationState.NotStarted;
     private roadManager: RoadManager;
     private pickupsCollected: number = 0;
@@ -49,7 +49,7 @@ class PlayerManager {
     constructor(scene: BABYLON.Scene, ECSengine: ECS.Engine, roadManager: RoadManager, audioManager: audioManager, gameUI: GameUI) {
         this.roadManager = roadManager;
         this.gameUI = gameUI;
-        this.scene = scene;
+        this._scene = scene;
         this.player = ECSengine.createEntity();
         this.playerTranslateComponent = new ECS.ComponentTransform(BABYLON.Vector3.Zero(), new BABYLON.Vector3(0.0013, 0.0013, 0.0013), new BABYLON.Quaternion(0, 1, 0, 0));
         this.player.addComponent(this.playerTranslateComponent);
@@ -59,12 +59,12 @@ class PlayerManager {
         this.playing = true;
 
         // setup collision
-        let mesh: BABYLON.Mesh = BABYLON.Mesh.CreateBox("CollBox", 0.2, this.scene, false);
+        let mesh: BABYLON.Mesh = BABYLON.Mesh.CreateBox("CollBox", 0.2, this._scene, false);
         mesh.scaling = new BABYLON.Vector3(1, 2, 1);
         this.playerMeshComponent.setColliderOffset = new BABYLON.Vector3(0, 0.25, 0);
         this.playerMeshComponent.setCollision(mesh);
 
-        this.jumpManager = new ComponentJumpLane(this.playerMeshComponent, BABYLON.Vector3.Zero(), this.scene, this.playerT);
+        this.jumpManager = new ComponentJumpLane(this.playerMeshComponent, BABYLON.Vector3.Zero(), this._scene, this.playerT);
 
 
         //playerTranslateComponent.setScale = new BABYLON.Vector3(0.1, 0.1, 0.1);
@@ -147,6 +147,7 @@ class PlayerManager {
         //swipe up
         if (this.touchEnd.y - this.touchStart.y < -screen.height * 0.2 && this.jumpManager.jumping == false) {
             this.jumpManager.jump(this.playerT);
+            this.audio.playSound(Sounds.Jump);
         }
     }
 
@@ -166,6 +167,7 @@ class PlayerManager {
             case 32: //'Space'
                 if (this.jumpManager.jumping == false) {
                     this.jumpManager.jump(this.playerT);
+                    this.audio.playSound(Sounds.Jump);
                 }
                 break;
         }
@@ -214,18 +216,18 @@ class PlayerManager {
         if (this.playerMeshComponent.meshState == ECS.MeshLoadState.Loaded) {
             switch (this.animationState) {
                 case PlayerAnimationState.NotStarted:
-                    this.scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 0, 21 * this.ftc, true, 1.4);
+                    this._scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 0, 21 * this.ftc, true, 1.4);
                     this.animationState = PlayerAnimationState.Running;
                     break;
                 case PlayerAnimationState.Running:
                     if (this.jumpManager.jumping) {
-                        this.scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 80 * this.ftc, 110 * this.ftc, true, 1);
+                        this._scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 80 * this.ftc, 110 * this.ftc, true, 1);
                         this.animationState = PlayerAnimationState.Jumping;
                     }
                     break;
                 case PlayerAnimationState.Jumping:
                     if (!this.jumpManager.jumping) {
-                        this.scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 0 * this.ftc, 21 * this.ftc, true, 1.4);
+                        this._scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 0 * this.ftc, 21 * this.ftc, true, 1.4);
                         this.animationState = PlayerAnimationState.Running;
                     }
                     break;
@@ -279,7 +281,8 @@ class PlayerManager {
         if (this.jumpManager.jumping) {
             let jumpInputT: number = (this.playerT - this.jumpManager.getT()) / (this.jumpManager.getLaneLength() / 2.5);
             if (jumpInputT > 1) {
-                this.jumpManager.done();
+                this.jumpManager.jumping = false;
+                this.audio.playSound(Sounds.JumpLand);
             }
             pos = pos.add(this.jumpManager.getPointAtT(jumpInputT));
         }
@@ -290,7 +293,6 @@ class PlayerManager {
 
     private updateCollision() {
         this.playerMeshComponent.updateCollision();
-        // check collision with obstacles
         if (!this.firstFrame) {
             for (var i: number = 0; i < this.roadManager.obstacles.length; i++) {
                 let meshLoaded: boolean = ((<ECS.ComponentAbstractMesh>this.roadManager.obstacles[i].entity.getComponent(this.abstractMeshComponetType)).meshState == ECS.MeshLoadState.Loaded);

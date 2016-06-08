@@ -89,7 +89,7 @@ class GameUI {
         this._cameraECS = this._ecsEngine.createEntity();
         let cameraTranslateComponent = new ECS.ComponentTransform(new BABYLON.Vector3(0, 0, -10), new BABYLON.Vector3(1, 1, 1), new BABYLON.Quaternion(0, 0, 0, 0));
         this._cameraECS.addComponent(cameraTranslateComponent);
-        let UICam = new ComponentCamera(cameraTranslateComponent, scene);
+        let UICam = new ComponentCamera(cameraTranslateComponent, this._scene);
         UICam.setLayermask = 0x20000000;
         this._cameraECS.addComponent(UICam);
     }
