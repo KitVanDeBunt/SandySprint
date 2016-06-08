@@ -89,7 +89,7 @@ var mainMenu = function () {
         skyboxManager = new SkyBoxManager(scene, ECSengine);
         return scene;
     };
-    this.scene = createScene();
+    scene = createScene();
     engine.runRenderLoop(function () {
         // update entity component system
         this.ECSengine.updateSystems();

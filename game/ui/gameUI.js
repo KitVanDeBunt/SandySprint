@@ -17,16 +17,13 @@ var GameUI = (function () {
         this._scene = scene;
         this._ecsEngine = ecs;
         this._audio = audioManager;
-        var UIlight = new BABYLON.DirectionalLight("MainMenuEmit", new BABYLON.Vector3(0, 0, 0), this._scene);
+        var UIlight = new BABYLON.DirectionalLight("MainMenuEmit", new BABYLON.Vector3(0, 0, 0), scene);
         UIlight.intensity = 1;
         UIlight.includeOnlyWithLayerMask = 0x20000000;
-        /**
-         * create UIcamera entity
-         */
         this._cameraECS = ecs.createEntity();
         var cameraTranslateComponent = new ECS.ComponentTransform(new BABYLON.Vector3(0, 0, -10), new BABYLON.Vector3(1, 1, 1), new BABYLON.Quaternion(0, 0, 0, 0));
         this._cameraECS.addComponent(cameraTranslateComponent);
-        var UICam = new ComponentCamera(cameraTranslateComponent, this._scene);
+        var UICam = new ComponentCamera(cameraTranslateComponent, scene);
         UICam.setLayermask = 0x20000000;
         this._cameraECS.addComponent(UICam);
     }
@@ -46,10 +43,10 @@ var GameUI = (function () {
                 break;
         }
     };
-    GameUI.prototype.onInputEnd = function (touchEvt) {
-    };
-    GameUI.prototype.OnInputMove = function (touchEvt) {
-    };
+    /**
+     * on Key pressed
+     * @param keyEvt the keyboardevent of the pressed key.
+     */
     GameUI.prototype.onKeyDown = function (keyEvt) {
         switch (this.menuState) {
             case menuState.Start:
@@ -60,7 +57,7 @@ var GameUI = (function () {
         }
     };
     /**
-     * closes camera and makes a new one
+     * destroys camera and creates a new one.
      */
     GameUI.prototype.restartCamera = function () {
         this._cameraECS.destroy();
@@ -71,6 +68,9 @@ var GameUI = (function () {
         UICam.setLayermask = 0x20000000;
         this._cameraECS.addComponent(UICam);
     };
+    /**
+     * updates menu scripts.
+     */
     GameUI.prototype.update = function () {
         switch (this.menuState) {
             case menuState.Start:
@@ -93,7 +93,7 @@ var GameUI = (function () {
         this._menu.Move();
     };
     /**
-     * opens the game before the game UI start
+     * opens the game before the game UI starts
      */
     GameUI.prototype.preopenInGame = function () {
         this.menuState = menuState.Game;
@@ -137,7 +137,7 @@ var GameUI = (function () {
         return logobox;
     };
     /**
-     * sets playerTOffset for restrating
+     * sets playerTOffset for restarting
      * @param PlayerT the playerT where there player died previous round.
      */
     GameUI.prototype.setPlayerTOffset = function (PlayerT) {

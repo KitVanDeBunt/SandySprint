@@ -11,12 +11,12 @@ var audioManager = (function () {
         this._pickUpSound = this.addSound("Pickup", "../assets/sounds/pickUp.wav", false, 2);
         this.menuBackgroundSound = this.addSound("MenuBackGround", "../assets/sounds/menuSound.mp3", true, 0.1);
         this._inGameSound = this.addSound("InGameSound", "../assets/sounds/gameSound.mp3", true, 1);
-        this._jumpSound = this.addSound("Jumpsound", "../assets/sounds/jump.flac", false, 1);
+        this._jumpSound = this.addSound("Jumpsound", "../assets/sounds/jump.mp3", false, 1);
         this._jumpLandSound = this.addSound("JumpLandSound", "../assets/sounds/jumpland.mp3", false, 1);
         this._startSound = this.addSound("StartSound", "../assets/sounds/start.wav", false, 2);
-        this._stopSound = this.addSound("StopSound", "../assets/sounds/stop.flac", false, 2);
+        this._stopSound = this.addSound("StopSound", "../assets/sounds/stop.mp3", false, 2);
         this._laneSwitchSound = this.addSound("SwitchSound", "../assets/sounds/swipe.wav", false, 1);
-        this._walkSound = this.addSound("WalkSound", "../assets/sounds/Walk1.flac", false, 0.5);
+        this._walkSound = this.addSound("WalkSound", "../assets/sounds/Walk1.mp3", false, 0.5);
     }
     /**
      * Creates and returns a sound

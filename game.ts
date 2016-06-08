@@ -108,7 +108,7 @@ var mainMenu = function () {
         // create managers (scripts that handel game logic) 
         this.audio = new audioManager(scene);
         this.roadManager = new RoadManager(ECSengine, scene);
-
+        
         //starting main menu
         this.gameUI = new GameUI(scene, ECSengine, canvas, engine, audio);
         this.gameUI.openMainMenu();
@@ -117,9 +117,10 @@ var mainMenu = function () {
         skyboxManager = new SkyBoxManager(scene, ECSengine);
 
         return scene;
+        
     }
 
-    this.scene = createScene();
+    scene = createScene();
 
     engine.runRenderLoop(function () {
         // update entity component system

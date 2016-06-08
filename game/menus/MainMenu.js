@@ -1,5 +1,6 @@
 /**
  * MainMenu
+ * Creates
  */
 var MainMenu = (function () {
     function MainMenu(canvas, ecs, engine, scene, gameUI, audio) {
@@ -12,34 +13,22 @@ var MainMenu = (function () {
         this._gameUI = gameUI;
         this._ECSEngine = ecs;
         this._scene = scene;
-        /**
-         *  create camera for main menu screne
-         */
         var createCamera = function () {
-            this.camera = new BABYLON.ArcRotateCamera("MenuCam", 0, 0.3, 5, new BABYLON.Vector3(0, 0, -8.5), this._scene);
-            this._scene.activeCameras.push(this.camera);
-            return this.camera;
+            this._camera = new BABYLON.ArcRotateCamera("MenuCam", 0, 0.3, 5, new BABYLON.Vector3(0, 0, -8.5), scene);
+            scene.activeCameras.push(this._camera);
+            return this._camera;
         };
         this._camera = createCamera();
-        /**
-         * create temple for main menu scene
-         */
         BABYLON.SceneLoader.ImportMesh("", "assets/models/", "game_intro_temple.babylon", this._scene, function (newMeshes, newParticlesystems, newSkeletons) {
             newMeshes.forEach(function (element) {
             });
             newMeshes[0].position = new BABYLON.Vector3(0, 0, 1);
         });
         this.StartScreen();
-        /**
-         * rotate camera slowly
-         */
         engine.runRenderLoop(function () {
-            this.camera.alpha -= 0.0042;
+            this._camera.alpha -= 0.0042;
         });
     }
-    /**
-     * creates startscreen
-     */
     MainMenu.prototype.StartScreen = function () {
         this._gameUI.menuState = menuState.Start;
         var startScreenTex = new BABYLON.Texture("assets/textures/ui_textures/logo-final.png", this._scene, true);
@@ -58,7 +47,6 @@ var MainMenu = (function () {
         this._flyCam.setTarget(new BABYLON.Vector3(0, 0, -8.5));
         this._startPos = this._flyCam.position;
         this._startRot = this._flyCam.rotation;
-        console.log(this._flyCam.rotation);
         this._camera.dispose();
         this._scene.activeCameras.push(this._flyCam);
         this._movingCam = true;

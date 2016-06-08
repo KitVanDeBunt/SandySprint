@@ -35,17 +35,14 @@ class GameUI {
         this._ecsEngine = ecs;
         this._audio = audioManager;
 
-        var UIlight = new BABYLON.DirectionalLight("MainMenuEmit", new BABYLON.Vector3(0, 0, 0), this._scene);
+        var UIlight = new BABYLON.DirectionalLight("MainMenuEmit", new BABYLON.Vector3(0, 0, 0), scene);
         UIlight.intensity = 1;
         UIlight.includeOnlyWithLayerMask = 0x20000000;
 
-        /**
-         * create UIcamera entity
-         */
         this._cameraECS = ecs.createEntity();
         let cameraTranslateComponent = new ECS.ComponentTransform(new BABYLON.Vector3(0, 0, -10), new BABYLON.Vector3(1, 1, 1), new BABYLON.Quaternion(0, 0, 0, 0));
         this._cameraECS.addComponent(cameraTranslateComponent);
-        let UICam = new ComponentCamera(cameraTranslateComponent, this._scene);
+        let UICam = new ComponentCamera(cameraTranslateComponent, scene);
         UICam.setLayermask = 0x20000000;
         this._cameraECS.addComponent(UICam);
     }
@@ -67,14 +64,10 @@ class GameUI {
         }
     }
 
-    onInputEnd(touchEvt: TouchEvent) {
-
-    }
-
-    OnInputMove(touchEvt: TouchEvent) {
-
-    }
-
+    /**
+     * on Key pressed
+     * @param keyEvt the keyboardevent of the pressed key.
+     */
     onKeyDown(keyEvt: KeyboardEvent) {
         switch (this.menuState) {
             case menuState.Start:
@@ -86,7 +79,7 @@ class GameUI {
     }
 
     /**
-     * closes camera and makes a new one
+     * destroys camera and creates a new one.
      */
     restartCamera() {
         this._cameraECS.destroy();
@@ -98,6 +91,9 @@ class GameUI {
         this._cameraECS.addComponent(UICam);
     }
 
+/**
+ * updates menu scripts.
+ */
     update(): void {
         switch (this.menuState) {
             case menuState.Start:
@@ -112,8 +108,6 @@ class GameUI {
             default:
                 break;
         }
-
-
     }
 
     openMainMenu() {
@@ -126,7 +120,7 @@ class GameUI {
     }
 
     /**
-     * opens the game before the game UI start
+     * opens the game before the game UI starts
      */
     preopenInGame() {
         this.menuState = menuState.Game;
@@ -177,7 +171,7 @@ class GameUI {
     }
 
     /**
-     * sets playerTOffset for restrating
+     * sets playerTOffset for restarting
      * @param PlayerT the playerT where there player died previous round.
      */
     setPlayerTOffset(PlayerT: number) {
