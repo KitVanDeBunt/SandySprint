@@ -91,12 +91,12 @@ class PlayerManager {
     getplayerT(): number {
         return this.playerT;
     }
-    
+
     /**
      * Sets the players interpontation(t or dictance in game).
      * @param T T to be set
      */
-    setplayerT(T:number): void {
+    setplayerT(T: number): void {
         this.playerT = T;
     }
 
@@ -192,6 +192,8 @@ class PlayerManager {
     private startPlayerLaneTween() {
         this.inLaneTween = true;
         this.laneTweenInterpolation = 0;
+        this.audio.playSound(Sounds.LaneSwitch);
+
     }
 
     /**
@@ -252,9 +254,9 @@ class PlayerManager {
      */
     private updatePlayerMovment(deltaTime: number) {
         if (this.playerSpeed != 0) {
-            if(deltaTime>100){
+            if (deltaTime > 100) {
                 this.playerT += (100 * this.playerSpeed);
-                deltaTime-=100;
+                deltaTime -= 100;
                 this.updatePlayerMovment(deltaTime);
             }
             else {
@@ -301,7 +303,8 @@ class PlayerManager {
                         var coll: boolean = this.playerMeshComponent.getCollider.intersectsMesh(this.roadManager.obstacles[i].meshCollider);
                         if (coll) {
                             switch (this.roadManager.obstacles[i].meshType) {
-                                case CollisionMeshType.pillar||CollisionMeshType.spike:
+                                case CollisionMeshType.pillar || CollisionMeshType.spike:
+                                    this.audio.playSound(Sounds.Stop);
                                     this.gameUI.closeInGame();
                                     this.gameUI.openEndScreen();
                                     this.playing = false;

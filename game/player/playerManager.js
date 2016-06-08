@@ -147,6 +147,7 @@ var PlayerManager = (function () {
     PlayerManager.prototype.startPlayerLaneTween = function () {
         this.inLaneTween = true;
         this.laneTweenInterpolation = 0;
+        this.audio.playSound(Sounds.LaneSwitch);
     };
     /**
      * updates the player
@@ -245,6 +246,7 @@ var PlayerManager = (function () {
                         if (coll) {
                             switch (this.roadManager.obstacles[i].meshType) {
                                 case CollisionMeshType.pillar || CollisionMeshType.spike:
+                                    this.audio.playSound(Sounds.Stop);
                                     this.gameUI.closeInGame();
                                     this.gameUI.openEndScreen();
                                     this.playing = false;

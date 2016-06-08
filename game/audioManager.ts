@@ -30,7 +30,7 @@ class audioManager {
         this._startSound = this.addSound("StartSound", "../assets/sounds/start.wav", false, 2);
         this._stopSound = this.addSound("StopSound", "../assets/sounds/stop.mp3", false, 2);
         this._laneSwitchSound = this.addSound("SwitchSound", "../assets/sounds/swipe.wav", false, 1);
-        this._walkSound = this.addSound("WalkSound", "../assets/sounds/Walk1.mp3", false, 0.5);
+        this._walkSound = this.addSound("WalkSound", "../assets/sounds/Walk1.mp3", true, 0.5);
     }
 
     /**
@@ -62,7 +62,7 @@ class audioManager {
                 this._inGameSound.play();
                 break;
             case Sounds.Jump:
-            this._jumpSound.setPlaybackRate(1 + (Math.random() * 0.2));
+                this._jumpSound.setPlaybackRate(1 + (Math.random() * 0.2));
                 this._jumpSound.play();
                 break;
             case Sounds.JumpLand:

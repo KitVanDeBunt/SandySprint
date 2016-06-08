@@ -137,7 +137,7 @@ class Game {
 
         this._engine.runRenderLoop(function () {
             // update entity component system
-            this.ECSengine.updateSystems();
+            this._ECSengine.updateSystems();
             // update babylon
             this.scene.render();
             //update Gameui
