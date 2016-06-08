@@ -66,7 +66,7 @@ var endScreen = (function () {
     endScreen.prototype.onInput = function (inputPos) {
         if (!this._count) {
             this.Dispose();
-            game();
+            main.game();
         }
     };
     /**

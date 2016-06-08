@@ -91,7 +91,7 @@ class endScreen {
     onInput(inputPos: BABYLON.Vector2) {
         if (!this._count) {
             this.Dispose();
-            game();
+            main.game();
         }
     }
 

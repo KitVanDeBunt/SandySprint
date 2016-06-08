@@ -263,7 +263,7 @@ var PlayerManager = (function () {
                 }
             }
             for (var i = 0; i < this.roadManager.sceneObjects.length; i++) {
-                if (roadManager.sceneObjects[i].hasCollider) {
+                if (this.roadManager.sceneObjects[i].hasCollider) {
                     var meshLoaded = (this.roadManager.sceneObjects[i].entity.getComponent(this.abstractMeshComponetType).meshState == ECS.MeshLoadState.Loaded);
                     if (meshLoaded) {
                         if (this.roadManager.sceneObjects[i] != null) {

@@ -321,7 +321,7 @@ class PlayerManager {
             }
             for (var i: number = 0; i < this.roadManager.sceneObjects.length; i++) {
 
-                if (roadManager.sceneObjects[i].hasCollider) {
+                if (this.roadManager.sceneObjects[i].hasCollider) {
                     let meshLoaded: boolean = ((<ECS.ComponentAbstractMesh>this.roadManager.sceneObjects[i].entity.getComponent(this.abstractMeshComponetType)).meshState == ECS.MeshLoadState.Loaded);
                     if (meshLoaded) {
                         if (this.roadManager.sceneObjects[i] != null) {

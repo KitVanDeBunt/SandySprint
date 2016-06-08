@@ -100,7 +100,7 @@ var GameUI = (function () {
         this._audio.stopSound(Sounds.MainMenu);
         this._audio.playSound(Sounds.Game);
         this._menu.Dispose();
-        game();
+        main.game();
     };
     GameUI.prototype.openInGame = function () {
         this._inGameUI = new InGameUI(this._canvas, this._engine, this._scene, this, this._playerManager);
@@ -110,8 +110,8 @@ var GameUI = (function () {
     };
     GameUI.prototype.openEndScreen = function () {
         this._endScreen = new endScreen(this, this._scene);
-        this._endScreen.setScore(playerManager.getplayerT() - this.getPlayerTOffset());
-        this._endScreen.setScarabs(playerManager.getPickupsCollected());
+        this._endScreen.setScore(this._playerManager.getplayerT() - this.getPlayerTOffset());
+        this._endScreen.setScarabs(this._playerManager.getPickupsCollected());
     };
     GameUI.prototype.closeEndScreen = function () {
         this._endScreen.Dispose();

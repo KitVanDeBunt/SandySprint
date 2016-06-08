@@ -74,4 +74,4 @@ var Utils;
     }());
     Utils.MathUtil = MathUtil;
 })(Utils || (Utils = {}));
-//# sourceMappingURL=MathUtils.js.map
+//# sourceMappingURL=mathUtils.js.map
