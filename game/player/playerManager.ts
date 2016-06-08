@@ -36,8 +36,11 @@ class PlayerManager {
 
     private abstractMeshComponetType: string;
 
+    private _walkSoundRepeatTime: number = 200;
+    private _walkSoundRepeatTimer: number = 0;
+
     // frame time correction 24/30
-    private ftc = 0.8;
+    private ftc: number = 0.8;
 
     /**
      * @param scene the scene which contains the player
@@ -155,7 +158,7 @@ class PlayerManager {
      * pass the key down event on to the player
      * @param keyEvent the key down event
      */
-     onKeyDown(keyEvent: KeyboardEvent): void {
+    onKeyDown(keyEvent: KeyboardEvent): void {
 
         switch (keyEvent.keyCode) {
             case 65: //'Left'
@@ -205,13 +208,12 @@ class PlayerManager {
     update(deltaTime: number): void {
 
         if (this.playing == true) {
-            //console.log("updatePLayer");
+            this.updateAudio(deltaTime);
             this.updateAnimation();
             this.updateRoadLane();
             this.updatePlayerMovment(deltaTime);
+            this.updateCollision();
         }
-        // this.updateCollision();
-
         if (this.firstFrame) {
             this.firstFrame = false;
         }
@@ -240,6 +242,16 @@ class PlayerManager {
                 default:
                     break;
             }
+        }
+    }
+
+    private updateAudio(deltaTime:number) {
+        console.log("update sound: "+this._walkSoundRepeatTimer);
+        this._walkSoundRepeatTimer += deltaTime;
+        if(this._walkSoundRepeatTimer>this._walkSoundRepeatTime){
+        console.log("play walk sound");
+            this._walkSoundRepeatTimer = 0;
+            //this.audio.playSound(Sounds.Walk);
         }
     }
 
@@ -293,22 +305,21 @@ class PlayerManager {
         }
 
         this.playerTranslateComponent.setPosition = pos;
-        this.updateCollision();
     }
 
     private updateCollision() {
         this.playerMeshComponent.updateCollision();
         if (!this.firstFrame) {
             for (var i: number = 0; i < this.roadManager.sceneObjects.length; i++) {
-                if(this.roadManager.sceneObjects[i].hasCollider){
+                if (this.roadManager.sceneObjects[i].hasCollider) {
                     let meshLoaded: boolean = ((<ECS.ComponentAbstractMesh>this.roadManager.sceneObjects[i].entity.getComponent(this.abstractMeshComponetType)).meshState == ECS.MeshLoadState.Loaded);
                     if (meshLoaded) {
                         if (this.roadManager.sceneObjects[i] != null) {
                             var coll: boolean = this.playerMeshComponent.getCollider.intersectsMesh(this.roadManager.sceneObjects[i].meshCollider);
                             if (coll) {
                                 switch (this.roadManager.sceneObjects[i].meshType) {
-                                    case CollisionMeshType.pillar||CollisionMeshType.spike:
-                                    this.audio.playSound(Sounds.Stop);
+                                    case CollisionMeshType.pillar || CollisionMeshType.spike:
+                                        this.audio.playSound(Sounds.Stop);
                                         this.gameUI.closeInGame();
                                         this.gameUI.openEndScreen();
                                         this.playing = false;

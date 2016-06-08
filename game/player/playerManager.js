@@ -20,6 +20,8 @@ var PlayerManager = (function () {
         this.laneSwitchSpeed = 0.01;
         // collision
         this.firstFrame = true;
+        this._walkSoundRepeatTime = 200;
+        this._walkSoundRepeatTimer = 0;
         // frame time correction 24/30
         this.ftc = 0.8;
         this.roadManager = roadManager;
@@ -157,12 +159,12 @@ var PlayerManager = (function () {
      */
     PlayerManager.prototype.update = function (deltaTime) {
         if (this.playing == true) {
-            //console.log("updatePLayer");
+            this.updateAudio(deltaTime);
             this.updateAnimation();
             this.updateRoadLane();
             this.updatePlayerMovment(deltaTime);
+            this.updateCollision();
         }
-        // this.updateCollision();
         if (this.firstFrame) {
             this.firstFrame = false;
         }
@@ -189,6 +191,14 @@ var PlayerManager = (function () {
                 default:
                     break;
             }
+        }
+    };
+    PlayerManager.prototype.updateAudio = function (deltaTime) {
+        console.log("update sound: " + this._walkSoundRepeatTimer);
+        this._walkSoundRepeatTimer += deltaTime;
+        if (this._walkSoundRepeatTimer > this._walkSoundRepeatTime) {
+            console.log("play walk sound");
+            this._walkSoundRepeatTimer = 0;
         }
     };
     PlayerManager.prototype.updateRoadLane = function () {
@@ -236,7 +246,6 @@ var PlayerManager = (function () {
             pos = pos.add(this.jumpManager.getPointAtT(jumpInputT));
         }
         this.playerTranslateComponent.setPosition = pos;
-        this.updateCollision();
     };
     PlayerManager.prototype.updateCollision = function () {
         this.playerMeshComponent.updateCollision();
