@@ -155,16 +155,19 @@ class PlayerManager {
      * pass the key down event on to the player
      * @param keyEvent the key down event
      */
-    onKeyDown(keyEvent: KeyboardEvent): void {
+     onKeyDown(keyEvent: KeyboardEvent): void {
 
         switch (keyEvent.keyCode) {
+            case 65: //'Left'
             case 37: //'Left'
                 this.movePlayerLeft();
                 break;
+            case 68: //'Right'
             case 39: //'Right'
                 this.movePlayerRight();
                 break;
-            case 32: //'Space'
+            case 38: //'Jump'
+            case 32: //'Jump'
                 if (this.jumpManager.jumping == false) {
                     this.jumpManager.jump(this.playerT);
                     this.audio.playSound(Sounds.Jump);
