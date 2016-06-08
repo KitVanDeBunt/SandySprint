@@ -5,6 +5,7 @@ var Game = (function () {
     function Game() {
         this._canvas = document.getElementById("renderCanvas");
         this._engine = new BABYLON.Engine(this._canvas, true);
+        this._scene = this.createScene();
         this.mainMenu();
     }
     Object.defineProperty(Game.prototype, "gameUI", {
@@ -56,39 +57,41 @@ var Game = (function () {
      */
     Game.prototype.mainMenu = function () {
         console.log("mainMenu 1");
-        this._scene = this.createScene();
+        var ECSengine = this._ECSengine;
+        var scene = this._scene;
+        var gameUI = this._gameUI;
         this._engine.runRenderLoop(function () {
             // update entity component system
-            this._ECSengine.updateSystems();
+            ECSengine.updateSystems();
             // update babylon
-            this.scene.render();
+            scene.render();
             //update Gameui
-            this._gameUI.update();
+            gameUI.update();
         });
         /**
          * Event when key gets pressed.
          * @param keyEvt data about the pressed key
          */
         function onKeyDown(keyEvt) {
-            this._gameUI.onKeyDown(keyEvt);
+            gameUI.onKeyDown(keyEvt);
         }
         /**
          * Event when screen gets touched.
          * @param touchEvt data about the touch input
          */
         function onTouchStart(touchEvt) {
-            this._gameUI.onInputStart(new BABYLON.Vector2(touchEvt.touches[0].pageX, touchEvt.touches[0].pageY));
+            gameUI.onInputStart(new BABYLON.Vector2(touchEvt.touches[0].pageX, touchEvt.touches[0].pageY));
         }
         /**
          * Event when mousebutton gets clicked.
          * @param mouseEvt data about the mouse input.
          */
         function mouseDown(mouseEvt) {
-            this._gameUI.onInputStart(new BABYLON.Vector2(mouseEvt.pageX, mouseEvt.pageY));
+            gameUI.onInputStart(new BABYLON.Vector2(mouseEvt.pageX, mouseEvt.pageY));
         }
         // call resize on babylon engine if the windows resizes
         window.addEventListener("resize", function () {
-            this._engine.resize();
+            this.e.resize();
         });
         // add input event listener
         window.addEventListener("keydown", onKeyDown);
@@ -100,6 +103,7 @@ var Game = (function () {
      * Creates and updates managers for the player, Sets the UI to InGame-mode, and adds events listeners
      */
     Game.prototype.game = function () {
+        var thisGame = this;
         if (this._playerManager != null) {
             /**
              * get the playerT from where the player died
@@ -126,19 +130,21 @@ var Game = (function () {
                 /**
                  * gets deltatime for the playermanagers
                  */
-                var deltaTime = this._engine.getDeltaTime();
+                var deltaTime = thisGame._engine.getDeltaTime();
                 // update managers (scripts that handel game logic)
-                this._roadManager.update(this._playerManager.getplayerT());
-                this._playerManager.update(deltaTime);
-                this._playerCameraManager.update(deltaTime);
+                thisGame._roadManager.update(thisGame._playerManager.getplayerT());
+                thisGame._playerManager.update(deltaTime);
+                thisGame._playerCameraManager.update(deltaTime);
                 // update skybox position
-                this._skyboxManager.update(this.playerCameraManager.cameraPosition);
+                thisGame._skyboxManager.update(thisGame._playerCameraManager.cameraPosition);
             });
+            console.log("add events 1");
             window.addEventListener("keydown", onKeyDown);
             window.addEventListener("touchstart", onTouchStart);
             window.addEventListener("touchend", onTouchEnd);
             window.addEventListener("touchcancel", onTouchEnd);
             window.addEventListener("touchmove", onTouchMove);
+            console.log("add events 2");
         }
         this._gameUI.restartCamera();
         this._gameUI.setPlayerManager(this._playerManager);
@@ -148,28 +154,30 @@ var Game = (function () {
          * @param keyEvt data about the pressed key
          */
         function onKeyDown(keyEvt) {
-            this._playerManager.onKeyDown(keyEvt);
+            thisGame._playerManager.onKeyDown(keyEvt);
+            console.log("on key down:" + keyEvt.keyCode);
         }
         /**
          * Event when screen gets touched.
          * @param touchEvt data about the touch input
          */
         function onTouchStart(touchEvt) {
-            this._playerManager.onTouchStart(touchEvt);
+            thisGame._playerManager.onTouchStart(touchEvt);
+            console.log("key touch start");
         }
         /**
          * Event when screen stops getting touched.
          * @param touchEvt data about the touch input
          */
         function onTouchEnd(touchEvt) {
-            this._playerManager.onTouchEnd(touchEvt);
+            thisGame._playerManager.onTouchEnd(touchEvt);
         }
         /**
          * Event when the screen gets swiped.
          * @param touchEvt data about the touch input
          */
         function onTouchMove(touchEvt) {
-            this._playerManager.onTouchMove(touchEvt);
+            thisGame._playerManager.onTouchMove(touchEvt);
         }
     };
     return Game;

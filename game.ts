@@ -68,6 +68,7 @@ class Game {
     constructor() {
         this._canvas = <HTMLCanvasElement>document.getElementById("renderCanvas");
         this._engine = new BABYLON.Engine(this._canvas, true);
+        this._scene = this.createScene();
         this.mainMenu();
     }
 
@@ -123,7 +124,7 @@ class Game {
         this._skyboxManager = new SkyBoxManager(scene, this._ECSengine);
 
         return scene;
-        
+
     }
 
     /**
@@ -133,15 +134,17 @@ class Game {
 
         console.log("mainMenu 1");
 
-        this._scene = this.createScene();
+        let ECSengine: ECS.Engine = this._ECSengine;
+        let scene: BABYLON.Scene = this._scene;
+        let gameUI: GameUI = this._gameUI;
 
         this._engine.runRenderLoop(function () {
             // update entity component system
-            this._ECSengine.updateSystems();
+            ECSengine.updateSystems();
             // update babylon
-            this.scene.render();
+            scene.render();
             //update Gameui
-            this._gameUI.update();
+            gameUI.update();
         });
 
         /**
@@ -149,7 +152,7 @@ class Game {
          * @param keyEvt data about the pressed key
          */
         function onKeyDown(keyEvt: KeyboardEvent) {
-            this._gameUI.onKeyDown(keyEvt);
+            gameUI.onKeyDown(keyEvt);
         }
 
         /**
@@ -157,7 +160,7 @@ class Game {
          * @param touchEvt data about the touch input
          */
         function onTouchStart(touchEvt: TouchEvent) {
-            this._gameUI.onInputStart(new BABYLON.Vector2(touchEvt.touches[0].pageX, touchEvt.touches[0].pageY));
+            gameUI.onInputStart(new BABYLON.Vector2(touchEvt.touches[0].pageX, touchEvt.touches[0].pageY));
         }
 
         /**
@@ -165,12 +168,12 @@ class Game {
          * @param mouseEvt data about the mouse input.
          */
         function mouseDown(mouseEvt: MouseEvent): void {
-            this._gameUI.onInputStart(new BABYLON.Vector2(mouseEvt.pageX, mouseEvt.pageY));
+            gameUI.onInputStart(new BABYLON.Vector2(mouseEvt.pageX, mouseEvt.pageY));
         }
 
         // call resize on babylon engine if the windows resizes
         window.addEventListener("resize", function () {
-            this._engine.resize();
+            this.e.resize();
         });
 
         // add input event listener
@@ -184,6 +187,7 @@ class Game {
      */
     game() {
 
+        let thisGame: Game = this;
         if (this._playerManager != null) {
             /**
              * get the playerT from where the player died
@@ -206,6 +210,7 @@ class Game {
              * first start
              */
 
+
             this._playerManager = new PlayerManager(this._scene, this._ECSengine, this._roadManager, this._audio, this._gameUI);
             this._playerCameraManager = new PlayerCameraManager(this._ECSengine, this._scene, this._playerManager);
 
@@ -214,21 +219,24 @@ class Game {
                 /**
                  * gets deltatime for the playermanagers
                  */
-                let deltaTime: number = this._engine.getDeltaTime();
+                let deltaTime: number = thisGame._engine.getDeltaTime();
 
                 // update managers (scripts that handel game logic)
-                this._roadManager.update(this._playerManager.getplayerT());
-                this._playerManager.update(deltaTime);
-                this._playerCameraManager.update(deltaTime);
+                thisGame._roadManager.update(thisGame._playerManager.getplayerT());
+                thisGame._playerManager.update(deltaTime);
+                thisGame._playerCameraManager.update(deltaTime);
 
                 // update skybox position
-                this._skyboxManager.update(this.playerCameraManager.cameraPosition);
+                thisGame._skyboxManager.update(thisGame._playerCameraManager.cameraPosition);
             });
+            
+            console.log("add events 1");
             window.addEventListener("keydown", onKeyDown);
             window.addEventListener("touchstart", onTouchStart);
             window.addEventListener("touchend", onTouchEnd);
             window.addEventListener("touchcancel", onTouchEnd);
             window.addEventListener("touchmove", onTouchMove);
+            console.log("add events 2");
         }
 
         this._gameUI.restartCamera();
@@ -240,7 +248,8 @@ class Game {
          * @param keyEvt data about the pressed key
          */
         function onKeyDown(keyEvt: KeyboardEvent) {
-            this._playerManager.onKeyDown(keyEvt);
+            thisGame._playerManager.onKeyDown(keyEvt);
+            console.log("on key down:" + keyEvt.keyCode);
         }
 
         /**
@@ -248,7 +257,8 @@ class Game {
          * @param touchEvt data about the touch input
          */
         function onTouchStart(touchEvt: TouchEvent) {
-            this._playerManager.onTouchStart(touchEvt);
+            thisGame._playerManager.onTouchStart(touchEvt);
+            console.log("key touch start");
         }
 
         /**
@@ -256,7 +266,7 @@ class Game {
          * @param touchEvt data about the touch input
          */
         function onTouchEnd(touchEvt: TouchEvent) {
-            this._playerManager.onTouchEnd(touchEvt);
+            thisGame._playerManager.onTouchEnd(touchEvt);
         }
 
         /**
@@ -264,7 +274,7 @@ class Game {
          * @param touchEvt data about the touch input
          */
         function onTouchMove(touchEvt: TouchEvent) {
-            this._playerManager.onTouchMove(touchEvt);
+            thisGame._playerManager.onTouchMove(touchEvt);
         }
 
 
