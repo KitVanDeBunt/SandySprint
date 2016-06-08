@@ -18,7 +18,8 @@ var RoadObstacle = (function (_super) {
 }(SceneObject));
 var CollisionMeshType;
 (function (CollisionMeshType) {
-    CollisionMeshType[CollisionMeshType["pillar"] = 0] = "pillar";
-    CollisionMeshType[CollisionMeshType["scarab"] = 1] = "scarab";
+    CollisionMeshType[CollisionMeshType["spike"] = 0] = "spike";
+    CollisionMeshType[CollisionMeshType["pillar"] = 1] = "pillar";
+    CollisionMeshType[CollisionMeshType["scarab"] = 2] = "scarab";
 })(CollisionMeshType || (CollisionMeshType = {}));
 //# sourceMappingURL=obstacle.js.map

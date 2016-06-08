@@ -12,6 +12,7 @@ class RoadObstacle extends SceneObject {
 }
 
 enum CollisionMeshType {
+    spike,
     pillar,
     scarab
 }

@@ -61,7 +61,7 @@ class RoadManager {
         );
 
         road.addComponent(roadPositionComponent);
-        this.roadMeshes[roadN] = new ECS.ComponentAbstractMesh(roadPositionComponent, "assets/models/", "road_plain.babylon");
+        this.roadMeshes[roadN] = new ECS.ComponentAbstractMesh(roadPositionComponent, "assets/models/", "road_river.babylon");
         
         road.addComponent(this.roadMeshes[roadN]);
 
@@ -102,6 +102,21 @@ class RoadManager {
             , 2
             , this.randomLane()
         );
+        
+        this.createLaneObject(
+            roadN
+            , "assets/models/"
+            , "Obstacle_Spikes.babylon"
+            , CollisionMeshType.spike
+            , new BABYLON.Vector3(0.5, 0.5, 0.5)
+            , BABYLON.Quaternion.Identity()
+            , new BABYLON.Vector3(0, 0, 0)
+            , BABYLON.Vector3.Zero()
+            , 0.2
+            , 0.5
+            , this.randomLane()
+        );
+        
         
         for (var i = 0; i < 5; i++) {
             this.createLaneObject(

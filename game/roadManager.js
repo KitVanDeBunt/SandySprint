@@ -35,7 +35,7 @@ var RoadManager = (function () {
         var road = this.engine.createEntity();
         var roadPositionComponent = new ECS.ComponentTransform(new BABYLON.Vector3(0, 0, this.roadesSpawned * 14), new BABYLON.Vector3(1, 1, 1), BABYLON.Quaternion.Identity());
         road.addComponent(roadPositionComponent);
-        this.roadMeshes[roadN] = new ECS.ComponentAbstractMesh(roadPositionComponent, "assets/models/", "road_plain.babylon");
+        this.roadMeshes[roadN] = new ECS.ComponentAbstractMesh(roadPositionComponent, "assets/models/", "road_river.babylon");
         road.addComponent(this.roadMeshes[roadN]);
         this.lanes[roadN] = [
             new ComponentStraightLane(this.roadMeshes[roadN], new BABYLON.Vector3(-0.25, 0, this.roadesSpawned * 14), BABYLON.Vector3.Zero(), this.scene, this.roadesSpawned * 14),
@@ -58,6 +58,7 @@ var RoadManager = (function () {
         road.addComponent(this.lanes[roadN][1]);
         road.addComponent(this.lanes[roadN][2]);
         this.createLaneObject(roadN, "assets/models/", "pillar.babylon", CollisionMeshType.pillar, new BABYLON.Vector3(0.14, 0.14, 0.14), BABYLON.Quaternion.Identity(), new BABYLON.Vector3(0, 0, 0), BABYLON.Vector3.Zero(), 0.2, 2, this.randomLane());
+        this.createLaneObject(roadN, "assets/models/", "Obstacle_Spikes.babylon", CollisionMeshType.spike, new BABYLON.Vector3(0.5, 0.5, 0.5), BABYLON.Quaternion.Identity(), new BABYLON.Vector3(0, 0, 0), BABYLON.Vector3.Zero(), 0.2, 0.5, this.randomLane());
         for (var i = 0; i < 5; i++) {
             this.createLaneObject(roadN, "assets/models/", "pickup_scarab.babylon", CollisionMeshType.scarab, new BABYLON.Vector3(2.5, 2.5, 2.5), new BABYLON.Quaternion(0, 0, 0, 1), new BABYLON.Vector3(0, 0.5, 0), BABYLON.Vector3.Zero(), 0.2, 0.5, this.randomLane());
         }

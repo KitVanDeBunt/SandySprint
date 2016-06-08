@@ -301,7 +301,7 @@ class PlayerManager {
                         var coll: boolean = this.playerMeshComponent.getCollider.intersectsMesh(this.roadManager.obstacles[i].meshCollider);
                         if (coll) {
                             switch (this.roadManager.obstacles[i].meshType) {
-                                case CollisionMeshType.pillar:
+                                case CollisionMeshType.pillar||CollisionMeshType.spike:
                                     this.gameUI.closeInGame();
                                     this.gameUI.openEndScreen();
                                     this.playing = false;
