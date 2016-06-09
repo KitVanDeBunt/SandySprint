@@ -64,8 +64,7 @@ var endScreen = (function () {
         this._endscreentexture.drawText("Total: " + Math.round(this._scorecount + (this._scarabcount * 3)), 150, 330, "30px Cooper Std Black", "black", "transparent");
     };
     endScreen.prototype.onInput = function (inputPos) {
-        if (!this._count) {
-            this.Dispose();
+        if (this.Dispose()) {
             main.game();
         }
     };
@@ -88,6 +87,7 @@ var endScreen = (function () {
         for (var i = 0; i < this._objects.length; i++) {
             this._objects[i].dispose();
         }
+        return true;
     };
     return endScreen;
 }());

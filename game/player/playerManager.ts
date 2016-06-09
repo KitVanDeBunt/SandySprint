@@ -145,7 +145,7 @@ class PlayerManager {
             this.playerMovedCurrentTouch = true;
         }
         //swipe up
-        if (this.touchEnd.y - this.touchStart.y < -screen.height * 0.2 && this.jumpManager.jumping == false) {
+        if (this.touchEnd.y - this.touchStart.y < -screen.height * 0.2 && this.jumpManager.jumping == false && this.playing == true) {
             this.jumpManager.jump(this.playerT);
             this.audio.playSound(Sounds.Jump);
         }
@@ -165,7 +165,7 @@ class PlayerManager {
                 this.movePlayerRight();
                 break;
             case 32: //'Space'
-                if (this.jumpManager.jumping == false) {
+                if (this.jumpManager.jumping == false && this.playing == true) {
                     this.jumpManager.jump(this.playerT);
                     this.audio.playSound(Sounds.Jump);
                 }

@@ -8,6 +8,7 @@ var InGameUI = (function () {
         this._playerManager = playerManager;
         this._objects = [];
         this._scene = scene;
+        this._tutorialEnabled = true;
         this.CreateUI();
     }
     /**
@@ -21,7 +22,8 @@ var InGameUI = (function () {
         var treasureBarTex = new BABYLON.Texture("assets/textures/ui_textures/treasure-bar.png", this._scene, true);
         var treasureBar = this._gameUI.createImage(new BABYLON.Vector2(-440, 342), new BABYLON.Vector2(580 / 2, 51 / 2), treasureBarTex);
         this._objects.push(treasureBar);
-        var material = new BABYLON.StandardMaterial("textuare1", this._scene);
+        this._tutorial = new Tutorial(this._gameUI);
+        var material = new BABYLON.StandardMaterial("UITextTexture", this._scene);
         material.alpha = 1;
         material.diffuseColor = new BABYLON.Color3(1.00, 1.00, 1.00);
         this._myMaterial_diffuseTexture = new BABYLON.DynamicTexture('ScoreTex', 512, this._scene, true);
@@ -42,6 +44,9 @@ var InGameUI = (function () {
         this.context2D.clearRect(0, 0, 512, 512);
         this._myMaterial_diffuseTexture.drawText("" + Math.round(this._playerManager.getplayerT() - this._gameUI.getPlayerTOffset()), 0, 58, "25px Cooper Std Black", "black", "transparent");
         this._myMaterial_diffuseTexture.drawText("" + this._playerManager.getPickupsCollected(), 0, 88, "25px Cooper Std Black", "black", "transparent");
+        if (this._tutorialEnabled) {
+            this._tutorial.update();
+        }
     };
     /**
      * Delete all objects

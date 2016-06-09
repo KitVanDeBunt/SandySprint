@@ -89,10 +89,9 @@ class endScreen {
     }
 
     onInput(inputPos: BABYLON.Vector2) {
-        if (!this._count) {
-            this.Dispose();
+            if(this.Dispose()){
             main.game();
-        }
+            }
     }
 
     /**
@@ -112,9 +111,10 @@ class endScreen {
     /**
      * remove all UI objects
      */
-    Dispose() {
+    Dispose():boolean {
         for (var i: number = 0; i < this._objects.length; i++) {
             this._objects[i].dispose();
         }
+        return true;
     }
 }
