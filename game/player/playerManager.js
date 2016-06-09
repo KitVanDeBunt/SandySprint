@@ -178,7 +178,7 @@ var PlayerManager = (function () {
                     break;
                 case PlayerAnimationState.Running:
                     if (this.jumpManager.jumping) {
-                        this._scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 80 * this.ftc, 110 * this.ftc, true, 1);
+                        this._scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 110 * this.ftc, 140 * this.ftc, true, 1);
                         this.animationState = PlayerAnimationState.Jumping;
                     }
                     break;
