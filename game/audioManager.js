@@ -8,15 +8,15 @@ var audioManager = (function () {
      */
     function audioManager(scene) {
         this._scene = scene;
-        this._pickUpSound = this.addSound("Pickup", "../assets/sounds/pickUp.wav", false, 2);
-        this.menuBackgroundSound = this.addSound("MenuBackGround", "../assets/sounds/menuSound.mp3", true, 0.1);
-        this._inGameSound = this.addSound("InGameSound", "../assets/sounds/gameSound.mp3", true, 1);
-        this._jumpSound = this.addSound("Jumpsound", "../assets/sounds/jump.wav", false, 0.5);
-        this._jumpLandSound = this.addSound("JumpLandSound", "../assets/sounds/jumpland.mp3", false, 1);
-        this._startSound = this.addSound("StartSound", "../assets/sounds/start.wav", false, 2);
-        this._stopSound = this.addSound("StopSound", "../assets/sounds/stop.mp3", false, 2);
-        this._laneSwitchSound = this.addSound("SwitchSound", "../assets/sounds/swipe.wav", false, 1);
-        this._walkSound = this.addSound("WalkSound", "../assets/sounds/Walk1.mp3", true, 0.5);
+        this._pickUpSound = this.addSound("Pickup", "../assets/sounds/pickUp.wav", false, 2, 1);
+        this.menuBackgroundSound = this.addSound("MenuBackGround", "../assets/sounds/menuSound.mp3", true, 0.1, 1);
+        this._inGameSound = this.addSound("InGameSound", "../assets/sounds/gameSound.mp3", true, 1, 1);
+        this._jumpSound = this.addSound("Jumpsound", "../assets/sounds/jump.wav", false, 0.5, 1);
+        this._jumpLandSound = this.addSound("JumpLandSound", "../assets/sounds/jumpland.mp3", false, 1, 1);
+        this._startSound = this.addSound("StartSound", "../assets/sounds/start.wav", false, 2, 0.6);
+        this._stopSound = this.addSound("StopSound", "../assets/sounds/stop.mp3", false, 2, 1);
+        this._laneSwitchSound = this.addSound("SwitchSound", "../assets/sounds/swipe.wav", false, 0.1, 1);
+        this._walkSound = this.addSound("WalkSound", "../assets/sounds/Walk1.mp3", true, 0.5, 1);
     }
     /**
      * Creates and returns a sound
@@ -25,9 +25,10 @@ var audioManager = (function () {
      * @param loop boolean if the sound needs to loop
      * @param volume volume of the sound
      */
-    audioManager.prototype.addSound = function (name, url, loop, volume) {
+    audioManager.prototype.addSound = function (name, url, loop, volume, playbackRate) {
         var sound = new BABYLON.Sound(name, url, this._scene, null, { autoplay: false, loop: loop });
         sound.setVolume(volume);
+        sound.setPlaybackRate(playbackRate);
         return sound;
     };
     /**
