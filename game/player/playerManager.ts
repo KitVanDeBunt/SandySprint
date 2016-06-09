@@ -246,10 +246,8 @@ class PlayerManager {
     }
 
     private updateAudio(deltaTime:number) {
-        console.log("update sound: "+this._walkSoundRepeatTimer);
         this._walkSoundRepeatTimer += deltaTime;
         if(this._walkSoundRepeatTimer>this._walkSoundRepeatTime){
-        console.log("play walk sound");
             this._walkSoundRepeatTimer = 0;
             //this.audio.playSound(Sounds.Walk);
         }

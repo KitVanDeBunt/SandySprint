@@ -194,10 +194,8 @@ var PlayerManager = (function () {
         }
     };
     PlayerManager.prototype.updateAudio = function (deltaTime) {
-        console.log("update sound: " + this._walkSoundRepeatTimer);
         this._walkSoundRepeatTimer += deltaTime;
         if (this._walkSoundRepeatTimer > this._walkSoundRepeatTime) {
-            console.log("play walk sound");
             this._walkSoundRepeatTimer = 0;
         }
     };
