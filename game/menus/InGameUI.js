@@ -22,7 +22,9 @@ var InGameUI = (function () {
         var treasureBarTex = new BABYLON.Texture("assets/textures/ui_textures/treasure-bar.png", this._scene, true);
         var treasureBar = this._gameUI.createImage(new BABYLON.Vector2(-440, 342), new BABYLON.Vector2(580 / 2, 51 / 2), treasureBarTex);
         this._objects.push(treasureBar);
-        this._tutorial = new tutorial(this._gameUI, this._playerManager);
+        if (this._tutorialEnabled) {
+            this._tutorial = new tutorial(this._gameUI, this._scene, this._playerManager);
+        }
         var material = new BABYLON.StandardMaterial("UITextTexture", this._scene);
         material.alpha = 1;
         material.diffuseColor = new BABYLON.Color3(1.00, 1.00, 1.00);
@@ -46,6 +48,16 @@ var InGameUI = (function () {
         this._myMaterial_diffuseTexture.drawText("" + this._playerManager.getPickupsCollected(), 0, 88, "25px Cooper Std Black", "black", "transparent");
         if (this._tutorialEnabled) {
             this._tutorial.update();
+        }
+    };
+    InGameUI.prototype.onInputStart = function (inputPos) {
+        if (this._tutorialEnabled) {
+            this._tutorial.onInputStart(inputPos);
+        }
+    };
+    InGameUI.prototype.onKeyDown = function (keyEvt) {
+        if (this._tutorialEnabled) {
+            this._tutorial.onKeyDown(keyEvt);
         }
     };
     /**

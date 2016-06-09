@@ -39,7 +39,9 @@ class InGameUI {
         var treasureBar = this._gameUI.createImage(new BABYLON.Vector2(-440, 342), new BABYLON.Vector2(580 / 2, 51 / 2), treasureBarTex);
         this._objects.push(treasureBar);
         
-        this._tutorial = new tutorial(this._gameUI,this._playerManager);
+        if(this._tutorialEnabled){
+            this._tutorial = new tutorial(this._gameUI,this._scene,this._playerManager);
+        }
 
         var material = new BABYLON.StandardMaterial("UITextTexture", this._scene);
         material.alpha = 1;
@@ -69,6 +71,18 @@ class InGameUI {
         this._myMaterial_diffuseTexture.drawText("" + this._playerManager.getPickupsCollected(), 0, 88, "25px Cooper Std Black", "black", "transparent");
         if(this._tutorialEnabled){
             this._tutorial.update();
+        }
+    }
+    
+    onInputStart(inputPos:BABYLON.Vector2){
+        if(this._tutorialEnabled){
+            this._tutorial.onInputStart(inputPos);
+        }
+    }
+    
+    onKeyDown(keyEvt:KeyboardEvent){
+        if(this._tutorialEnabled){
+            this._tutorial.onKeyDown(keyEvt);
         }
     }
 

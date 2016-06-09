@@ -5,7 +5,6 @@
 class GameUI {
 
     public menuState: menuState;
-
     private context2D;
     private _myMaterial_diffuseTexture: BABYLON.DynamicTexture;
     private _box: BABYLON.Mesh;
@@ -56,6 +55,9 @@ class GameUI {
             case menuState.Start:
                 this._menu.onInput(new BABYLON.Vector2(inputPos.x, inputPos.y));
                 break;
+            case menuState.Game:
+                this._inGameUI.onInputStart(inputPos);
+                break;
             case menuState.End:
                 this._endScreen.onInput(new BABYLON.Vector2(inputPos.x, inputPos.y));
                 break;
@@ -72,6 +74,9 @@ class GameUI {
         switch (this.menuState) {
             case menuState.Start:
                 this._menu.onKeyDown(keyEvt);
+                break;
+            case menuState.Game:
+                this._inGameUI.onKeyDown(keyEvt);
                 break;
             default:
                 break;
@@ -91,9 +96,9 @@ class GameUI {
         this._cameraECS.addComponent(UICam);
     }
 
-/**
- * updates menu scripts.
- */
+    /**
+     * updates menu scripts.
+     */
     update(): void {
         switch (this.menuState) {
             case menuState.Start:

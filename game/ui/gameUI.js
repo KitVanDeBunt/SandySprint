@@ -36,6 +36,9 @@ var GameUI = (function () {
             case menuState.Start:
                 this._menu.onInput(new BABYLON.Vector2(inputPos.x, inputPos.y));
                 break;
+            case menuState.Game:
+                this._inGameUI.onInputStart(inputPos);
+                break;
             case menuState.End:
                 this._endScreen.onInput(new BABYLON.Vector2(inputPos.x, inputPos.y));
                 break;
@@ -51,6 +54,9 @@ var GameUI = (function () {
         switch (this.menuState) {
             case menuState.Start:
                 this._menu.onKeyDown(keyEvt);
+                break;
+            case menuState.Game:
+                this._inGameUI.onKeyDown(keyEvt);
                 break;
             default:
                 break;
