@@ -162,6 +162,14 @@ class Game {
         function onTouchStart(touchEvt: TouchEvent) {
             gameUI.onInputStart(new BABYLON.Vector2(touchEvt.touches[0].pageX, touchEvt.touches[0].pageY));
         }
+        
+        /**
+         * Event when screen gets swiped.
+         * @param touchEvt data about the touch input.
+         */
+        function onTouchMove(touchEvt:TouchEvent){
+            gameUI.onInputMove(new BABYLON.Vector2(touchEvt.touches[0].pageX, touchEvt.touches[0].pageY));
+        }
 
         /**
          * Event when mousebutton gets clicked.
@@ -179,6 +187,7 @@ class Game {
         // add input event listener
         window.addEventListener("keydown", onKeyDown);
         window.addEventListener("touchstart", onTouchStart);
+        window.addEventListener("touchmove", onTouchMove);
         window.addEventListener("mousedown", mouseDown);
     };
 

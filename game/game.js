@@ -83,6 +83,13 @@ var Game = (function () {
             gameUI.onInputStart(new BABYLON.Vector2(touchEvt.touches[0].pageX, touchEvt.touches[0].pageY));
         }
         /**
+         * Event when screen gets swiped.
+         * @param touchEvt data about the touch input.
+         */
+        function onTouchMove(touchEvt) {
+            gameUI.onInputMove(new BABYLON.Vector2(touchEvt.touches[0].pageX, touchEvt.touches[0].pageY));
+        }
+        /**
          * Event when mousebutton gets clicked.
          * @param mouseEvt data about the mouse input.
          */
@@ -96,6 +103,7 @@ var Game = (function () {
         // add input event listener
         window.addEventListener("keydown", onKeyDown);
         window.addEventListener("touchstart", onTouchStart);
+        window.addEventListener("touchmove", onTouchMove);
         window.addEventListener("mousedown", mouseDown);
     };
     ;

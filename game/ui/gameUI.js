@@ -29,7 +29,7 @@ var GameUI = (function () {
     }
     /**
      * on Touch or click
-     * @param inputPos (x,y) pos of the touch/click
+     * @param inputPos (x,y) position of the touch/click.
      */
     GameUI.prototype.onInputStart = function (inputPos) {
         switch (this.menuState) {
@@ -41,6 +41,19 @@ var GameUI = (function () {
                 break;
             case menuState.End:
                 this._endScreen.onInput(new BABYLON.Vector2(inputPos.x, inputPos.y));
+                break;
+            default:
+                break;
+        }
+    };
+    /**
+     * on Swipe
+     * @param inputPos (x,y) position when there touch moved.
+     */
+    GameUI.prototype.onInputMove = function (inputPos) {
+        switch (this.menuState) {
+            case menuState.Game:
+                this._inGameUI.onInputMove(inputPos);
                 break;
             default:
                 break;

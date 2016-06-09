@@ -79,12 +79,13 @@ class PlayerManager {
 
         this.abstractMeshComponetType = new ECS.ComponentAbstractMesh(null, null, null).componentType();
     }
-
+    
     /**
-     * starts the player forwared movement by setting its speed
+     * Sets the players speed
+     * @param playerSpeed the new speed of the player.
      */
-    startRunning() {
-        this.playerSpeed = 0.006;
+    setPlaying(state:boolean) {
+        this.playing = state;
     }
 
     /**
@@ -131,7 +132,6 @@ class PlayerManager {
 
     }
 
-    // TODO : if swipe > screen.width*0.5 move 2 lanes? 
     /**
      * check for swipe
      */
@@ -245,9 +245,9 @@ class PlayerManager {
         }
     }
 
-    private updateAudio(deltaTime:number) {
+    private updateAudio(deltaTime: number) {
         this._walkSoundRepeatTimer += deltaTime;
-        if(this._walkSoundRepeatTimer>this._walkSoundRepeatTime){
+        if (this._walkSoundRepeatTimer > this._walkSoundRepeatTime && this.jumpManager.jumping == false) {
             this._walkSoundRepeatTimer = 0;
             this.audio.playSound(Sounds.Walk);
         }

@@ -1,6 +1,6 @@
 /**
  * InGameUI
- */ 
+ */
 class InGameUI {
 
     private _objects: Array<BABYLON.Mesh>;
@@ -11,8 +11,8 @@ class InGameUI {
     private context2D;
     private _scene: BABYLON.Scene;
     private _playerManager: PlayerManager;
-    private _tutorialEnabled:boolean;
-    private _tutorial:tutorial;
+    tutorialEnabled: boolean;
+    private _tutorial: tutorial;
 
     constructor(canvas: HTMLCanvasElement, engine: BABYLON.Engine, scene: BABYLON.Scene, gameUI: GameUI, playerManager: PlayerManager) {
         this._gameUI = gameUI;
@@ -20,7 +20,7 @@ class InGameUI {
         this._playerManager = playerManager;
         this._objects = [];
         this._scene = scene;
-        this._tutorialEnabled = true;
+        this.tutorialEnabled = true;
 
         this.CreateUI();
     }
@@ -38,9 +38,9 @@ class InGameUI {
         var treasureBarTex = new BABYLON.Texture("assets/textures/ui_textures/treasure-bar.png", this._scene, true);
         var treasureBar = this._gameUI.createImage(new BABYLON.Vector2(-440, 342), new BABYLON.Vector2(580 / 2, 51 / 2), treasureBarTex);
         this._objects.push(treasureBar);
-        
-        if(this._tutorialEnabled){
-            this._tutorial = new tutorial(this._gameUI,this._scene,this._playerManager);
+
+        if (this.tutorialEnabled) {
+            this._tutorial = new tutorial(this._gameUI, this._scene, this._playerManager, this);
         }
 
         var material = new BABYLON.StandardMaterial("UITextTexture", this._scene);
@@ -69,19 +69,25 @@ class InGameUI {
         this.context2D.clearRect(0, 0, 512, 512);
         this._myMaterial_diffuseTexture.drawText("" + Math.round(this._playerManager.getplayerT() - this._gameUI.getPlayerTOffset()), 0, 58, "25px Cooper Std Black", "black", "transparent");
         this._myMaterial_diffuseTexture.drawText("" + this._playerManager.getPickupsCollected(), 0, 88, "25px Cooper Std Black", "black", "transparent");
-        if(this._tutorialEnabled){
+        if (this.tutorialEnabled) {
             this._tutorial.update();
         }
     }
-    
-    onInputStart(inputPos:BABYLON.Vector2){
-        if(this._tutorialEnabled){
+
+    onInputStart(inputPos: BABYLON.Vector2) {
+        if (this.tutorialEnabled) {
             this._tutorial.onInputStart(inputPos);
         }
     }
     
-    onKeyDown(keyEvt:KeyboardEvent){
-        if(this._tutorialEnabled){
+    onInputMove(inputPos:BABYLON.Vector2){
+        if(this.tutorialEnabled){
+            this._tutorial.onInputMove(inputPos);
+        }
+    }
+
+    onKeyDown(keyEvt: KeyboardEvent) {
+        if (this.tutorialEnabled) {
             this._tutorial.onKeyDown(keyEvt);
         }
     }

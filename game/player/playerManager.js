@@ -48,10 +48,11 @@ var PlayerManager = (function () {
         this.abstractMeshComponetType = new ECS.ComponentAbstractMesh(null, null, null).componentType();
     }
     /**
-     * starts the player forwared movement by setting its speed
+     * Sets the players speed
+     * @param playerSpeed the new speed of the player.
      */
-    PlayerManager.prototype.startRunning = function () {
-        this.playerSpeed = 0.006;
+    PlayerManager.prototype.setPlaying = function (state) {
+        this.playing = state;
     };
     /**
      * Returns the players interpontation(t or dictance in game).
@@ -90,7 +91,6 @@ var PlayerManager = (function () {
     };
     PlayerManager.prototype.onTouchEnd = function (touchEvt) {
     };
-    // TODO : if swipe > screen.width*0.5 move 2 lanes? 
     /**
      * check for swipe
      */
@@ -195,7 +195,7 @@ var PlayerManager = (function () {
     };
     PlayerManager.prototype.updateAudio = function (deltaTime) {
         this._walkSoundRepeatTimer += deltaTime;
-        if (this._walkSoundRepeatTimer > this._walkSoundRepeatTime) {
+        if (this._walkSoundRepeatTimer > this._walkSoundRepeatTime && this.jumpManager.jumping == false) {
             this._walkSoundRepeatTimer = 0;
             this.audio.playSound(Sounds.Walk);
         }

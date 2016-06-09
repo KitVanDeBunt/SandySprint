@@ -48,7 +48,7 @@ class GameUI {
 
     /**
      * on Touch or click
-     * @param inputPos (x,y) pos of the touch/click
+     * @param inputPos (x,y) position of the touch/click.
      */
     onInputStart(inputPos: BABYLON.Vector2) {
         switch (this.menuState) {
@@ -61,6 +61,21 @@ class GameUI {
             case menuState.End:
                 this._endScreen.onInput(new BABYLON.Vector2(inputPos.x, inputPos.y));
                 break;
+            default:
+                break;
+        }
+    }
+    
+    /**
+     * on Swipe
+     * @param inputPos (x,y) position when there touch moved.
+     */
+    onInputMove(inputPos:BABYLON.Vector2){
+        switch (this.menuState) {
+            case menuState.Game:
+                this._inGameUI.onInputMove(inputPos);
+                break;
+        
             default:
                 break;
         }
