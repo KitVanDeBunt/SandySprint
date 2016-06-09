@@ -22,7 +22,7 @@ var InGameUI = (function () {
         var treasureBarTex = new BABYLON.Texture("assets/textures/ui_textures/treasure-bar.png", this._scene, true);
         var treasureBar = this._gameUI.createImage(new BABYLON.Vector2(-440, 342), new BABYLON.Vector2(580 / 2, 51 / 2), treasureBarTex);
         this._objects.push(treasureBar);
-        this._tutorial = new Tutorial(this._gameUI);
+        this._tutorial = new tutorial(this._gameUI, this._playerManager);
         var material = new BABYLON.StandardMaterial("UITextTexture", this._scene);
         material.alpha = 1;
         material.diffuseColor = new BABYLON.Color3(1.00, 1.00, 1.00);

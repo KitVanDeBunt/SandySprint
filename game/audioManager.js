@@ -16,7 +16,7 @@ var audioManager = (function () {
         this._startSound = this.addSound("StartSound", "../assets/sounds/start.wav", false, 2, 0.6);
         this._stopSound = this.addSound("StopSound", "../assets/sounds/stop.mp3", false, 2, 1);
         this._laneSwitchSound = this.addSound("SwitchSound", "../assets/sounds/swipe.wav", false, 0.1, 1);
-        this._walkSound = this.addSound("WalkSound", "../assets/sounds/Walk1.mp3", true, 0.5, 1);
+        this._walkSound = this.addSound("WalkSound", "../assets/sounds/Walk1.mp3", false, 0.2, 1);
     }
     /**
      * Creates and returns a sound

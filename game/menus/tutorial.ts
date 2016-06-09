@@ -1,4 +1,4 @@
-class Tutorial {
+class tutorial {
 
     private _gameUI: GameUI;
     private _playermanager: PlayerManager;

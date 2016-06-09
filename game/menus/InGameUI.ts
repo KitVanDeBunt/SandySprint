@@ -12,7 +12,7 @@ class InGameUI {
     private _scene: BABYLON.Scene;
     private _playerManager: PlayerManager;
     private _tutorialEnabled:boolean;
-    private _tutorial:Tutorial;
+    private _tutorial:tutorial;
 
     constructor(canvas: HTMLCanvasElement, engine: BABYLON.Engine, scene: BABYLON.Scene, gameUI: GameUI, playerManager: PlayerManager) {
         this._gameUI = gameUI;
@@ -39,7 +39,7 @@ class InGameUI {
         var treasureBar = this._gameUI.createImage(new BABYLON.Vector2(-440, 342), new BABYLON.Vector2(580 / 2, 51 / 2), treasureBarTex);
         this._objects.push(treasureBar);
         
-        this._tutorial = new Tutorial(this._gameUI);
+        this._tutorial = new tutorial(this._gameUI,this._playerManager);
 
         var material = new BABYLON.StandardMaterial("UITextTexture", this._scene);
         material.alpha = 1;
