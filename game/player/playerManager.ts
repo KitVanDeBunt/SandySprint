@@ -15,7 +15,11 @@ class PlayerManager {
     private jumpManager: ComponentJumpLane;
     private audio: audioManager;
     private gameUI: GameUI;
-    private playing: boolean;
+
+    //player Dieing
+    private playing: boolean = true;
+    private playerDied: boolean = false;
+    private playerDiedT: number = 0;
 
     // lane
     private previousLane: ComponentLaneBase;
@@ -59,7 +63,6 @@ class PlayerManager {
         this.playerMeshComponent = new ECS.ComponentAbstractMesh(this.playerTranslateComponent, "assets/models/", "Explorer_Rig_AllAnimations.babylon");
         this.player.addComponent(this.playerMeshComponent);
         this.audio = audioManager;
-        this.playing = true;
 
         // setup collision
         let mesh: BABYLON.Mesh = BABYLON.Mesh.CreateBox("CollBox", 0.2, this._scene, false);
@@ -79,12 +82,12 @@ class PlayerManager {
 
         this.abstractMeshComponetType = new ECS.ComponentAbstractMesh(null, null, null).componentType();
     }
-    
+
     /**
      * Sets the players speed
      * @param playerSpeed the new speed of the player.
      */
-    setPlaying(state:boolean) {
+    setPlaying(state: boolean) {
         this.playing = state;
     }
 
@@ -171,6 +174,7 @@ class PlayerManager {
                 break;
             case 38: //'Jump'
             case 32: //'Jump'
+            case 87: //'Jump'
                 if (this.jumpManager.jumping == false && this.playing == true) {
                     this.jumpManager.jump(this.playerT);
                     this.audio.playSound(Sounds.Jump);
@@ -202,6 +206,17 @@ class PlayerManager {
 
     }
 
+    private playerDies() {
+        this.playerDiedT++;
+        if (this.playerDiedT >= 30) {
+            this.gameUI.closeInGame();
+            this.gameUI.openEndScreen();
+            this.playerDied = false;
+            this.animationState = PlayerAnimationState.Idle;
+            this.updateAnimation();
+        }
+    }
+
     /**
      * updates the player
      */
@@ -216,6 +231,9 @@ class PlayerManager {
         }
         if (this.firstFrame) {
             this.firstFrame = false;
+        }
+        if (this.playerDied) {
+            this.playerDies();
         }
     }
 
@@ -234,9 +252,15 @@ class PlayerManager {
                     break;
                 case PlayerAnimationState.Jumping:
                     if (!this.jumpManager.jumping) {
-                        this._scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 0 * this.ftc, 21 * this.ftc, true, 1.4);
+                        this._scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 0, 21 * this.ftc, true, 1.4);
                         this.animationState = PlayerAnimationState.Running;
                     }
+                    break;
+                case PlayerAnimationState.Falling:
+                    this._scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 60 * this.ftc, 90 * this.ftc, true, 1);
+                    break;
+                case PlayerAnimationState.Idle:
+                    this._scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 89 * this.ftc, 90 * this.ftc, true, 1);
                     break;
 
                 default:
@@ -267,9 +291,9 @@ class PlayerManager {
      */
     private updatePlayerMovment(deltaTime: number) {
         if (this.playerSpeed != 0) {
-            if (deltaTime > 100) {
-                this.playerT += (100 * this.playerSpeed);
-                deltaTime -= 100;
+            if (deltaTime > 1000) {
+                this.playerT += (1000 * this.playerSpeed);
+                deltaTime -= 1000;
                 this.updatePlayerMovment(deltaTime);
             }
             else {
@@ -318,9 +342,10 @@ class PlayerManager {
                                 switch (this.roadManager.sceneObjects[i].meshType) {
                                     case CollisionMeshType.pillar || CollisionMeshType.spike:
                                         this.audio.playSound(Sounds.Stop);
-                                        this.gameUI.closeInGame();
-                                        this.gameUI.openEndScreen();
+                                        this.animationState = PlayerAnimationState.Falling;
+                                        this.updateAnimation();
                                         this.playing = false;
+                                        this.playerDied = true;
                                         break;
                                     case CollisionMeshType.scarab:
                                         this.audio.playSound(Sounds.Pickup);

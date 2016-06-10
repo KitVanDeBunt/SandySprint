@@ -37,7 +37,7 @@ var GameUI = (function () {
                 this._menu.onInput(new BABYLON.Vector2(inputPos.x, inputPos.y));
                 break;
             case menuState.Game:
-                this._inGameUI.onInputStart(inputPos);
+                this.inGameUI.onInputStart(inputPos);
                 break;
             case menuState.End:
                 this._endScreen.onInput(new BABYLON.Vector2(inputPos.x, inputPos.y));
@@ -53,7 +53,7 @@ var GameUI = (function () {
     GameUI.prototype.onInputMove = function (inputPos) {
         switch (this.menuState) {
             case menuState.Game:
-                this._inGameUI.onInputMove(inputPos);
+                this.inGameUI.onInputMove(inputPos);
                 break;
             default:
                 break;
@@ -69,7 +69,7 @@ var GameUI = (function () {
                 this._menu.onKeyDown(keyEvt);
                 break;
             case menuState.Game:
-                this._inGameUI.onKeyDown(keyEvt);
+                this.inGameUI.onKeyDown(keyEvt);
                 break;
             default:
                 break;
@@ -96,7 +96,7 @@ var GameUI = (function () {
                 this._menu.update();
                 break;
             case menuState.Game:
-                this._inGameUI.update();
+                this.inGameUI.update();
                 break;
             case menuState.End:
                 this._endScreen.update();
@@ -121,11 +121,12 @@ var GameUI = (function () {
         this._menu.Dispose();
         main.game();
     };
-    GameUI.prototype.openInGame = function () {
-        this._inGameUI = new InGameUI(this._canvas, this._engine, this._scene, this, this._playerManager);
+    GameUI.prototype.openInGame = function (tutorialEnabled) {
+        this.inGameUI = new InGameUI(this._canvas, this._engine, this._scene, this, this._playerManager, tutorialEnabled);
+        this.inGameUI.tutorialEnabled = tutorialEnabled;
     };
     GameUI.prototype.closeInGame = function () {
-        this._inGameUI.Dispose();
+        this.inGameUI.Dispose();
     };
     GameUI.prototype.openEndScreen = function () {
         this._endScreen = new endScreen(this, this._scene);

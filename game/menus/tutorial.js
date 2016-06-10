@@ -10,6 +10,7 @@ var tutorial = (function () {
      * @param inGameUI the running inGameUI of GameUI.
      */
     function tutorial(gameUI, scene, playerManager, inGameUI) {
+        this._tutFinished = false;
         this._gameUI = gameUI;
         this._playermanager = playerManager;
         this._scene = scene;
@@ -40,23 +41,25 @@ var tutorial = (function () {
      * check if tutorial images need to be created.
      */
     tutorial.prototype.update = function () {
-        switch (this._tutorialState) {
-            case tutorialState.None:
-                if (Math.round(this._playermanager.getplayerT()) >= 20) {
-                    this._tutorialState = tutorialState.Move;
-                    this._playermanager.setPlaying(false);
-                    this.openImage();
-                }
-                break;
-            case tutorialState.WaitForJump:
-                if (Math.round(this._playermanager.getplayerT()) >= 40) {
-                    this._tutorialState = tutorialState.Jump;
-                    this._playermanager.setPlaying(false);
-                    this.openImage();
-                }
-                break;
-            default:
-                break;
+        if (this._tutFinished == false) {
+            switch (this._tutorialState) {
+                case tutorialState.None:
+                    if (Math.round(this._playermanager.getplayerT() - this._gameUI.getPlayerTOffset()) >= 20) {
+                        this._tutorialState = tutorialState.Move;
+                        this._playermanager.setPlaying(false);
+                        this.openImage();
+                    }
+                    break;
+                case tutorialState.WaitForJump:
+                    if (Math.round(this._playermanager.getplayerT() - this._gameUI.getPlayerTOffset()) >= 40) {
+                        this._tutorialState = tutorialState.Jump;
+                        this._playermanager.setPlaying(false);
+                        this.openImage();
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
     };
     /**
@@ -75,17 +78,18 @@ var tutorial = (function () {
         switch (this._tutorialState) {
             case tutorialState.Move:
                 if (touchEnd.x - this._touchStart.x > screen.width * 0.1 || touchEnd.x - this._touchStart.x < -screen.width * 0.1) {
-                    this.dispose();
+                    this.disposeObjects();
                     this._tutorialState = tutorialState.WaitForJump;
                     this._playermanager.setPlaying(true);
                 }
                 break;
             case tutorialState.Jump:
                 if (touchEnd.y - this._touchStart.y < -screen.height * 0.2) {
-                    this.dispose();
+                    this.disposeObjects();
                     this._tutorialState = tutorialState.None;
                     this._playermanager.setPlaying(true);
                     this._inGameUI.tutorialEnabled = false;
+                    this._tutFinished = true;
                 }
                 break;
             default:
@@ -104,7 +108,7 @@ var tutorial = (function () {
                     case 37: //'Left'
                     case 68: //'Right'
                     case 39:
-                        this.dispose();
+                        this.disposeObjects();
                         this._tutorialState = tutorialState.WaitForJump;
                         this._playermanager.setPlaying(true);
                         break;
@@ -113,8 +117,9 @@ var tutorial = (function () {
             case tutorialState.Jump:
                 switch (keyEvt.keyCode) {
                     case 38: //'Jump'
-                    case 32:
-                        this.dispose();
+                    case 32: //'Jump'
+                    case 87:
+                        this.disposeObjects();
                         this._tutorialState = tutorialState.None;
                         this._playermanager.setPlaying(true);
                         this._inGameUI.tutorialEnabled = false;
@@ -128,7 +133,7 @@ var tutorial = (function () {
     /**
      * removes all tutorial elements.
      */
-    tutorial.prototype.dispose = function () {
+    tutorial.prototype.disposeObjects = function () {
         for (var i = 0; i < this._objects.length; i++) {
             this._objects[i].dispose();
         }

@@ -127,6 +127,14 @@ var Game = (function () {
             this._playerCameraManager = new PlayerCameraManager(this._ECSengine, this._scene, this._playerManager);
             this._playerManager.setplayerT(playerT);
             this._gameUI.setPlayerTOffset(playerT);
+            this._gameUI.restartCamera();
+            this._gameUI.setPlayerManager(this._playerManager);
+            if (this._gameUI.inGameUI.tutorialEnabled) {
+                this._gameUI.openInGame(true);
+            }
+            else {
+                this._gameUI.openInGame(false);
+            }
         }
         else {
             /**
@@ -134,6 +142,9 @@ var Game = (function () {
              */
             this._playerManager = new PlayerManager(this._scene, this._ECSengine, this._roadManager, this._audio, this._gameUI);
             this._playerCameraManager = new PlayerCameraManager(this._ECSengine, this._scene, this._playerManager);
+            this._gameUI.restartCamera();
+            this._gameUI.setPlayerManager(this._playerManager);
+            this._gameUI.openInGame(true);
             this._engine.runRenderLoop(function () {
                 /**
                  * gets deltatime for the playermanagers
@@ -146,24 +157,18 @@ var Game = (function () {
                 // update skybox position
                 thisGame._skyboxManager.update(thisGame._playerCameraManager.cameraPosition);
             });
-            console.log("add events 1");
             window.addEventListener("keydown", onKeyDown);
             window.addEventListener("touchstart", onTouchStart);
             window.addEventListener("touchend", onTouchEnd);
             window.addEventListener("touchcancel", onTouchEnd);
             window.addEventListener("touchmove", onTouchMove);
-            console.log("add events 2");
         }
-        this._gameUI.restartCamera();
-        this._gameUI.setPlayerManager(this._playerManager);
-        this._gameUI.openInGame();
         /**
          * Event when key gets pressed.
          * @param keyEvt data about the pressed key
          */
         function onKeyDown(keyEvt) {
             thisGame._playerManager.onKeyDown(keyEvt);
-            console.log("on key down:" + keyEvt.keyCode);
         }
         /**
          * Event when screen gets touched.
@@ -171,7 +176,6 @@ var Game = (function () {
          */
         function onTouchStart(touchEvt) {
             thisGame._playerManager.onTouchStart(touchEvt);
-            console.log("key touch start");
         }
         /**
          * Event when screen stops getting touched.

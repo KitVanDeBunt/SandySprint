@@ -2,13 +2,13 @@
  * InGameUI
  */
 var InGameUI = (function () {
-    function InGameUI(canvas, engine, scene, gameUI, playerManager) {
+    function InGameUI(canvas, engine, scene, gameUI, playerManager, tutorialEnabled) {
         this._gameUI = gameUI;
         this._canvas = canvas;
         this._playerManager = playerManager;
         this._objects = [];
         this._scene = scene;
-        this.tutorialEnabled = true;
+        this.tutorialEnabled = tutorialEnabled;
         this.CreateUI();
     }
     /**

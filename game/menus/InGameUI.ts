@@ -14,13 +14,13 @@ class InGameUI {
     tutorialEnabled: boolean;
     private _tutorial: tutorial;
 
-    constructor(canvas: HTMLCanvasElement, engine: BABYLON.Engine, scene: BABYLON.Scene, gameUI: GameUI, playerManager: PlayerManager) {
+    constructor(canvas: HTMLCanvasElement, engine: BABYLON.Engine, scene: BABYLON.Scene, gameUI: GameUI, playerManager: PlayerManager, tutorialEnabled: boolean) {
         this._gameUI = gameUI;
         this._canvas = canvas;
         this._playerManager = playerManager;
         this._objects = [];
         this._scene = scene;
-        this.tutorialEnabled = true;
+        this.tutorialEnabled = tutorialEnabled;
 
         this.CreateUI();
     }
@@ -79,9 +79,9 @@ class InGameUI {
             this._tutorial.onInputStart(inputPos);
         }
     }
-    
-    onInputMove(inputPos:BABYLON.Vector2){
-        if(this.tutorialEnabled){
+
+    onInputMove(inputPos: BABYLON.Vector2) {
+        if (this.tutorialEnabled) {
             this._tutorial.onInputMove(inputPos);
         }
     }

@@ -11,6 +11,7 @@ class tutorial {
     private _tutorialState: tutorialState;
     private _inGameUI: InGameUI;
     private _touchStart: BABYLON.Vector2;
+    private _tutFinished: boolean = false;
 
     /**
      * @param gameUI the gameUI of the game.
@@ -53,23 +54,25 @@ class tutorial {
      * check if tutorial images need to be created.
      */
     update() {
-        switch (this._tutorialState) {
-            case tutorialState.None:
-                if (Math.round(this._playermanager.getplayerT()) >= 20) {
-                    this._tutorialState = tutorialState.Move;
-                    this._playermanager.setPlaying(false);
-                    this.openImage();
-                }
-                break;
-            case tutorialState.WaitForJump:
-                if (Math.round(this._playermanager.getplayerT()) >= 40) {
-                    this._tutorialState = tutorialState.Jump;
-                    this._playermanager.setPlaying(false);
-                    this.openImage();
-                }
-                break;
-            default:
-                break;
+        if (this._tutFinished == false) {
+            switch (this._tutorialState) {
+                case tutorialState.None:
+                    if (Math.round(this._playermanager.getplayerT() - this._gameUI.getPlayerTOffset()) >= 20) {
+                        this._tutorialState = tutorialState.Move;
+                        this._playermanager.setPlaying(false);
+                        this.openImage();
+                    }
+                    break;
+                case tutorialState.WaitForJump:
+                    if (Math.round(this._playermanager.getplayerT() - this._gameUI.getPlayerTOffset()) >= 40) {
+                        this._tutorialState = tutorialState.Jump;
+                        this._playermanager.setPlaying(false);
+                        this.openImage();
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -90,17 +93,18 @@ class tutorial {
         switch (this._tutorialState) {
             case tutorialState.Move:
                 if (touchEnd.x - this._touchStart.x > screen.width * 0.1 || touchEnd.x - this._touchStart.x < -screen.width * 0.1) {
-                    this.dispose();
+                    this.disposeObjects();
                     this._tutorialState = tutorialState.WaitForJump;
                     this._playermanager.setPlaying(true);
                 }
                 break;
             case tutorialState.Jump:
                 if (touchEnd.y - this._touchStart.y < -screen.height * 0.2) {
-                    this.dispose();
+                    this.disposeObjects();
                     this._tutorialState = tutorialState.None;
                     this._playermanager.setPlaying(true);
                     this._inGameUI.tutorialEnabled = false;
+                    this._tutFinished = true;
                 }
                 break;
             default:
@@ -120,7 +124,7 @@ class tutorial {
                     case 37: //'Left'
                     case 68: //'Right'
                     case 39: //'Right'
-                        this.dispose();
+                        this.disposeObjects();
                         this._tutorialState = tutorialState.WaitForJump;
                         this._playermanager.setPlaying(true);
                         break;
@@ -130,7 +134,8 @@ class tutorial {
                 switch (keyEvt.keyCode) {
                     case 38: //'Jump'
                     case 32: //'Jump'
-                        this.dispose();
+                    case 87: //'Jump'
+                        this.disposeObjects();
                         this._tutorialState = tutorialState.None;
                         this._playermanager.setPlaying(true);
                         this._inGameUI.tutorialEnabled = false;
@@ -146,7 +151,7 @@ class tutorial {
     /**
      * removes all tutorial elements.
      */
-    dispose() {
+    disposeObjects() {
         for (var i: number = 0; i < this._objects.length; i++) {
             this._objects[i].dispose();
         }

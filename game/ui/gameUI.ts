@@ -14,7 +14,7 @@ class GameUI {
     private _playerManager: PlayerManager;
     private _scene: BABYLON.Scene;
     private _menu: MainMenu;
-    private _inGameUI: InGameUI;
+    inGameUI: InGameUI;
     private _endScreen: endScreen;
     private _cameraECS: ECS.Entity;
     private _audio: audioManager;
@@ -56,7 +56,7 @@ class GameUI {
                 this._menu.onInput(new BABYLON.Vector2(inputPos.x, inputPos.y));
                 break;
             case menuState.Game:
-                this._inGameUI.onInputStart(inputPos);
+                this.inGameUI.onInputStart(inputPos);
                 break;
             case menuState.End:
                 this._endScreen.onInput(new BABYLON.Vector2(inputPos.x, inputPos.y));
@@ -73,7 +73,7 @@ class GameUI {
     onInputMove(inputPos:BABYLON.Vector2){
         switch (this.menuState) {
             case menuState.Game:
-                this._inGameUI.onInputMove(inputPos);
+                this.inGameUI.onInputMove(inputPos);
                 break;
         
             default:
@@ -91,7 +91,7 @@ class GameUI {
                 this._menu.onKeyDown(keyEvt);
                 break;
             case menuState.Game:
-                this._inGameUI.onKeyDown(keyEvt);
+                this.inGameUI.onKeyDown(keyEvt);
                 break;
             default:
                 break;
@@ -120,7 +120,7 @@ class GameUI {
                 this._menu.update();
                 break;
             case menuState.Game:
-                this._inGameUI.update();
+                this.inGameUI.update();
                 break;
             case menuState.End:
                 this._endScreen.update();
@@ -150,12 +150,13 @@ class GameUI {
         main.game();
     }
 
-    openInGame() {
-        this._inGameUI = new InGameUI(this._canvas, this._engine, this._scene, this, this._playerManager);
+    openInGame(tutorialEnabled:boolean) {
+        this.inGameUI = new InGameUI(this._canvas, this._engine, this._scene, this, this._playerManager,tutorialEnabled);
+        this.inGameUI.tutorialEnabled = tutorialEnabled;
     }
 
     closeInGame() {
-        this._inGameUI.Dispose();
+        this.inGameUI.Dispose();
     }
 
     openEndScreen() {
