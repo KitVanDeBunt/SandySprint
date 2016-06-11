@@ -16,9 +16,10 @@ class PlayerManager {
     private audio: audioManager;
     private gameUI: GameUI;
 
-    //player Dieing
+    //player dieing
     private playing: boolean = true;
     private playerDied: boolean = false;
+    private _playerDiedAnimDone: boolean = false;
     private playerDiedT: number = 0;
 
     // lane
@@ -28,7 +29,7 @@ class PlayerManager {
     // lane tween
     private inLaneTween: boolean = false;
     private laneTweenInterpolation: number = 0;
-    private laneSwitchSpeed: number = 0.01;
+    private laneSwitchSpeed: number = 0.0001;
 
     // collision
     private firstFrame: boolean = true;
@@ -184,23 +185,30 @@ class PlayerManager {
     }
 
     private movePlayerLeft() {
-        if (this.currentLane.getLeftLaneAvalable && !this.inLaneTween) {
+        if (this.currentLane.getLeftLaneAvalable && !this.inLaneTween && this.playing == true) {
             this.previousLane = this.currentLane;
             this.currentLane = this.currentLane.getLeftLane;
+            if (!this.jumpManager.jumping) {
+                this.animationState = PlayerAnimationState.LaneSwitchL;
+            }
             this.startPlayerLaneTween();
         }
     }
 
     private movePlayerRight() {
-        if (this.currentLane.getRightLaneAvalable && !this.inLaneTween) {
+        if (this.currentLane.getRightLaneAvalable && !this.inLaneTween && this.playing == true) {
             this.previousLane = this.currentLane;
             this.currentLane = this.currentLane.getRightLane;
+            if (!this.jumpManager.jumping) {
+                this.animationState = PlayerAnimationState.LaneSwitchR;
+            }
             this.startPlayerLaneTween();
         }
     }
 
     private startPlayerLaneTween() {
         this.inLaneTween = true;
+        this.updateAnimation();
         this.laneTweenInterpolation = 0;
         this.audio.playSound(Sounds.LaneSwitch);
 
@@ -208,9 +216,10 @@ class PlayerManager {
 
     private playerDies() {
         this.playerDiedT++;
-        if (this.playerDiedT > 7.5) {
+        if (this.playerDiedT > 7.5 && !this._playerDiedAnimDone) {
             this.animationState = PlayerAnimationState.FallingBackDone;
             this.updateAnimation();
+            this._playerDiedAnimDone = true;
         }
         if (this.playerDiedT >= 20) {
             this.gameUI.closeInGame();
@@ -242,6 +251,7 @@ class PlayerManager {
     private updateAnimation() {
         if (this.playerMeshComponent.meshState == ECS.MeshLoadState.Loaded) {
             switch (this.animationState) {
+
                 case PlayerAnimationState.NotStarted:
                     this._scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 0, 21 * this.ftc, true, 1.4);
                     this.animationState = PlayerAnimationState.Running;
@@ -264,7 +274,20 @@ class PlayerManager {
                 case PlayerAnimationState.FallingBackDone:
                     this._scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 83.5 * this.ftc, 83.6 * this.ftc, true, 1);
                     break;
-
+                case PlayerAnimationState.LaneSwitchL:
+                    if (!this.jumpManager.jumping) {
+                        this._scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 28 * this.ftc, 40 * this.ftc, true, 2);
+                        this.animationState = PlayerAnimationState.Running;
+                    }
+                    break;
+                case PlayerAnimationState.LaneSwitchR:
+                    if (!this.jumpManager.jumping) {
+                        this._scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 52 * this.ftc, 60 * this.ftc, true, 2);
+                        this.animationState = PlayerAnimationState.Running;
+                    }
+                    break;
+                case PlayerAnimationState.Idle:
+                    break;
                 default:
                     break;
             }
@@ -311,11 +334,19 @@ class PlayerManager {
             this.laneTweenInterpolation += deltaTime * this.laneSwitchSpeed;
             if (this.laneTweenInterpolation > 1) {
                 this.laneTweenInterpolation = 1;
+                if (this.jumpManager.jumping) {
+                    this.animationState = PlayerAnimationState.Jumping;
+                }
+                else {
+                    this.animationState = PlayerAnimationState.NotStarted;
+                }
+                this.updateAnimation();
                 this.inLaneTween = false;
             }
             let targetLanePosition: BABYLON.Vector3 = pos;
             let previousLanePosition: BABYLON.Vector3 = this.previousLane.getPointAtT(laneInputT);
             pos = BABYLON.Vector3.Lerp(previousLanePosition, targetLanePosition, this.laneTweenInterpolation);
+
         }
 
         // jumping
@@ -379,5 +410,7 @@ enum PlayerAnimationState {
     FallingBack,
     FallingBackDone,
     FallingForward,
-    FallingForwardDone
+    FallingForwardDone,
+    LaneSwitchL,
+    LaneSwitchR
 }

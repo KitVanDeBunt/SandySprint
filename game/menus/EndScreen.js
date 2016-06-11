@@ -44,14 +44,14 @@ var endScreen = (function () {
     endScreen.prototype.update = function () {
         if (this._count) {
             if (!this._scoreCounted) {
-                this._scorecount += (3 + (this._score / 200));
+                this._scorecount += (3.4 + (this._score / 100));
                 if (this._scorecount >= this._score) {
                     this._scorecount = this._score;
                     this._scoreCounted = true;
                 }
             }
             else {
-                this._scarabcount += (1 + (this._scarabs / 160));
+                this._scarabcount += (1.4 + (this._scarabs / 80));
                 if (this._scarabcount >= this._scarabs) {
                     this._scarabcount = this._scarabs;
                     this._count = false;

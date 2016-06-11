@@ -14,14 +14,15 @@ var PlayerManager = (function () {
         this.playerT = 0;
         this.animationState = PlayerAnimationState.NotStarted;
         this.pickupsCollected = 0;
-        //player Dieing
+        //player dieing
         this.playing = true;
         this.playerDied = false;
+        this._playerDiedAnimDone = false;
         this.playerDiedT = 0;
         // lane tween
         this.inLaneTween = false;
         this.laneTweenInterpolation = 0;
-        this.laneSwitchSpeed = 0.01;
+        this.laneSwitchSpeed = 0.0001;
         // collision
         this.firstFrame = true;
         this._walkSoundRepeatTime = 200;
@@ -140,29 +141,37 @@ var PlayerManager = (function () {
         }
     };
     PlayerManager.prototype.movePlayerLeft = function () {
-        if (this.currentLane.getLeftLaneAvalable && !this.inLaneTween) {
+        if (this.currentLane.getLeftLaneAvalable && !this.inLaneTween && this.playing == true) {
             this.previousLane = this.currentLane;
             this.currentLane = this.currentLane.getLeftLane;
+            if (!this.jumpManager.jumping) {
+                this.animationState = PlayerAnimationState.LaneSwitchL;
+            }
             this.startPlayerLaneTween();
         }
     };
     PlayerManager.prototype.movePlayerRight = function () {
-        if (this.currentLane.getRightLaneAvalable && !this.inLaneTween) {
+        if (this.currentLane.getRightLaneAvalable && !this.inLaneTween && this.playing == true) {
             this.previousLane = this.currentLane;
             this.currentLane = this.currentLane.getRightLane;
+            if (!this.jumpManager.jumping) {
+                this.animationState = PlayerAnimationState.LaneSwitchR;
+            }
             this.startPlayerLaneTween();
         }
     };
     PlayerManager.prototype.startPlayerLaneTween = function () {
         this.inLaneTween = true;
+        this.updateAnimation();
         this.laneTweenInterpolation = 0;
         this.audio.playSound(Sounds.LaneSwitch);
     };
     PlayerManager.prototype.playerDies = function () {
         this.playerDiedT++;
-        if (this.playerDiedT > 7.5) {
+        if (this.playerDiedT > 7.5 && !this._playerDiedAnimDone) {
             this.animationState = PlayerAnimationState.FallingBackDone;
             this.updateAnimation();
+            this._playerDiedAnimDone = true;
         }
         if (this.playerDiedT >= 20) {
             this.gameUI.closeInGame();
@@ -213,6 +222,20 @@ var PlayerManager = (function () {
                 case PlayerAnimationState.FallingBackDone:
                     this._scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 83.5 * this.ftc, 83.6 * this.ftc, true, 1);
                     break;
+                case PlayerAnimationState.LaneSwitchL:
+                    if (!this.jumpManager.jumping) {
+                        this._scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 28 * this.ftc, 40 * this.ftc, true, 2);
+                        this.animationState = PlayerAnimationState.Running;
+                    }
+                    break;
+                case PlayerAnimationState.LaneSwitchR:
+                    if (!this.jumpManager.jumping) {
+                        this._scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 52 * this.ftc, 60 * this.ftc, true, 2);
+                        this.animationState = PlayerAnimationState.Running;
+                    }
+                    break;
+                case PlayerAnimationState.Idle:
+                    break;
                 default:
                     break;
             }
@@ -254,6 +277,13 @@ var PlayerManager = (function () {
             this.laneTweenInterpolation += deltaTime * this.laneSwitchSpeed;
             if (this.laneTweenInterpolation > 1) {
                 this.laneTweenInterpolation = 1;
+                if (this.jumpManager.jumping) {
+                    this.animationState = PlayerAnimationState.Jumping;
+                }
+                else {
+                    this.animationState = PlayerAnimationState.NotStarted;
+                }
+                this.updateAnimation();
                 this.inLaneTween = false;
             }
             var targetLanePosition = pos;
@@ -320,5 +350,7 @@ var PlayerAnimationState;
     PlayerAnimationState[PlayerAnimationState["FallingBackDone"] = 6] = "FallingBackDone";
     PlayerAnimationState[PlayerAnimationState["FallingForward"] = 7] = "FallingForward";
     PlayerAnimationState[PlayerAnimationState["FallingForwardDone"] = 8] = "FallingForwardDone";
+    PlayerAnimationState[PlayerAnimationState["LaneSwitchL"] = 9] = "LaneSwitchL";
+    PlayerAnimationState[PlayerAnimationState["LaneSwitchR"] = 10] = "LaneSwitchR";
 })(PlayerAnimationState || (PlayerAnimationState = {}));
 //# sourceMappingURL=playerManager.js.map
