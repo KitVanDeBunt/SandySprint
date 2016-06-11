@@ -116,8 +116,6 @@ var GameUI = (function () {
      */
     GameUI.prototype.preopenInGame = function () {
         this.menuState = menuState.Game;
-        this._audio.stopSound(Sounds.MainMenu);
-        this._audio.playSound(Sounds.Game);
         this._menu.Dispose();
         main.game();
     };

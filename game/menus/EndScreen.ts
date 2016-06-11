@@ -66,7 +66,7 @@ class endScreen {
     update() {
         if (this._count) {
             if (!this._scoreCounted) {
-                this._scorecount += 5;
+                this._scorecount += (3 + (this._score / 200));
                 if (this._scorecount >= this._score) {
                     this._scorecount = this._score;
                     this._scoreCounted = true;
@@ -74,7 +74,7 @@ class endScreen {
 
             }
             else {
-                this._scarabcount++;
+                this._scarabcount += (1 + (this._scarabs / 160));
                 if (this._scarabcount >= this._scarabs) {
                     this._scarabcount = this._scarabs;
                     this._count = false;
@@ -83,15 +83,15 @@ class endScreen {
         }
         this.context2D.clearRect(0, 0, 512, 512);
         this._endscreentexture.drawText("Score: " + Math.round(this._scorecount), 150, 260, "30px Cooper Std Black", "black", "transparent");
-        this._endscreentexture.drawText("Scarabs: " + this._scarabcount + "  x 3", 150, 290, "30px Cooper Std Black", "black", "transparent");
+        this._endscreentexture.drawText("Scarabs: " + Math.round(this._scarabcount) + "  x 3", 150, 290, "30px Cooper Std Black", "black", "transparent");
         this._endscreentexture.drawText("Total: " + Math.round(this._scorecount + (this._scarabcount * 3)), 150, 330, "30px Cooper Std Black", "black", "transparent");
 
     }
 
     onInput(inputPos: BABYLON.Vector2) {
-            if(this.Dispose()){
+        if (this.Dispose()) {
             main.game();
-            }
+        }
     }
 
     /**
@@ -111,7 +111,7 @@ class endScreen {
     /**
      * remove all UI objects
      */
-    Dispose():boolean {
+    Dispose(): boolean {
         for (var i: number = 0; i < this._objects.length; i++) {
             this._objects[i].dispose();
         }

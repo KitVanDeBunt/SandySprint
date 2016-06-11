@@ -56,7 +56,6 @@ var Game = (function () {
      * creates scene, lighting, ECSengine, and most managers.
      */
     Game.prototype.mainMenu = function () {
-        console.log("mainMenu 1");
         var ECSengine = this._ECSengine;
         var scene = this._scene;
         var gameUI = this._gameUI;

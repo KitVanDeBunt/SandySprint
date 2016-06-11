@@ -65,17 +65,17 @@ class GameUI {
                 break;
         }
     }
-    
+
     /**
      * on Swipe
      * @param inputPos (x,y) position when there touch moved.
      */
-    onInputMove(inputPos:BABYLON.Vector2){
+    onInputMove(inputPos: BABYLON.Vector2) {
         switch (this.menuState) {
             case menuState.Game:
                 this.inGameUI.onInputMove(inputPos);
                 break;
-        
+
             default:
                 break;
         }
@@ -144,14 +144,12 @@ class GameUI {
      */
     preopenInGame() {
         this.menuState = menuState.Game;
-        this._audio.stopSound(Sounds.MainMenu);
-        this._audio.playSound(Sounds.Game);
         this._menu.Dispose();
         main.game();
     }
 
-    openInGame(tutorialEnabled:boolean) {
-        this.inGameUI = new InGameUI(this._canvas, this._engine, this._scene, this, this._playerManager,tutorialEnabled);
+    openInGame(tutorialEnabled: boolean) {
+        this.inGameUI = new InGameUI(this._canvas, this._engine, this._scene, this, this._playerManager, tutorialEnabled);
         this.inGameUI.tutorialEnabled = tutorialEnabled;
     }
 

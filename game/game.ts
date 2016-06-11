@@ -131,9 +131,6 @@ class Game {
      * creates scene, lighting, ECSengine, and most managers.
      */
     private mainMenu() {
-
-        console.log("mainMenu 1");
-
         let ECSengine: ECS.Engine = this._ECSengine;
         let scene: BABYLON.Scene = this._scene;
         let gameUI: GameUI = this._gameUI;

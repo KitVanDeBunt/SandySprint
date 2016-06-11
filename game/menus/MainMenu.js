@@ -42,13 +42,15 @@ var MainMenu = (function () {
      * move camera to start when start is clicked
      */
     MainMenu.prototype.Move = function () {
-        this._audio.playSound(Sounds.Start);
         this._movesToStart = 0;
         this._flyCam = new BABYLON.FreeCamera("freeCam", this._camera.position, this._scene);
         this._flyCam.setTarget(new BABYLON.Vector3(0, 0, -8.5));
         this._startPos = this._flyCam.position;
         this._startRot = this._flyCam.rotation;
         this._camera.dispose();
+        this._audio.playSound(Sounds.Start);
+        this._audio.stopSound(Sounds.MainMenu);
+        this._audio.playSound(Sounds.Game);
         this._scene.activeCameras.push(this._flyCam);
         this._movingCam = true;
     };

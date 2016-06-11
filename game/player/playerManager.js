@@ -160,12 +160,14 @@ var PlayerManager = (function () {
     };
     PlayerManager.prototype.playerDies = function () {
         this.playerDiedT++;
-        if (this.playerDiedT >= 30) {
+        if (this.playerDiedT > 7.5) {
+            this.animationState = PlayerAnimationState.FallingBackDone;
+            this.updateAnimation();
+        }
+        if (this.playerDiedT >= 20) {
             this.gameUI.closeInGame();
             this.gameUI.openEndScreen();
             this.playerDied = false;
-            this.animationState = PlayerAnimationState.Idle;
-            this.updateAnimation();
         }
     };
     /**
@@ -205,11 +207,11 @@ var PlayerManager = (function () {
                         this.animationState = PlayerAnimationState.Running;
                     }
                     break;
-                case PlayerAnimationState.Falling:
-                    this._scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 60 * this.ftc, 90 * this.ftc, true, 1);
+                case PlayerAnimationState.FallingBack:
+                    this._scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 60 * this.ftc, 83.5 * this.ftc, true, 1);
                     break;
-                case PlayerAnimationState.Idle:
-                    this._scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 89 * this.ftc, 90 * this.ftc, true, 1);
+                case PlayerAnimationState.FallingBackDone:
+                    this._scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 83.5 * this.ftc, 83.6 * this.ftc, true, 1);
                     break;
                 default:
                     break;
@@ -236,9 +238,9 @@ var PlayerManager = (function () {
      */
     PlayerManager.prototype.updatePlayerMovment = function (deltaTime) {
         if (this.playerSpeed != 0) {
-            if (deltaTime > 1000) {
-                this.playerT += (1000 * this.playerSpeed);
-                deltaTime -= 1000;
+            if (deltaTime > 0.1) {
+                this.playerT += (0.1 * this.playerSpeed);
+                deltaTime -= 0.1;
                 this.updatePlayerMovment(deltaTime);
             }
             else {
@@ -282,8 +284,10 @@ var PlayerManager = (function () {
                                 switch (this.roadManager.sceneObjects[i].meshType) {
                                     case CollisionMeshType.pillar || CollisionMeshType.spike:
                                         this.audio.playSound(Sounds.Stop);
-                                        this.animationState = PlayerAnimationState.Falling;
+                                        this.animationState = PlayerAnimationState.FallingBack;
                                         this.updateAnimation();
+                                        var deathPos = new BABYLON.Vector3(this.getplayerPosition().x, this.getplayerPosition().y, this.roadManager.sceneObjects[i].meshCollider.position.z - 0.2);
+                                        this.playerTranslateComponent.setPosition = deathPos;
                                         this.playing = false;
                                         this.playerDied = true;
                                         break;
@@ -312,6 +316,9 @@ var PlayerAnimationState;
     PlayerAnimationState[PlayerAnimationState["Sliding"] = 2] = "Sliding";
     PlayerAnimationState[PlayerAnimationState["Jumping"] = 3] = "Jumping";
     PlayerAnimationState[PlayerAnimationState["Idle"] = 4] = "Idle";
-    PlayerAnimationState[PlayerAnimationState["Falling"] = 5] = "Falling";
+    PlayerAnimationState[PlayerAnimationState["FallingBack"] = 5] = "FallingBack";
+    PlayerAnimationState[PlayerAnimationState["FallingBackDone"] = 6] = "FallingBackDone";
+    PlayerAnimationState[PlayerAnimationState["FallingForward"] = 7] = "FallingForward";
+    PlayerAnimationState[PlayerAnimationState["FallingForwardDone"] = 8] = "FallingForwardDone";
 })(PlayerAnimationState || (PlayerAnimationState = {}));
 //# sourceMappingURL=playerManager.js.map

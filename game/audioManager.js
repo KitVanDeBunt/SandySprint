@@ -8,15 +8,17 @@ var audioManager = (function () {
      */
     function audioManager(scene) {
         this._scene = scene;
+        this._walkSwitch = true;
         this._pickUpSound = this.addSound("Pickup", "../assets/sounds/pickUp.wav", false, 2, 1);
         this.menuBackgroundSound = this.addSound("MenuBackGround", "../assets/sounds/menuSound.mp3", true, 0.1, 1);
-        this._inGameSound = this.addSound("InGameSound", "../assets/sounds/gameSound.mp3", true, 1, 1);
-        this._jumpSound = this.addSound("Jumpsound", "../assets/sounds/jump.wav", false, 0.5, 1);
-        this._jumpLandSound = this.addSound("JumpLandSound", "../assets/sounds/jumpland.mp3", false, 1, 1);
+        this._inGameSound = this.addSound("InGameSound", "../assets/sounds/gameSound.mp3", true, 0.6, 1);
+        this._jumpSound = this.addSound("Jumpsound", "../assets/sounds/jump.wav", false, 0.3, 1);
+        this._jumpLandSound = this.addSound("JumpLandSound", "../assets/sounds/jumpland.mp3", false, 0.9, 1);
         this._startSound = this.addSound("StartSound", "../assets/sounds/start.wav", false, 2, 0.6);
-        this._stopSound = this.addSound("StopSound", "../assets/sounds/stop.mp3", false, 2, 1);
+        this._stopSound = this.addSound("StopSound", "../assets/sounds/stop.mp3", false, 1.6, 1);
         this._laneSwitchSound = this.addSound("SwitchSound", "../assets/sounds/swipe.wav", false, 0.1, 1);
-        this._walkSound = this.addSound("WalkSound", "../assets/sounds/Walk1.mp3", false, 0.2, 1);
+        this._walkSound0 = this.addSound("WalkSound", "../assets/sounds/Walk6.mp3", false, 0.5, 1);
+        this._walkSound1 = this.addSound("WalkSound", "../assets/sounds/Walk7.mp3", false, 0.2, 1);
     }
     /**
      * Creates and returns a sound
@@ -63,7 +65,13 @@ var audioManager = (function () {
                 this._laneSwitchSound.play();
                 break;
             case Sounds.Walk:
-                this._walkSound.play();
+                if (this._walkSwitch) {
+                    this._walkSound0.play();
+                }
+                else {
+                    this._walkSound1.play();
+                }
+                this._walkSwitch = !this._walkSwitch;
                 break;
             default:
                 break;
@@ -100,7 +108,8 @@ var audioManager = (function () {
                 this._laneSwitchSound.stop();
                 break;
             case Sounds.Walk:
-                this._walkSound.stop();
+                this._walkSound0.stop();
+                this._walkSound1.stop();
                 break;
             default:
                 break;
