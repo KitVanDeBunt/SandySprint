@@ -2,12 +2,15 @@
  * the RoadManager manages road and the lanes and al the objects spawned on and around it
  */
 var RoadManager = (function () {
+    /**
+     * @param engine entity component system engine
+     * @param scene games scene
+     */
     function RoadManager(engine, scene) {
         this._clonesCreated = false;
         this._roadesSpawned = 0;
         this._lanes = [];
         this._roadMeshes = [];
-        //this.obstacles = [];
         this.sceneObjects = [];
         this._engine = engine;
         this._scene = scene;
@@ -35,7 +38,13 @@ var RoadManager = (function () {
         var road = this._engine.createEntity();
         var roadPositionComponent = new ECS.ComponentTransform(new BABYLON.Vector3(0, 0, this._roadesSpawned * 14), new BABYLON.Vector3(1, 1, 1), BABYLON.Quaternion.Identity());
         road.addComponent(roadPositionComponent);
-        this._roadMeshes[roadN] = new ECS.ComponentAbstractMesh(roadPositionComponent, "assets/models/", "road_river.babylon");
+        var riverRoad = Math.random() > 0.8 ? true : false;
+        if (riverRoad) {
+            this._roadMeshes[roadN] = new ECS.ComponentAbstractMesh(roadPositionComponent, "assets/models/", "road_river.babylon");
+        }
+        else {
+            this._roadMeshes[roadN] = new ECS.ComponentAbstractMesh(roadPositionComponent, "assets/models/", "road_plain.babylon");
+        }
         road.addComponent(this._roadMeshes[roadN]);
         this._lanes[roadN] = [
             new ComponentStraightLane(this._roadMeshes[roadN], new BABYLON.Vector3(-0.25, 0, this._roadesSpawned * 14), BABYLON.Vector3.Zero(), this._scene, this._roadesSpawned * 14),
@@ -57,32 +66,9 @@ var RoadManager = (function () {
         road.addComponent(this._lanes[roadN][0]);
         road.addComponent(this._lanes[roadN][1]);
         road.addComponent(this._lanes[roadN][2]);
-        this.createLaneObject(roadN, "assets/models/", "pillar.babylon", CollisionMeshType.pillar, new BABYLON.Vector3(0.14, 0.14, 0.14), BABYLON.Quaternion.Identity(), new BABYLON.Vector3(0, 0, 0), BABYLON.Vector3.Zero(), 0.2, 2, this.randomLane(), Math.random());
-        this.createLaneObject(roadN, "assets/models/", "Obstacle_Spikes.babylon", CollisionMeshType.spike, new BABYLON.Vector3(0.5, 0.5, 0.5), BABYLON.Quaternion.Identity(), new BABYLON.Vector3(0, 0, 0), BABYLON.Vector3.Zero(), 0.2, 0.5, this.randomLane(), Math.random());
-        for (var i = 0; i < 5; i++) {
-            this.createLaneObject(roadN, "assets/models/", "pickup_scarab.babylon", CollisionMeshType.scarab, new BABYLON.Vector3(2.5, 2.5, 2.5), new BABYLON.Quaternion(0, 0, 0, 1), new BABYLON.Vector3(0, 0.5, 0), BABYLON.Vector3.Zero(), 0.2, 0.5, this.randomLane(), Math.random());
-        }
-        this._sceneObjectFactory.createRandomTemplateSet(roadN, this._scene);
+        var distanceBrige = this._sceneObjectFactory.createRandomRoadObjectTemplateSet(roadN, this._scene, riverRoad);
+        this._sceneObjectFactory.createRandomSceneObjectTemplateSet(roadN, this._scene, riverRoad, distanceBrige);
         this._roadesSpawned++;
-    };
-    /**
-     * creates Obstacle or pickup on a lane
-     */
-    RoadManager.prototype.createLaneObject = function (roadN, path, file, type, scale, rotation, obstacleDisplacement, collisionMeshOffset, colliderWidth, colliderHeight, lane, tOnLane) {
-        var obstacle = this._engine.createEntity();
-        var obstacleTransformComponent = new ECS.ComponentTransform(this._lanes[roadN][lane].getPointAtT(tOnLane), scale, rotation);
-        obstacleTransformComponent.setPosition = obstacleTransformComponent.getPosition.add(obstacleDisplacement);
-        obstacle.addComponent(obstacleTransformComponent);
-        var obstacleMesh = new ECS.ComponentAbstractMesh(obstacleTransformComponent, path, file);
-        obstacle.addComponent(obstacleMesh);
-        // collision
-        obstacleMesh.setCollision(BABYLON.Mesh.CreateCylinder("LaneObject Collider", colliderHeight, colliderWidth, colliderWidth, 0, 0, this._scene));
-        obstacleMesh.setColliderOffset = collisionMeshOffset;
-        obstacleMesh.updateCollision();
-        var arrayPosition = this.sceneObjects.length;
-        this.sceneObjects[arrayPosition] = new SceneObject(obstacle, this._lanes[roadN][lane].getDistanceAtT(tOnLane));
-        this.sceneObjects[arrayPosition].meshCollider = obstacleMesh.getCollider;
-        this.sceneObjects[arrayPosition].meshType = type;
     };
     /**
      * returns a random lane of the road
@@ -117,17 +103,6 @@ var RoadManager = (function () {
                 this._lanes.splice(i_1, 1);
             }
         }
-        // delete obstacles if out of view
-        /*for (var i = 0; i < this.obstacles.length; i++) {
-            if (this.obstacles[i].spawnDistance < playerT - 10) {
-                // check if object mesh is loaded before destroying it
-                let meshLoaded: boolean = ((<ECS.ComponentAbstractMesh>this.obstacles[i].entity.getComponent(this._abstractMeshComponetType)).meshState == ECS.MeshLoadState.Loaded);
-                if (meshLoaded) {
-                    this.obstacles[i].entity.destroy();
-                    this.obstacles.splice(i, 1);
-                }
-            }
-        }*/
         // delete sceneObjects if out of view
         for (var i = 0; i < this.sceneObjects.length; i++) {
             if (this.sceneObjects[i].spawnDistance < playerT - 5) {

@@ -19,6 +19,7 @@ class SceneObjectSpawnTemplate {
     colliderHeight: number;
     colliderOffset: BABYLON.Vector3;
     meshType: CollisionMeshType;
+    brige:boolean = false;
 
     constructor(path: string
         , file: string

@@ -3,11 +3,15 @@
  */
 class SceneObjectSpawnTemplateSetFactory {
 
-    private templatesSetList: SceneObjectSpawnTemplateSet[];
+    private roadTemplatesSetList: SceneObjectSpawnTemplateSet[];
+    private sceneTemplatesSetList: SceneObjectSpawnTemplateSet[];
     private templatesListBuildings: ((distanceOnRoad: number) => SceneObjectSpawnTemplate)[];
+    private templatesListRoadObjects: ((distanceOnRoad: number, lane: number) => SceneObjectSpawnTemplate)[];
     private templatesListVegitation: ((distanceOnRoad: number, positionDisplacment: BABYLON.Vector3, randomDisplacement: BABYLON.Vector3, randomScale: BABYLON.Vector3) => SceneObjectSpawnTemplate)[];
     private roadManager: RoadManager;
     private engine: ECS.Engine;
+
+
 
     /**
      * @param roadManager games road manager
@@ -19,108 +23,198 @@ class SceneObjectSpawnTemplateSetFactory {
         this.engine = engine;
 
         // create scene object spawn templates
-        this.templatesListBuildings = [];
-        this.templatesListVegitation = [];
+
+        this.createBuildingTemplates();
+        this.createVegitationTemplates();
+        this.createRoadObjectTemplates();
 
 
 
-        // create template list
+        // create scene object spawn template sets
+        this.roadTemplatesSetList = [];
+        let listNum: number = 0;
+        this.roadTemplatesSetList[listNum] = new SceneObjectSpawnTemplateSet();
+        this.roadTemplatesSetList[listNum].compatableWithWaterTile = true;
+        for (var i = 14; i < 24; i++) {
+            //this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[0]((i/30),1));
+        }
+        // 0 pillar
 
-        // house 01 dist 0.75
-        this.templatesListBuildings[0] = function (distanceOnRoad: number) {
-            return new SceneObjectSpawnTemplate(
-                "assets/models/buildings/"
-                , "building_building_001_001_tex01.babylon"
-                , new BABYLON.Vector3(0.02, 0.02, 0.02)
-                , new BABYLON.Vector3(0, 0, 0)
-                , new BABYLON.Quaternion(0.71, 0, 0, 0.71)
-                , new BABYLON.Quaternion(0.71, 0, 0, 0.71)
-                , new BABYLON.Vector3(-2.4, 0, 0)
-                , new BABYLON.Vector3(.5, 0, 0)
-                , 1
-                , distanceOnRoad//0.15
-            )
-        };
-        // house 02 dist 0.25
-        this.templatesListBuildings[1] = function (distanceOnRoad: number) {
-            return new SceneObjectSpawnTemplate(
-                "assets/models/buildings/"
-                , "building_building_002_001_tex01.babylon"
-                , new BABYLON.Vector3(0.02, 0.02, 0.02)
-                , new BABYLON.Vector3(0, 0, 0)
-                , new BABYLON.Quaternion(0.71, 0, 0, 0.71)
-                , new BABYLON.Quaternion(0.71, 0, 0, 0.71)
-                , new BABYLON.Vector3(2.4, 0, 0)
-                , new BABYLON.Vector3(.5, 0, 0)
-                , 1
-                , distanceOnRoad//0.15
+
+        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((11 / 28), 0));
+        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((11 / 28), 1));
+        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((21 / 28), 0));
+        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.BUILDING_BRIGE_002]((19 / 28), 1));
+        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((19 / 28), 2));
+        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((25 / 28), 0));
+
+        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((27 / 28), 0));
+        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((27 / 28), 1));
+
+        //this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[3](0.75, 1));
+
+        /**
+         * creation of sceneTemplatesSetListre
+         */
+        this.sceneTemplatesSetList = [];
+        listNum = 0;
+        this.sceneTemplatesSetList[listNum] = new SceneObjectSpawnTemplateSet();
+        this.sceneTemplatesSetList[listNum].compatableWithWaterTile = true;
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListBuildings[0](0.15));
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListBuildings[1](0.15));
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListBuildings[2](0.6));
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListBuildings[1](0.6));
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListBuildings[2](0.45));
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListBuildings[1](0.45));
+
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.30, new BABYLON.Vector3(-1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.55, new BABYLON.Vector3(-1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.70, new BABYLON.Vector3(-1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
+
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.30, new BABYLON.Vector3(1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.55, new BABYLON.Vector3(1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.70, new BABYLON.Vector3(1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
+        listNum++;
+
+        this.sceneTemplatesSetList[listNum] = new SceneObjectSpawnTemplateSet();
+        this.sceneTemplatesSetList[listNum].compatableWithWaterTile = true;
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListBuildings[0](0.15));
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListBuildings[2](0.6));
+
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.30, new BABYLON.Vector3(-1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.55, new BABYLON.Vector3(-1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.70, new BABYLON.Vector3(-1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
+
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.30, new BABYLON.Vector3(1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.55, new BABYLON.Vector3(1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.70, new BABYLON.Vector3(1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
+        listNum++;
+
+        this.sceneTemplatesSetList[listNum] = new SceneObjectSpawnTemplateSet();
+        this.sceneTemplatesSetList[listNum].compatableWithWaterTile = true;
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListBuildings[1](0.15));
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListBuildings[2](0.6));
+
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.30, new BABYLON.Vector3(-1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.55, new BABYLON.Vector3(-1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.70, new BABYLON.Vector3(-1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
+
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.30, new BABYLON.Vector3(1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.55, new BABYLON.Vector3(1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.70, new BABYLON.Vector3(1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
+        listNum++;
+
+        this.sceneTemplatesSetList[listNum] = new SceneObjectSpawnTemplateSet();
+        this.sceneTemplatesSetList[listNum].compatableWithWaterTile = true;
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListBuildings[0](0.15));
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListBuildings[1](0.15));
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListBuildings[3](0.6));
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListBuildings[4](0.6));
+        //this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListBuildings[6](0.75));
+
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.30, new BABYLON.Vector3(-1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.55, new BABYLON.Vector3(-1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.70, new BABYLON.Vector3(-1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
+
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.30, new BABYLON.Vector3(1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.55, new BABYLON.Vector3(1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.70, new BABYLON.Vector3(1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
+        listNum++;
+
+        this.sceneTemplatesSetList[listNum] = new SceneObjectSpawnTemplateSet();
+        this.sceneTemplatesSetList[listNum].compatableWithWaterTile = true;
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListBuildings[0](0.15));
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListBuildings[1](0.15));
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListBuildings[1](0.6));
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListBuildings[3](0.6));
+        //this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListBuildings[6](0.85));
+
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.30, new BABYLON.Vector3(-1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.55, new BABYLON.Vector3(-1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.70, new BABYLON.Vector3(-1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
+
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.30, new BABYLON.Vector3(1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.55, new BABYLON.Vector3(1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.70, new BABYLON.Vector3(1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
+
+    }
+
+    /**
+     * creates the road object template list 
+     */
+    private createRoadObjectTemplates() {
+
+        this.templatesListRoadObjects = [];
+
+        this.templatesListRoadObjects[0] = function (distanceOnRoad: number, lane: number) {
+            let spawnTeplate: SceneObjectSpawnTemplate = new SceneObjectSpawnTemplate(
+                "assets/models/"
+                , "pillar.babylon"
+                , new BABYLON.Vector3(0.14, 0.14, 0.14)
+                , new BABYLON.Vector3(0.0, 0.0, 0.0)
+                , BABYLON.Quaternion.Identity()
+                , BABYLON.Quaternion.Identity()
+                , BABYLON.Vector3.Zero()
+                , BABYLON.Vector3.Zero()
+                , lane
+                , distanceOnRoad
             );
-        };
-        // house 01 dist 0.75
-        this.templatesListBuildings[2] = function (distanceOnRoad: number) {
-            return new SceneObjectSpawnTemplate(
-                "assets/models/buildings/"
-                , "building_building_003_001_tex01.babylon"
-                , new BABYLON.Vector3(0.02, 0.02, 0.02)
-                , new BABYLON.Vector3(0, 0, 0)
-                , new BABYLON.Quaternion(0.71, 0, 0, 0.71)
-                , new BABYLON.Quaternion(0.71, 0, 0, 0.71)
-                , new BABYLON.Vector3(2.6, 0, 0)
-                , new BABYLON.Vector3(.5, 0, 0)
-                , 1
-                , distanceOnRoad//0.6
-            );
-        };
 
-        // house 02 dist 0.75
-        this.templatesListBuildings[3] = function (distanceOnRoad: number) {
-            return new SceneObjectSpawnTemplate(
-                "assets/models/buildings/"
-                , "building_building_004_001_tex01.babylon"
-                , new BABYLON.Vector3(0.02, 0.02, 0.02)
-                , new BABYLON.Vector3(0, 0, 0)
-                , new BABYLON.Quaternion(0.71, 0, 0, 0.71)
-                , new BABYLON.Quaternion(0.71, 0, 0, 0.71)
-                , new BABYLON.Vector3(-2.6, 0, 0)
-                , new BABYLON.Vector3(.5, 0, 0)
-                , 1
-                , distanceOnRoad//0.6
-            );
-        };
+            spawnTeplate.hasCollider = true;
+            spawnTeplate.colliderWidth = 0.2;
+            spawnTeplate.colliderHeight = 2;
+            spawnTeplate.colliderOffset = BABYLON.Vector3.Zero();
+            spawnTeplate.meshType = CollisionMeshType.pillar;
+            return spawnTeplate;
+        }
 
-        this.templatesListBuildings[4] = function (distanceOnRoad: number) {
-            return new SceneObjectSpawnTemplate(
-                "assets/models/buildings/"
-                , "building_building_001_001_tex01.babylon"
-                , new BABYLON.Vector3(0.02, 0.02, 0.02)
-                , new BABYLON.Vector3(0, 0, 0)
-                , new BABYLON.Quaternion(0.71, 0, 0, 0.71)
-                , new BABYLON.Quaternion(0.71, 0, 0, 0.71)
-                , new BABYLON.Vector3(-2.4, 0, 0)
-                , new BABYLON.Vector3(.5, 0, 0)
-                , 1
-                , distanceOnRoad//0.6
+        this.templatesListRoadObjects[1] = function (distanceOnRoad: number, lane: number) {
+            let spawnTeplate: SceneObjectSpawnTemplate = new SceneObjectSpawnTemplate(
+                "assets/models/"
+                , "Obstacle_Spikes.babylon"
+                , new BABYLON.Vector3(0.5, 0.5, 0.5)
+                , new BABYLON.Vector3(0.0, 0.0, 0.0)
+                , BABYLON.Quaternion.Identity()
+                , BABYLON.Quaternion.Identity()
+                , BABYLON.Vector3.Zero()
+                , BABYLON.Vector3.Zero()
+                , lane
+                , distanceOnRoad
             );
-        };
 
-        // house 02 dist 0.25
-        this.templatesListBuildings[5] = function (distanceOnRoad: number) {
-            return new SceneObjectSpawnTemplate(
-                "assets/models/buildings/"
-                , "building_building_002_001_tex01.babylon"
-                , new BABYLON.Vector3(0.02, 0.02, 0.02)
+            spawnTeplate.hasCollider = true;
+            spawnTeplate.colliderWidth = 0.2;
+            spawnTeplate.colliderHeight = 0.5;
+            spawnTeplate.colliderOffset = BABYLON.Vector3.Zero();
+            spawnTeplate.meshType = CollisionMeshType.spike;
+            return spawnTeplate;
+        }
+
+        this.templatesListRoadObjects[2] = function (distanceOnRoad: number, lane: number) {
+            let spawnTeplate: SceneObjectSpawnTemplate = new SceneObjectSpawnTemplate(
+                "assets/models/"
+                , "pickup_scarab.babylon"
+                , new BABYLON.Vector3(2.0, 2.0, 2.0)
                 , new BABYLON.Vector3(0, 0, 0)
-                , new BABYLON.Quaternion(0.71, 0, 0, 0.71)
-                , new BABYLON.Quaternion(0.71, 0, 0, 0.71)
-                , new BABYLON.Vector3(2.4, 0, 0)
-                , new BABYLON.Vector3(0, 0, 0)
-                , 1
-                , distanceOnRoad//0.75
+                , BABYLON.Quaternion.Identity()
+                , BABYLON.Quaternion.Identity()
+                , new BABYLON.Vector3(0, 0.4, 0)
+                , BABYLON.Vector3.Zero()
+                , lane
+                , distanceOnRoad
             );
-        };
 
-        this.templatesListBuildings[6] = function (distanceOnRoad: number) {
-            let buildingTemplate:SceneObjectSpawnTemplate = new SceneObjectSpawnTemplate(
+            spawnTeplate.hasCollider = true;
+            spawnTeplate.colliderWidth = 0.2;
+            spawnTeplate.colliderHeight = 0.5;
+            spawnTeplate.colliderOffset = BABYLON.Vector3.Zero();
+            spawnTeplate.meshType = CollisionMeshType.scarab;
+            return spawnTeplate;
+        }
+
+        this.templatesListRoadObjects[3] = function (distanceOnRoad: number, lane: number) {
+            lane = 1; // lane always has to be one for this building
+            let buildingTemplate: SceneObjectSpawnTemplate = new SceneObjectSpawnTemplate(
                 "assets/models/buildings/"
                 , "building_buildingbridge_002_002_tex01.babylon"
                 , new BABYLON.Vector3(0.02, 0.02, 0.02)
@@ -129,7 +223,7 @@ class SceneObjectSpawnTemplateSetFactory {
                 , new BABYLON.Quaternion(0.71, 0, 0, 0.71)
                 , new BABYLON.Vector3(0, 0, 0)
                 , new BABYLON.Vector3(0, 0, 0)
-                , 1
+                , lane
                 , distanceOnRoad//0.85
             );
             buildingTemplate.hasCollider = true;
@@ -137,13 +231,21 @@ class SceneObjectSpawnTemplateSetFactory {
             buildingTemplate.colliderHeight = 2;
             buildingTemplate.colliderOffset = BABYLON.Vector3.Zero();
             buildingTemplate.meshType = CollisionMeshType.pillar;
-            
+
+            buildingTemplate.brige = true;
+
             return buildingTemplate;
         };
+    }
 
-        // create template list vegitation
+    /**
+     * creates the vegitation template list
+     */
+    private createVegitationTemplates() {
+
+        this.templatesListVegitation = [];
+
         this.templatesListVegitation[0] = function (distanceOnRoad: number, displacment: BABYLON.Vector3, randomDisplacement: BABYLON.Vector3, randomScale: BABYLON.Vector3) {
-
             return new SceneObjectSpawnTemplate(
                 "assets/models/"
                 , "vegitation_palm_001.babylon"
@@ -159,7 +261,6 @@ class SceneObjectSpawnTemplateSetFactory {
         };
 
         this.templatesListVegitation[1] = function (distanceOnRoad: number, displacment: BABYLON.Vector3, randomDisplacement: BABYLON.Vector3, randomScale: BABYLON.Vector3) {
-
             return new SceneObjectSpawnTemplate(
                 "assets/models/"
                 , "vegitation_plant_001.babylon"
@@ -173,103 +274,160 @@ class SceneObjectSpawnTemplateSetFactory {
                 , distanceOnRoad
             );
         };
+    }
 
-        // create scene object spawn template sets
-        this.templatesSetList = [];
+    /**
+     *  creates the building template list
+     */
+    private createBuildingTemplates() {
 
-        let listNum: number = 0;
-        
-        this.templatesSetList[listNum] = new SceneObjectSpawnTemplateSet();
-        this.templatesSetList[listNum].compatableWithWaterTile = true;
-        this.templatesSetList[listNum].templateList.push(this.templatesListBuildings[0](0.15));
-        this.templatesSetList[listNum].templateList.push(this.templatesListBuildings[1](0.15));
-        this.templatesSetList[listNum].templateList.push(this.templatesListBuildings[2](0.6));
-        this.templatesSetList[listNum].templateList.push(this.templatesListBuildings[1](0.6));
-        
-        this.templatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.30, new BABYLON.Vector3(-1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
-        this.templatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.55, new BABYLON.Vector3(-1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
-        this.templatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.70, new BABYLON.Vector3(-1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
-        
-        this.templatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.30, new BABYLON.Vector3(1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
-        this.templatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.55, new BABYLON.Vector3(1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
-        this.templatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.70, new BABYLON.Vector3(1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
-        listNum++;
-        
-        this.templatesSetList[listNum] = new SceneObjectSpawnTemplateSet();
-        this.templatesSetList[listNum].compatableWithWaterTile = true;
-        this.templatesSetList[listNum].templateList.push(this.templatesListBuildings[0](0.15));
-        this.templatesSetList[listNum].templateList.push(this.templatesListBuildings[2](0.6));
-        
-        this.templatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.30, new BABYLON.Vector3(-1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
-        this.templatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.55, new BABYLON.Vector3(-1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
-        this.templatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.70, new BABYLON.Vector3(-1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
-        
-        this.templatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.30, new BABYLON.Vector3(1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
-        this.templatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.55, new BABYLON.Vector3(1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
-        this.templatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.70, new BABYLON.Vector3(1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
-        listNum++;
-        
-        this.templatesSetList[listNum] = new SceneObjectSpawnTemplateSet();
-        this.templatesSetList[listNum].compatableWithWaterTile = true;
-        this.templatesSetList[listNum].templateList.push(this.templatesListBuildings[1](0.15));
-        this.templatesSetList[listNum].templateList.push(this.templatesListBuildings[2](0.6));
-        
-        this.templatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.30, new BABYLON.Vector3(-1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
-        this.templatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.55, new BABYLON.Vector3(-1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
-        this.templatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.70, new BABYLON.Vector3(-1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
-        
-        this.templatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.30, new BABYLON.Vector3(1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
-        this.templatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.55, new BABYLON.Vector3(1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
-        this.templatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.70, new BABYLON.Vector3(1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
-        listNum++;
-        
-        this.templatesSetList[listNum] = new SceneObjectSpawnTemplateSet();
-        this.templatesSetList[listNum].compatableWithWaterTile = true;
-        this.templatesSetList[listNum].templateList.push(this.templatesListBuildings[0](0.15));
-        this.templatesSetList[listNum].templateList.push(this.templatesListBuildings[1](0.15));
-        this.templatesSetList[listNum].templateList.push(this.templatesListBuildings[3](0.6));
-        this.templatesSetList[listNum].templateList.push(this.templatesListBuildings[4](0.6));
-        this.templatesSetList[listNum].templateList.push(this.templatesListBuildings[6](0.75));
-        
-        this.templatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.30, new BABYLON.Vector3(-1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
-        this.templatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.55, new BABYLON.Vector3(-1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
-        this.templatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.70, new BABYLON.Vector3(-1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
-        
-        this.templatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.30, new BABYLON.Vector3(1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
-        this.templatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.55, new BABYLON.Vector3(1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
-        this.templatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.70, new BABYLON.Vector3(1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
-        listNum++;
+        this.templatesListBuildings = [];
+        // house 01
+        this.templatesListBuildings[0] = function (distanceOnRoad: number) {
+            return new SceneObjectSpawnTemplate(
+                "assets/models/buildings/"
+                , "building_building_001_001_tex01.babylon"
+                , new BABYLON.Vector3(0.02, 0.02, 0.02)
+                , new BABYLON.Vector3(0, 0, 0)
+                , new BABYLON.Quaternion(0.71, 0, 0, 0.71)
+                , new BABYLON.Quaternion(0.71, 0, 0, 0.71)
+                , new BABYLON.Vector3(-2.4, 0, 0)
+                , new BABYLON.Vector3(.5, 0, 0)
+                , 1
+                , distanceOnRoad//0.15
+            )
+        };
+        // house 02
+        this.templatesListBuildings[1] = function (distanceOnRoad: number) {
+            return new SceneObjectSpawnTemplate(
+                "assets/models/buildings/"
+                , "building_building_002_001_tex01.babylon"
+                , new BABYLON.Vector3(0.02, 0.02, 0.02)
+                , new BABYLON.Vector3(0, 0, 0)
+                , new BABYLON.Quaternion(0.71, 0, 0, 0.71)
+                , new BABYLON.Quaternion(0.71, 0, 0, 0.71)
+                , new BABYLON.Vector3(2.4, 0, 0)
+                , new BABYLON.Vector3(.5, 0, 0)
+                , 1
+                , distanceOnRoad//0.15
+            );
+        };
+        // house 03
+        this.templatesListBuildings[2] = function (distanceOnRoad: number) {
+            return new SceneObjectSpawnTemplate(
+                "assets/models/buildings/"
+                , "building_building_003_001_tex01.babylon"
+                , new BABYLON.Vector3(0.02, 0.02, 0.02)
+                , new BABYLON.Vector3(0, 0, 0)
+                , new BABYLON.Quaternion(0.71, 0, 0, 0.71)
+                , new BABYLON.Quaternion(0.71, 0, 0, 0.71)
+                , new BABYLON.Vector3(2.6, 0, 0)
+                , new BABYLON.Vector3(.5, 0, 0)
+                , 1
+                , distanceOnRoad//0.6
+            );
+        };
+        // house 04
+        this.templatesListBuildings[3] = function (distanceOnRoad: number) {
+            return new SceneObjectSpawnTemplate(
+                "assets/models/buildings/"
+                , "building_building_004_001_tex01.babylon"
+                , new BABYLON.Vector3(0.02, 0.02, 0.02)
+                , new BABYLON.Vector3(0, 0, 0)
+                , new BABYLON.Quaternion(0.71, 0, 0, 0.71)
+                , new BABYLON.Quaternion(0.71, 0, 0, 0.71)
+                , new BABYLON.Vector3(-2.6, 0, 0)
+                , new BABYLON.Vector3(.5, 0, 0)
+                , 1
+                , distanceOnRoad//0.6
+            );
+        };
+        // TODO : two times house 01
+        // house 01
+        this.templatesListBuildings[4] = function (distanceOnRoad: number) {
+            return new SceneObjectSpawnTemplate(
+                "assets/models/buildings/"
+                , "building_building_001_001_tex01.babylon"
+                , new BABYLON.Vector3(0.02, 0.02, 0.02)
+                , new BABYLON.Vector3(0, 0, 0)
+                , new BABYLON.Quaternion(0.71, 0, 0, 0.71)
+                , new BABYLON.Quaternion(0.71, 0, 0, 0.71)
+                , new BABYLON.Vector3(-2.4, 0, 0)
+                , new BABYLON.Vector3(.5, 0, 0)
+                , 1
+                , distanceOnRoad//0.6
+            );
+        };
+        // TODO : two times house 02
+        // house 02
+        this.templatesListBuildings[5] = function (distanceOnRoad: number) {
+            return new SceneObjectSpawnTemplate(
+                "assets/models/buildings/"
+                , "building_building_002_001_tex01.babylon"
+                , new BABYLON.Vector3(0.02, 0.02, 0.02)
+                , new BABYLON.Vector3(0, 0, 0)
+                , new BABYLON.Quaternion(0.71, 0, 0, 0.71)
+                , new BABYLON.Quaternion(0.71, 0, 0, 0.71)
+                , new BABYLON.Vector3(2.4, 0, 0)
+                , new BABYLON.Vector3(0, 0, 0)
+                , 1
+                , distanceOnRoad//0.75
+            );
+        };
 
-        this.templatesSetList[listNum] = new SceneObjectSpawnTemplateSet();
-        this.templatesSetList[listNum].compatableWithWaterTile = true;
-        this.templatesSetList[listNum].templateList.push(this.templatesListBuildings[0](0.15));
-        this.templatesSetList[listNum].templateList.push(this.templatesListBuildings[1](0.15));
-        this.templatesSetList[listNum].templateList.push(this.templatesListBuildings[1](0.6));
-        this.templatesSetList[listNum].templateList.push(this.templatesListBuildings[3](0.6));
-        this.templatesSetList[listNum].templateList.push(this.templatesListBuildings[6](0.85));
+    }
 
-        this.templatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.30, new BABYLON.Vector3(-1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
-        this.templatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.55, new BABYLON.Vector3(-1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
-        this.templatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.70, new BABYLON.Vector3(-1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
-        
-        this.templatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.30, new BABYLON.Vector3(1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
-        this.templatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.55, new BABYLON.Vector3(1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
-        this.templatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.70, new BABYLON.Vector3(1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
+    private randomListNumber(list: any[]): number {
+        return Math.floor((Math.random() * list.length));
     }
 
     /**
      * creates a new random set of scene objects to spawn around and on the world
      */
-    public createRandomTemplateSet(roadIndex: number,scene:BABYLON.Scene) {
+    public createRandomSceneObjectTemplateSet(roadIndex: number, scene: BABYLON.Scene, riverRoad: boolean, distanceBrige: number) {
+        let random: number = this.randomListNumber(this.sceneTemplatesSetList);
 
-        let random: number = Math.floor((Math.random() * this.templatesSetList.length));
-
-        for (var i = 0; i < this.templatesSetList[random].templateList.length; i++) {
-            this.createSceneObject(this.templatesSetList[random].templateList[i],scene, roadIndex);
+        for (var i = 0; i < this.sceneTemplatesSetList[random].templateList.length; i++) {
+            if (riverRoad) {
+                if (0.5 > this.sceneTemplatesSetList[random].templateList[i].distOnRoad - 0.1
+                    && 0.5 < this.sceneTemplatesSetList[random].templateList[i].distOnRoad + 0.1) {
+                    continue; // object not spawn because there already is a river
+                }
+            }
+            if (distanceBrige > this.sceneTemplatesSetList[random].templateList[i].distOnRoad - 0.2
+                && distanceBrige < this.sceneTemplatesSetList[random].templateList[i].distOnRoad + 0.2) {
+                continue; // object not spawn because there already is a brige
+            }
+            console.log("bd:" + distanceBrige + " spd:" + this.sceneTemplatesSetList[random].templateList[i].distOnRoad);
+            this.createSceneObject(this.sceneTemplatesSetList[random].templateList[i], scene, roadIndex);
         }
     }
 
-    private createSceneObject(sost: SceneObjectSpawnTemplate, scene:BABYLON.Scene, roadIndex: number) {
+    /**
+     * Spawn interactable objects on the road
+     * @param roadIndex index of the road where the objects have to be spawned on
+     * @param scene games scene
+     * @param riverRoad is the road where the objects are spawned on a river or not
+     * @returns distance of a brige placed on the road if no brige is placed -1 is returned
+     */
+    public createRandomRoadObjectTemplateSet(roadIndex: number, scene: BABYLON.Scene, riverRoad: boolean): number {
+        console.log("createRandomRoadObjectTemplateSet");
+        let random: number = this.randomListNumber(this.roadTemplatesSetList);
+        let brigePosition: number = -1;
+
+        for (var i = 0; i < this.roadTemplatesSetList[random].templateList.length; i++) {
+            if (this.roadTemplatesSetList[random].templateList[i].brige) {
+                if (riverRoad) {
+                    continue;
+                }
+                brigePosition = this.roadTemplatesSetList[random].templateList[i].distOnRoad;
+            }
+            this.createSceneObject(this.roadTemplatesSetList[random].templateList[i], scene, roadIndex);
+        }
+        return brigePosition;
+    }
+
+    private createSceneObject(sost: SceneObjectSpawnTemplate, scene: BABYLON.Scene, roadIndex: number) {
 
         let randomNum: number = (Math.random() * 2) - 1;
         let randomNum2: number = Math.random(); //random scale 
@@ -285,11 +443,11 @@ class SceneObjectSpawnTemplateSetFactory {
         sceneObjectEntity.addComponent(sceneObjectTransformComponent);
         let sceneObjectMesh: ECS.ComponentAbstractMesh = new ECS.ComponentAbstractMesh(sceneObjectTransformComponent, sost.path, sost.file);
         sceneObjectEntity.addComponent(sceneObjectMesh);
-        
+
         let arrayPosition: number = this.roadManager.sceneObjects.length;
-        let sceneObject:SceneObject = new SceneObject(sceneObjectEntity, this.roadManager.getLanes[roadIndex][sost.lane].getDistanceAtT(sost.distOnRoad));
-        
-        if(sost.hasCollider){
+        let sceneObject: SceneObject = new SceneObject(sceneObjectEntity, this.roadManager.getLanes[roadIndex][sost.lane].getDistanceAtT(sost.distOnRoad));
+
+        if (sost.hasCollider) {
             sceneObjectMesh.setCollision(BABYLON.Mesh.CreateCylinder("LaneObject Collider", sost.colliderHeight, sost.colliderWidth, sost.colliderWidth, 0, 0, scene));
             sceneObjectMesh.setColliderOffset = sost.colliderOffset;
             sceneObjectMesh.updateCollision();

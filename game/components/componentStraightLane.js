@@ -31,6 +31,14 @@ var ComponentStraightLane = (function (_super) {
         var cubicBezierCurve = BABYLON.Mesh.CreateLines("cbezier", curve.getPoints(), scene);
         cubicBezierCurve.color = new BABYLON.Color3(1, 0, .5);
         cubicBezierCurve.isVisible = false;
+        for (var i = 0; i < this.points.length; i++) {
+            var drawPoists = void 0;
+            var drawPoints = [];
+            drawPoints[0] = this.points[i];
+            drawPoints[1] = drawPoints[0].add(new BABYLON.Vector3(0, 4, 0));
+            var cubicBezierCurve_1 = BABYLON.Mesh.CreateLines("up vectors bezier", drawPoints, scene);
+            cubicBezierCurve_1.color = new BABYLON.Color3(0, 1, 1);
+        }
         /*
         //draw lane up
         for (let i = 0; i < 10; i++) {

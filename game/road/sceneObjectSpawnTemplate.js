@@ -4,6 +4,7 @@
 var SceneObjectSpawnTemplate = (function () {
     function SceneObjectSpawnTemplate(path, file, scale, randomScale, rotation, rotationEnd, objectDisplacement, randomDisplacement, lane, distOnRoad) {
         this.hasCollider = false;
+        this.brige = false;
         this.path = path;
         this.file = file;
         this.scale = scale;
