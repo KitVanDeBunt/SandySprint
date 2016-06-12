@@ -70,11 +70,12 @@ class MainMenu {
         this._startPos = this._flyCam.position;
         this._startRot = this._flyCam.rotation;
         this._camera.dispose();
+        this._scene.activeCameras.push(this._flyCam);
+        this._movingCam = true;
+        this._musicPlaying = true;
         this._audio.playSound(Sounds.Start);
         this._audio.stopSound(Sounds.MainMenu);
         this._audio.playSound(Sounds.Game);
-        this._scene.activeCameras.push(this._flyCam);
-        this._movingCam = true;
     }
 
     onInput(inputPos: BABYLON.Vector2) {
@@ -121,7 +122,7 @@ class MainMenu {
             }
         }
         if (!this._audio.menuBackgroundSound.isPlaying) {
-            if (this._musicPlaying == false) {
+            if (!this._musicPlaying && !this._movingCam) {
                 this._audio.playSound(Sounds.MainMenu);
             }
         }

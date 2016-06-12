@@ -4,18 +4,19 @@
  */
 class audioManager {
 
-    private _scene: BABYLON.Scene;
-    state: Sounds;
-    private _pickUpSound: BABYLON.Sound;
     menuBackgroundSound: BABYLON.Sound;
+    state: Sounds;
+    
+    private _scene: BABYLON.Scene;
+    private _pickUpSound: BABYLON.Sound;
     private _inGameSound: BABYLON.Sound;
     private _jumpSound: BABYLON.Sound;
     private _jumpLandSound: BABYLON.Sound;
     private _startSound: BABYLON.Sound;
     private _stopSound: BABYLON.Sound;
     private _laneSwitchSound: BABYLON.Sound;
-    private _walkSound0: BABYLON.Sound;
-    private _walkSound1: BABYLON.Sound;
+    private _walkSoundL: BABYLON.Sound;
+    private _walkSoundR: BABYLON.Sound;
     private _walkSwitch: boolean;
 
     /**
@@ -33,8 +34,8 @@ class audioManager {
         this._startSound = this.addSound("StartSound", "../assets/sounds/start.wav", false, 2, 0.6);
         this._stopSound = this.addSound("StopSound", "../assets/sounds/stop.mp3", false, 1.6, 1);
         this._laneSwitchSound = this.addSound("SwitchSound", "../assets/sounds/swipe.wav", false, 0.1, 1);
-        this._walkSound0 = this.addSound("WalkSound", "../assets/sounds/Walk6.mp3", false, 0.5, 1);
-        this._walkSound1 = this.addSound("WalkSound", "../assets/sounds/Walk7.mp3", false, 0.2, 1);
+        this._walkSoundL = this.addSound("WalkSoundL", "../assets/sounds/Walk1.mp3", false, 0.1, 0.8);
+        this._walkSoundR = this.addSound("WalkSoundR", "../assets/sounds/Walk2.mp3", false, 0.1, 0.8);
     }
 
     /**
@@ -84,10 +85,10 @@ class audioManager {
                 break;
             case Sounds.Walk:
                 if (this._walkSwitch) {
-                    this._walkSound0.play();
+                    this._walkSoundL.play();
                 }
                 else {
-                    this._walkSound1.play();
+                    this._walkSoundR.play();
                 }
                 this._walkSwitch = !this._walkSwitch;
                 break;
@@ -127,8 +128,8 @@ class audioManager {
                 this._laneSwitchSound.stop();
                 break;
             case Sounds.Walk:
-                this._walkSound0.stop();
-                this._walkSound1.stop();
+                this._walkSoundL.stop();
+                this._walkSoundR.stop();
                 break;
             default:
                 break;
