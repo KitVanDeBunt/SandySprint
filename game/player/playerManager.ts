@@ -6,30 +6,35 @@ class PlayerManager {
     private player: ECS.Entity;
     private playerTranslateComponent: ECS.ComponentTransform;
     private playerMeshComponent: ECS.ComponentAbstractMesh;
-    private playerSpeed: number = 0.006;
+    private playerSpeed: number = 0.004;
     private playerT: number = 0;
     private _scene: BABYLON.Scene;
     private animationState: PlayerAnimationState = PlayerAnimationState.NotStarted;
     private roadManager: RoadManager;
     private pickupsCollected: number = 0;
-    private jumpManager: ComponentJumpLane;
+    private jumpManager: ComponentJumpCurve;
     private audio: audioManager;
     private gameUI: GameUI;
 
     //player dieing
     private playing: boolean = true;
-    private playerDied: boolean = false;
+    private playerDead: boolean = false;
+    private _playerDiedAnimStarted: boolean = false;
     private _playerDiedAnimDone: boolean = false;
     private playerDiedT: number = 0;
+    private endScreenOpened = false;
 
     // lane
     private previousLane: ComponentLaneBase;
     private currentLane: ComponentLaneBase;
+    private moveLeftRight: number = 0;
 
     // lane tween
     private inLaneTween: boolean = false;
+    private inLaneTweenLeft: boolean = false;
+    private inLaneTweenRight: boolean = false;
     private laneTweenInterpolation: number = 0;
-    private laneSwitchSpeed: number = 0.0001;
+    private laneSwitchSpeed: number = 0.001;
 
     // collision
     private firstFrame: boolean = true;
@@ -71,7 +76,7 @@ class PlayerManager {
         this.playerMeshComponent.setColliderOffset = new BABYLON.Vector3(0, 0.25, 0);
         this.playerMeshComponent.setCollision(mesh);
 
-        this.jumpManager = new ComponentJumpLane(this.playerMeshComponent, BABYLON.Vector3.Zero(), this._scene, this.playerT);
+        this.jumpManager = new ComponentJumpCurve();
 
 
         //playerTranslateComponent.setScale = new BABYLON.Vector3(0.1, 0.1, 0.1);
@@ -152,7 +157,7 @@ class PlayerManager {
             this.playerMovedCurrentTouch = true;
         }
         //swipe up
-        if (this.touchEnd.y - this.touchStart.y < -screen.height * 0.2 && this.jumpManager.jumping == false && this.playing == true) {
+        if (this.touchEnd.y - this.touchStart.y < -screen.height * 0.2 && this.jumpManager.jumping == false && this.playing) {
             this.jumpManager.jump(this.playerT);
             this.audio.playSound(Sounds.Jump);
         }
@@ -176,33 +181,41 @@ class PlayerManager {
             case 38: //'Jump'
             case 32: //'Jump'
             case 87: //'Jump'
-                if (this.jumpManager.jumping == false && this.playing == true) {
+                if (this.jumpManager.jumping == false && this.playing) {
                     this.jumpManager.jump(this.playerT);
                     this.audio.playSound(Sounds.Jump);
                 }
+                //case 82:
+                //throw 0;
                 break;
         }
     }
 
     private movePlayerLeft() {
-        if (this.currentLane.getLeftLaneAvalable && !this.inLaneTween && this.playing == true) {
-            this.previousLane = this.currentLane;
-            this.currentLane = this.currentLane.getLeftLane;
-            if (!this.jumpManager.jumping) {
-                this.animationState = PlayerAnimationState.LaneSwitchL;
+        if (this.currentLane.getLeftLaneAvalable && this.playing) {
+            if (!this.inLaneTween) {
+                this.previousLane = this.currentLane;
+                this.currentLane = this.currentLane.getLeftLane;
+                this.inLaneTweenLeft = true;
+                this.startPlayerLaneTween();
+                this.moveLeftRight = 0;
+            } else {
+                this.moveLeftRight = -1;
             }
-            this.startPlayerLaneTween();
         }
     }
 
     private movePlayerRight() {
-        if (this.currentLane.getRightLaneAvalable && !this.inLaneTween && this.playing == true) {
-            this.previousLane = this.currentLane;
-            this.currentLane = this.currentLane.getRightLane;
-            if (!this.jumpManager.jumping) {
-                this.animationState = PlayerAnimationState.LaneSwitchR;
+        if (this.currentLane.getRightLaneAvalable && this.playing) {
+            if (!this.inLaneTween) {
+                this.previousLane = this.currentLane;
+                this.currentLane = this.currentLane.getRightLane;
+                this.inLaneTweenRight = true;
+                this.startPlayerLaneTween();
+                this.moveLeftRight = 0;
+            } else {
+                this.moveLeftRight = 1;
             }
-            this.startPlayerLaneTween();
         }
     }
 
@@ -214,17 +227,22 @@ class PlayerManager {
 
     }
 
-    private playerDies() {
-        this.playerDiedT++;
-        if (this.playerDiedT > 7.5 && !this._playerDiedAnimDone) {
-            this.animationState = PlayerAnimationState.FallingBackDone;
-            this.updateAnimation();
+    private playerFallbackAnimationTime() {
+        return ((((420 - 360) * this.ftc) / 24) * 1000);
+    }
+
+    private updateDead(deltaTime: number) {
+        this.playerDiedT += deltaTime;
+        if (this.playerDiedT > this.playerFallbackAnimationTime() && !this._playerDiedAnimDone) {
             this._playerDiedAnimDone = true;
+            this.updateAnimation();
         }
-        if (this.playerDiedT >= 20) {
+        // end screen 1.5 second after animation is done
+        if (!this.endScreenOpened && this.playerDiedT > this.playerFallbackAnimationTime() + 1500) {
+            //window.alert("sometext");
             this.gameUI.closeInGame();
+            this.endScreenOpened = true;
             this.gameUI.openEndScreen();
-            this.playerDied = false;
         }
     }
 
@@ -232,8 +250,7 @@ class PlayerManager {
      * updates the player
      */
     update(deltaTime: number): void {
-
-        if (this.playing == true) {
+        if (this.playing) {
             this.updateAudio(deltaTime);
             this.updateAnimation();
             this.updateRoadLane();
@@ -243,53 +260,77 @@ class PlayerManager {
         if (this.firstFrame) {
             this.firstFrame = false;
         }
-        if (this.playerDied) {
-            this.playerDies();
+        if (this.playerDead) {
+            this.updateDead(deltaTime);
         }
     }
 
     private updateAnimation() {
-        if (this.playerMeshComponent.meshState == ECS.MeshLoadState.Loaded) {
-            switch (this.animationState) {
 
-                case PlayerAnimationState.NotStarted:
-                    this._scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 0, 21 * this.ftc, true, 1.4);
-                    this.animationState = PlayerAnimationState.Running;
-                    break;
-                case PlayerAnimationState.Running:
-                    if (this.jumpManager.jumping) {
-                        this._scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 110 * this.ftc, 140 * this.ftc, true, 1);
-                        this.animationState = PlayerAnimationState.Jumping;
-                    }
-                    break;
-                case PlayerAnimationState.Jumping:
-                    if (!this.jumpManager.jumping) {
+        if (this.playerMeshComponent.meshState == ECS.MeshLoadState.Loaded) {
+            if (this.playerDead && !this._playerDiedAnimStarted) {
+                // play fall back animation
+                this.animationState = PlayerAnimationState.FallingBack;
+                this._playerDiedAnimStarted = true;
+                this._scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 360 * this.ftc, 420 * this.ftc, true, 1);
+            } else {
+                switch (this.animationState) {
+
+                    case PlayerAnimationState.NotStarted:
+                        // play run animation
                         this._scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 0, 21 * this.ftc, true, 1.4);
                         this.animationState = PlayerAnimationState.Running;
-                    }
-                    break;
-                case PlayerAnimationState.FallingBack:
-                    this._scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 60 * this.ftc, 83.5 * this.ftc, true, 1);
-                    break;
-                case PlayerAnimationState.FallingBackDone:
-                    this._scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 83.5 * this.ftc, 83.6 * this.ftc, true, 1);
-                    break;
-                case PlayerAnimationState.LaneSwitchL:
-                    if (!this.jumpManager.jumping) {
-                        this._scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 28 * this.ftc, 40 * this.ftc, true, 2);
-                        this.animationState = PlayerAnimationState.Running;
-                    }
-                    break;
-                case PlayerAnimationState.LaneSwitchR:
-                    if (!this.jumpManager.jumping) {
-                        this._scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 52 * this.ftc, 60 * this.ftc, true, 2);
-                        this.animationState = PlayerAnimationState.Running;
-                    }
-                    break;
-                case PlayerAnimationState.Idle:
-                    break;
-                default:
-                    break;
+                        break;
+                    case PlayerAnimationState.Running:
+                        if (this.jumpManager.jumping) {
+                            // play jump animation
+                            this._scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 110 * this.ftc, 140 * this.ftc, true, 1);
+                            this.animationState = PlayerAnimationState.Jumping;
+                        } else if (this.inLaneTweenLeft) {
+                            // play move left animation
+                            this.animationState = PlayerAnimationState.LaneSwitchL;
+                            this._scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 25 * this.ftc, 39 * this.ftc, true, 1.2);
+                        } else if (this.inLaneTweenRight) {
+                            // play move right animation
+                            this.animationState = PlayerAnimationState.LaneSwitchR;
+                            this._scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 45 * this.ftc, 57 * this.ftc, true, 1.2);
+                        }
+                        break;
+                    case PlayerAnimationState.Jumping:
+                        if (!this.jumpManager.jumping) {
+                            // play run animation
+                            this._scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 0, 21 * this.ftc, true, 1.4);
+                            this.animationState = PlayerAnimationState.Running;
+                        }
+                        break;
+                    case PlayerAnimationState.FallingBack:
+                        if (this._playerDiedAnimDone) {
+                            // loop end of deat animation
+                            this._scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 419 * this.ftc, 420 * this.ftc, true, 1);
+                        }
+                        break;
+                    case PlayerAnimationState.FallingBackDone:
+
+                        break;
+                    case PlayerAnimationState.LaneSwitchL:
+                        if (!this.inLaneTween) {
+                            // play run animation
+                            this._scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 0, 21 * this.ftc, true, 1.4);
+                            this.animationState = PlayerAnimationState.Running;
+                        }
+                        break;
+                    case PlayerAnimationState.LaneSwitchR:
+                        if (!this.inLaneTween) {
+                            // play run animation
+                            this._scene.beginAnimation(this.playerMeshComponent.babylonMesh.skeleton, 0, 21 * this.ftc, true, 1.4);
+                            this.animationState = PlayerAnimationState.Running;
+                        }
+                        break;
+                    case PlayerAnimationState.Idle:
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }
@@ -310,18 +351,34 @@ class PlayerManager {
         }
     }
 
+    //prevent to much recursion
+    private MAX_RECURSIONS: number = 3;
+    private recursions: number = 0;
+
     /**
      * updats the movement of the player
      * @param deltaTime time delta this update and previous update
      */
     private updatePlayerMovment(deltaTime: number) {
+        if (!this.inLaneTween) {
+            if (this.moveLeftRight < -0.5) {
+                this.movePlayerLeft();
+                this.moveLeftRight = 0;
+            } else if (this.moveLeftRight > 0.5) {
+                this.movePlayerRight();
+                this.moveLeftRight = 0;
+            }
+        }
+
         if (this.playerSpeed != 0) {
-            if (deltaTime > 0.1) {
+            if (deltaTime > 0.1 && this.recursions < this.MAX_RECURSIONS) {
                 this.playerT += (0.1 * this.playerSpeed);
                 deltaTime -= 0.1;
+                this.recursions++;
                 this.updatePlayerMovment(deltaTime);
             }
             else {
+                this.recursions = 0;
                 this.playerT += (deltaTime * this.playerSpeed);
             }
         }
@@ -334,14 +391,9 @@ class PlayerManager {
             this.laneTweenInterpolation += deltaTime * this.laneSwitchSpeed;
             if (this.laneTweenInterpolation > 1) {
                 this.laneTweenInterpolation = 1;
-                if (this.jumpManager.jumping) {
-                    this.animationState = PlayerAnimationState.Jumping;
-                }
-                else {
-                    this.animationState = PlayerAnimationState.NotStarted;
-                }
-                this.updateAnimation();
                 this.inLaneTween = false;
+                this.inLaneTweenRight = false;
+                this.inLaneTweenLeft = false;
             }
             let targetLanePosition: BABYLON.Vector3 = pos;
             let previousLanePosition: BABYLON.Vector3 = this.previousLane.getPointAtT(laneInputT);
@@ -351,12 +403,12 @@ class PlayerManager {
 
         // jumping
         if (this.jumpManager.jumping) {
-            let jumpInputT: number = (this.playerT - this.jumpManager.getT()) / (this.jumpManager.getLaneLength() / 2.5);
-            if (jumpInputT > 1) {
+            if (this.jumpManager.getPointAtT(this.playerT,1.5,deltaTime).y < 0) {
                 this.jumpManager.jumping = false;
                 this.audio.playSound(Sounds.JumpLand);
+            }else{
+                pos = pos.add(this.jumpManager.getPointAtT(this.playerT,1.5,deltaTime));
             }
-            pos = pos.add(this.jumpManager.getPointAtT(jumpInputT));
         }
 
         this.playerTranslateComponent.setPosition = pos;
@@ -373,14 +425,14 @@ class PlayerManager {
                             var coll: boolean = this.playerMeshComponent.getCollider.intersectsMesh(this.roadManager.sceneObjects[i].meshCollider);
                             if (coll) {
                                 switch (this.roadManager.sceneObjects[i].meshType) {
-                                    case CollisionMeshType.pillar || CollisionMeshType.spike:
+                                    case CollisionMeshType.pillar:
+                                    case CollisionMeshType.spike:
                                         this.audio.playSound(Sounds.Stop);
-                                        this.animationState = PlayerAnimationState.FallingBack;
-                                        this.updateAnimation();
                                         var deathPos = new BABYLON.Vector3(this.getplayerPosition().x, this.getplayerPosition().y, this.roadManager.sceneObjects[i].meshCollider.position.z - 0.2);
                                         this.playerTranslateComponent.setPosition = deathPos;
                                         this.playing = false;
-                                        this.playerDied = true;
+                                        this.playerDead = true;
+                                        this.updateAnimation();
                                         break;
                                     case CollisionMeshType.scarab:
                                         this.audio.playSound(Sounds.Pickup);

@@ -21,14 +21,15 @@ var SceneObjectSpawnTemplateSetFactory = (function () {
         for (var i = 14; i < 24; i++) {
         }
         // 0 pillar
-        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((11 / 28), 0));
-        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((11 / 28), 1));
-        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((21 / 28), 0));
-        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.BUILDING_BRIGE_002]((19 / 28), 1));
-        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((19 / 28), 2));
-        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((25 / 28), 0));
+        //this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((11 / 28), 0));
+        //this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((11 / 28), 1));
+        //this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((21 / 28), 0));
+        //this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.BUILDING_BRIGE_002]((19 / 28), 1));
+        //this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((19 / 28), 2));
+        //this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((25 / 28), 0));
         this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((27 / 28), 0));
-        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((27 / 28), 1));
+        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SPIKE]((27 / 28), 1));
+        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((27 / 28), 2));
         //this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[3](0.75, 1));
         /**
          * creation of sceneTemplatesSetListre
@@ -214,7 +215,6 @@ var SceneObjectSpawnTemplateSetFactory = (function () {
                 && distanceBrige < this.sceneTemplatesSetList[random].templateList[i].distOnRoad + 0.2) {
                 continue; // object not spawn because there already is a brige
             }
-            console.log("bd:" + distanceBrige + " spd:" + this.sceneTemplatesSetList[random].templateList[i].distOnRoad);
             this.createSceneObject(this.sceneTemplatesSetList[random].templateList[i], scene, roadIndex);
         }
     };
@@ -226,7 +226,6 @@ var SceneObjectSpawnTemplateSetFactory = (function () {
      * @returns distance of a brige placed on the road if no brige is placed -1 is returned
      */
     SceneObjectSpawnTemplateSetFactory.prototype.createRandomRoadObjectTemplateSet = function (roadIndex, scene, riverRoad) {
-        console.log("createRandomRoadObjectTemplateSet");
         var random = this.randomListNumber(this.roadTemplatesSetList);
         var brigePosition = -1;
         for (var i = 0; i < this.roadTemplatesSetList[random].templateList.length; i++) {
