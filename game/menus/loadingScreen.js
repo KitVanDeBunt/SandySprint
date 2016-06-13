@@ -1,7 +1,13 @@
 /**
  * Class LoadingScreen
+ * Shows a loading screen and calls the loader.
  * */
 var loadingScreen = (function () {
+    /**
+     * @param gameui the gameUI that has created the loadingscreen.
+     * @param scene the scene that the game is using.
+     * @param systemMeshRender the meshRender that loads the objects.
+     */
     function loadingScreen(gameui, scene, systemMeshRender) {
         this._gameUI = gameui;
         this._scene = scene;
@@ -18,6 +24,9 @@ var loadingScreen = (function () {
         ];
         this.showLoadingScreen();
     }
+    /**
+     * Creates the loadingscreen, loading indicator, and starts the loader.
+     */
     loadingScreen.prototype.showLoadingScreen = function () {
         var loadingImage = new BABYLON.Texture("assets/textures/ui_textures/LoadingScreen.png", this._scene, true);
         var loading = this._gameUI.createImage(new BABYLON.Vector2(0, 0), new BABYLON.Vector2(1920 * 0.5, 1080 * 0.5), loadingImage);
@@ -34,6 +43,9 @@ var loadingScreen = (function () {
         this.context2D = this._myMaterial_diffuseTexture.getContext();
         this._meshRender.StartLoading(this._paths, this._modelNames);
     };
+    /**
+     * updates the loading indicator.
+     */
     loadingScreen.prototype.update = function () {
         if (this._meshRender.LoadingProgress() >= 1) {
             this._meshRender.RemoveLoadingObjects();
@@ -46,6 +58,9 @@ var loadingScreen = (function () {
             this._myMaterial_diffuseTexture.drawText(Math.round(this._meshRender.LoadingProgress() * 100) + "%", 200, 200, "50px Cooper Std Black", "black", "transparent");
         }
     };
+    /**
+     * Deletes all objects.
+     */
     loadingScreen.prototype.dispose = function () {
         for (var i = 0; i < this._objects.length; i++) {
             this._objects[i].dispose();

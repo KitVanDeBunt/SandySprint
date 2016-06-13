@@ -88,7 +88,7 @@ var tutorial = (function () {
                     this.disposeObjects();
                     this._tutorialState = tutorialState.None;
                     this._playermanager.setPlaying(true);
-                    this._inGameUI.tutorialEnabled = false;
+                    this._inGameUI.tutorial = false;
                     this._tutFinished = true;
                 }
                 break;
@@ -122,7 +122,7 @@ var tutorial = (function () {
                         this.disposeObjects();
                         this._tutorialState = tutorialState.None;
                         this._playermanager.setPlaying(true);
-                        this._inGameUI.tutorialEnabled = false;
+                        this._inGameUI.tutorial = false;
                         break;
                 }
                 break;

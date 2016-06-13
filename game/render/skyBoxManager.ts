@@ -7,6 +7,10 @@ class SkyBoxManager {
 
     private _skybox: BABYLON.Mesh;
     
+    /**
+     * @param scene the scene of the game.
+     * @param ECSengine the Entity Component System of the game.
+     */
     constructor(scene: BABYLON.Scene, ECSengine: ECS.Engine) {
         // Skybox
         this._skybox = BABYLON.Mesh.CreateBox("skyBox", 1000.0, scene);

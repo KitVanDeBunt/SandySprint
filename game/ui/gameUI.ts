@@ -156,7 +156,7 @@ class GameUI {
 
     openInGame(tutorialEnabled: boolean) {
         this.inGameUI = new InGameUI(this._canvas, this._engine, this._scene, this, this._playerManager, tutorialEnabled);
-        this.inGameUI.tutorialEnabled = tutorialEnabled;
+        this.inGameUI.tutorial = tutorialEnabled;
     }
 
     openLoadingScreen() {

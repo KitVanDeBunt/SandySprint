@@ -1,7 +1,12 @@
 /**
  * endScreen
+ * creates the endscreen, and shows the score.
  */
 var endScreen = (function () {
+    /**
+     * @param gameUI the gameUI that has created this endscreen.
+     * @param scene the scene that the game is using.
+     */
     function endScreen(gameUI, scene) {
         this._scorecount = 0;
         this._scarabcount = 0;
@@ -10,19 +15,19 @@ var endScreen = (function () {
         this._scene = scene;
         this._objects = [];
         this._count = true;
-        this.StartScreen();
+        this.ShowScreen();
     }
     /**
-     * start EndScreen
+     * creates all the elements for the endscreen.
      */
-    endScreen.prototype.StartScreen = function () {
+    endScreen.prototype.ShowScreen = function () {
         this._objects = [];
         this._gameUI.menuState = menuState.End;
         var backgroundTex = new BABYLON.Texture("assets/textures/ui_textures/ui-background.png", this._scene, true);
         var background = this._gameUI.createImage(new BABYLON.Vector2(0, 0), new BABYLON.Vector2(337, 403), backgroundTex);
         this._objects.push(background);
         backgroundTex = new BABYLON.Texture("assets/textures/ui_textures/restart-button.png", this._scene, true);
-        var play = this._gameUI.createImage(new BABYLON.Vector2(0, -270), new BABYLON.Vector2(50, 50), backgroundTex);
+        var play = this._gameUI.createImage(new BABYLON.Vector2(0, -270), new BABYLON.Vector2(80, 80), backgroundTex);
         this._objects.push(play);
         var material = new BABYLON.StandardMaterial("textuare1", this._scene);
         material.alpha = 1;
@@ -39,7 +44,7 @@ var endScreen = (function () {
         this.context2D = this._endscreentexture.getContext();
     };
     /**
-     * update for the score count.
+     * update for the score count and drawText.
      */
     endScreen.prototype.update = function () {
         if (this._count) {
@@ -63,6 +68,9 @@ var endScreen = (function () {
         this._endscreentexture.drawText("Scarabs: " + Math.round(this._scarabcount) + "  x 3", 150, 290, "30px Cooper Std Black", "black", "transparent");
         this._endscreentexture.drawText("Total: " + Math.round(this._scorecount + (this._scarabcount * 3)), 150, 330, "30px Cooper Std Black", "black", "transparent");
     };
+    /**
+     * restarts game when mousebutton gets pressed, or the screen gets touched.
+     */
     endScreen.prototype.onInput = function (inputPos) {
         if (this.Dispose()) {
             main.game();
@@ -75,7 +83,7 @@ var endScreen = (function () {
         this._score = score;
     };
     /**
-     * Sets the score for the endscreen.
+     * Sets the scarab count for the endscreen.
      */
     endScreen.prototype.setScarabs = function (scarabs) {
         this._scarabs = scarabs;

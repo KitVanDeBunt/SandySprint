@@ -1,6 +1,6 @@
 /**
  * MainMenu
- * Creates 
+ * Creates the mainMenu scene and starts the game.
  */
 class MainMenu {
 
@@ -19,6 +19,14 @@ class MainMenu {
     private _targetRotation: BABYLON.Vector3 = new BABYLON.Vector3(0, 0, 0);
     private _musicPlaying: boolean = false;
 
+    /**
+     * @param canvas the canvas that the game is being displayed on.
+     * @param ecs the Entity Component System of the game.
+     * @param engine the babylon engine of the game.
+     * @param scene the scene that the game is using.
+     * @param gameUI the gameUI that has created this mainMenu.
+     * @param audio the audioplayer of the game. 
+     */
     constructor(canvas: HTMLCanvasElement, ecs: ECS.Engine, engine: BABYLON.Engine, scene: BABYLON.Scene, gameUI: GameUI, audio: audioManager) {
         this._objects = [];
         this._audio = audio;
@@ -26,6 +34,7 @@ class MainMenu {
         this._ECSEngine = ecs;
         this._scene = scene;
 
+        //rotating camera
         let createCamera = function () {
             this._camera = new BABYLON.ArcRotateCamera("MenuCam", 0, 0.3, 5, new BABYLON.Vector3(0, 0, -8.5), scene);
             scene.activeCameras.push(this._camera);
@@ -33,6 +42,7 @@ class MainMenu {
         }
         this._camera = createCamera();
 
+        //scene
         BABYLON.SceneLoader.ImportMesh("", "assets/models/", "game_intro_temple.babylon", this._scene
             , function (newMeshes, newParticlesystems, newSkeletons) {
                 newMeshes.forEach(element => {
@@ -48,6 +58,9 @@ class MainMenu {
         });
     }
 
+    /**
+     * creates the startScreen.
+     */
     private StartScreen() {
         this._gameUI.menuState = menuState.Start;
         var startScreenTex = new BABYLON.Texture("assets/textures/ui_textures/logo-final.png", this._scene, true);
@@ -61,7 +74,7 @@ class MainMenu {
 
 
     /**
-     * move camera to start when start is clicked
+     * creates a new camera and moves it to start when start is clicked.
      */
     Move() {
         this._movesToStart = 0;
@@ -78,6 +91,10 @@ class MainMenu {
         this._audio.playSound(Sounds.Game);
     }
 
+    /**
+     * checks if the mousebutton get pressed, or the sceen gets touched.
+     * @param inputPos the screen position of the input.
+     */
     onInput(inputPos: BABYLON.Vector2) {
         switch (this._gameUI.menuState) {
             case menuState.Start:
@@ -91,6 +108,10 @@ class MainMenu {
         }
     }
 
+    /**
+     * checks if a key gets pressed.
+     * @param keyEvt data about the pressed key.
+     */
     onKeyDown(keyEvt: KeyboardEvent) {
         switch (this._gameUI.menuState) {
             case menuState.Start:
@@ -105,8 +126,7 @@ class MainMenu {
     }
 
     /**
-     * Checks if the camera needs to move, and how
-     * Checks if mainMenu sound is playing
+     * updates camera movement and plays background music.
      */
     update() {
         if (this._movingCam) {

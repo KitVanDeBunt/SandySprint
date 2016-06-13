@@ -1,5 +1,6 @@
 /**
  * endScreen
+ * creates the endscreen, and shows the score.
  */
 class endScreen {
 
@@ -17,19 +18,23 @@ class endScreen {
     private _box: BABYLON.Mesh;
     private _scoreCounted: boolean = false;
 
+    /**
+     * @param gameUI the gameUI that has created this endscreen.
+     * @param scene the scene that the game is using.
+     */
     constructor(gameUI: GameUI, scene: BABYLON.Scene) {
         this._gameUI = gameUI;
         this._scene = scene;
         this._objects = [];
         this._count = true;
 
-        this.StartScreen();
+        this.ShowScreen();
     }
 
     /**
-     * start EndScreen
+     * creates all the elements for the endscreen.
      */
-    StartScreen() {
+    ShowScreen() {
         this._objects = [];
         this._gameUI.menuState = menuState.End;
 
@@ -38,7 +43,7 @@ class endScreen {
         this._objects.push(background);
 
         backgroundTex = new BABYLON.Texture("assets/textures/ui_textures/restart-button.png", this._scene, true);
-        var play = this._gameUI.createImage(new BABYLON.Vector2(0, -270), new BABYLON.Vector2(50, 50), backgroundTex);
+        var play = this._gameUI.createImage(new BABYLON.Vector2(0, -270), new BABYLON.Vector2(80, 80), backgroundTex);
         this._objects.push(play);
 
         var material = new BABYLON.StandardMaterial("textuare1", this._scene);
@@ -61,7 +66,7 @@ class endScreen {
     }
 
     /**
-     * update for the score count.
+     * update for the score count and drawText.
      */
     update() {
         if (this._count) {
@@ -88,6 +93,9 @@ class endScreen {
 
     }
 
+    /**
+     * restarts game when mousebutton gets pressed, or the screen gets touched.
+     */
     onInput(inputPos: BABYLON.Vector2) {
         if (this.Dispose()) {
             main.game();
@@ -102,7 +110,7 @@ class endScreen {
     }
 
     /**
-     * Sets the score for the endscreen.
+     * Sets the scarab count for the endscreen.
      */
     setScarabs(scarabs: number) {
         this._scarabs = scarabs;

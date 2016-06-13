@@ -125,7 +125,7 @@ var GameUI = (function () {
     };
     GameUI.prototype.openInGame = function (tutorialEnabled) {
         this.inGameUI = new InGameUI(this._canvas, this._engine, this._scene, this, this._playerManager, tutorialEnabled);
-        this.inGameUI.tutorialEnabled = tutorialEnabled;
+        this.inGameUI.tutorial = tutorialEnabled;
     };
     GameUI.prototype.openLoadingScreen = function () {
         this._loadingScreen = new loadingScreen(this, this._scene, this._MeshRender);

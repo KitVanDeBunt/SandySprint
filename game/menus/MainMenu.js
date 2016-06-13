@@ -1,8 +1,16 @@
 /**
  * MainMenu
- * Creates
+ * Creates the mainMenu scene and starts the game.
  */
 var MainMenu = (function () {
+    /**
+     * @param canvas the canvas that the game is being displayed on.
+     * @param ecs the Entity Component System of the game.
+     * @param engine the babylon engine of the game.
+     * @param scene the scene that the game is using.
+     * @param gameUI the gameUI that has created this mainMenu.
+     * @param audio the audioplayer of the game.
+     */
     function MainMenu(canvas, ecs, engine, scene, gameUI, audio) {
         this._movingCam = false;
         this._targetPosition = new BABYLON.Vector3(0, 0.5, -2);
@@ -13,12 +21,14 @@ var MainMenu = (function () {
         this._gameUI = gameUI;
         this._ECSEngine = ecs;
         this._scene = scene;
+        //rotating camera
         var createCamera = function () {
             this._camera = new BABYLON.ArcRotateCamera("MenuCam", 0, 0.3, 5, new BABYLON.Vector3(0, 0, -8.5), scene);
             scene.activeCameras.push(this._camera);
             return this._camera;
         };
         this._camera = createCamera();
+        //scene
         BABYLON.SceneLoader.ImportMesh("", "assets/models/", "game_intro_temple.babylon", this._scene, function (newMeshes, newParticlesystems, newSkeletons) {
             newMeshes.forEach(function (element) {
             });
@@ -29,6 +39,9 @@ var MainMenu = (function () {
             this._camera.alpha -= 0.0042;
         });
     }
+    /**
+     * creates the startScreen.
+     */
     MainMenu.prototype.StartScreen = function () {
         this._gameUI.menuState = menuState.Start;
         var startScreenTex = new BABYLON.Texture("assets/textures/ui_textures/logo-final.png", this._scene, true);
@@ -39,7 +52,7 @@ var MainMenu = (function () {
         this._objects.push(play);
     };
     /**
-     * move camera to start when start is clicked
+     * creates a new camera and moves it to start when start is clicked.
      */
     MainMenu.prototype.Move = function () {
         this._movesToStart = 0;
@@ -55,6 +68,10 @@ var MainMenu = (function () {
         this._audio.stopSound(Sounds.MainMenu);
         this._audio.playSound(Sounds.Game);
     };
+    /**
+     * checks if the mousebutton get pressed, or the sceen gets touched.
+     * @param inputPos the screen position of the input.
+     */
     MainMenu.prototype.onInput = function (inputPos) {
         switch (this._gameUI.menuState) {
             case menuState.Start:
@@ -67,6 +84,10 @@ var MainMenu = (function () {
                 break;
         }
     };
+    /**
+     * checks if a key gets pressed.
+     * @param keyEvt data about the pressed key.
+     */
     MainMenu.prototype.onKeyDown = function (keyEvt) {
         switch (this._gameUI.menuState) {
             case menuState.Start:
@@ -80,8 +101,7 @@ var MainMenu = (function () {
         }
     };
     /**
-     * Checks if the camera needs to move, and how
-     * Checks if mainMenu sound is playing
+     * updates camera movement and plays background music.
      */
     MainMenu.prototype.update = function () {
         if (this._movingCam) {

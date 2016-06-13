@@ -4,6 +4,10 @@
  * manages the skybox
  */
 var SkyBoxManager = (function () {
+    /**
+     * @param scene the scene of the game.
+     * @param ECSengine the Entity Component System of the game.
+     */
     function SkyBoxManager(scene, ECSengine) {
         // Skybox
         this._skybox = BABYLON.Mesh.CreateBox("skyBox", 1000.0, scene);
