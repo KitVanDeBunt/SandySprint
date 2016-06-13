@@ -79,6 +79,11 @@ class GameBase {
 
         // prevent manifest file error warning
         this._engine.enableOfflineSupport = false;
+            var gamebase:GameBase = this;
+        // call resize on babylon engine if the windows resizes
+        window.addEventListener("resize", function () {
+            gamebase._engine.resize();
+        });
 
         let scene: BABYLON.Scene = new BABYLON.Scene(this._engine);
 
@@ -176,11 +181,6 @@ class GameBase {
             gameUI.onInputStart(new BABYLON.Vector2(mouseEvt.pageX, mouseEvt.pageY));
         }
 
-        // call resize on babylon engine if the windows resizes
-        window.addEventListener("resize", function () {
-            this.e.resize();
-        });
-
         // add input event listener
         window.addEventListener("keydown", onKeyDown);
         window.addEventListener("touchstart", onTouchStart);
@@ -212,20 +212,12 @@ class GameBase {
             this._gameUI.setPlayerTOffset(playerT);
             this._gameUI.restartCamera();
             this._gameUI.setPlayerManager(this._playerManager);
-            /*if (this._gameUI.inGameUI.tutorialEnabled) {
-                this._gameUI.openInGame(true);
-            }
-            else {
-                this._gameUI.openInGame(false);
-            }*/
             this._gameUI.openInGame(this._gameUI.inGameUI.tutorialEnabled);
         }
         else {
             /**
              * first start
              */
-
-
             this._playerManager = new PlayerManager(this._scene, this._ECSengine, this._roadManager, this._audio, this._gameUI);
             this._playerCameraManager = new PlayerCameraManager(this._ECSengine, this._scene, this._playerManager);
             this._gameUI.restartCamera();

@@ -21,6 +21,11 @@ var GameBase = (function () {
     GameBase.prototype.createScene = function () {
         // prevent manifest file error warning
         this._engine.enableOfflineSupport = false;
+        var gamebase = this;
+        // call resize on babylon engine if the windows resizes
+        window.addEventListener("resize", function () {
+            gamebase._engine.resize();
+        });
         var scene = new BABYLON.Scene(this._engine);
         //enable collision
         scene.collisionsEnabled = true;
@@ -95,10 +100,6 @@ var GameBase = (function () {
         function mouseDown(mouseEvt) {
             gameUI.onInputStart(new BABYLON.Vector2(mouseEvt.pageX, mouseEvt.pageY));
         }
-        // call resize on babylon engine if the windows resizes
-        window.addEventListener("resize", function () {
-            this.e.resize();
-        });
         // add input event listener
         window.addEventListener("keydown", onKeyDown);
         window.addEventListener("touchstart", onTouchStart);
@@ -128,12 +129,6 @@ var GameBase = (function () {
             this._gameUI.setPlayerTOffset(playerT);
             this._gameUI.restartCamera();
             this._gameUI.setPlayerManager(this._playerManager);
-            /*if (this._gameUI.inGameUI.tutorialEnabled) {
-                this._gameUI.openInGame(true);
-            }
-            else {
-                this._gameUI.openInGame(false);
-            }*/
             this._gameUI.openInGame(this._gameUI.inGameUI.tutorialEnabled);
         }
         else {
