@@ -24,6 +24,45 @@ var ECS;
             this._scene = scene;
         };
         /**
+         * laods list of models in manualy
+         * @param modelPathList list
+         */
+        SystemMeshRender.prototype.StartLoading = function (modelPathList, modelNameList) {
+            this._loadingEntitys = [];
+            for (var i = 0; i < modelPathList.length; i++) {
+                var loadObject = this._engine.createEntity();
+                var loadObjectTransform = new ECS.ComponentTransform(BABYLON.Vector3.Zero(), new BABYLON.Vector3(1, 1, 1), BABYLON.Quaternion.Identity());
+                loadObject.addComponent(loadObjectTransform);
+                var loadObjectMesh = new ECS.ComponentAbstractMesh(loadObjectTransform, modelPathList[i], modelNameList[i]);
+                loadObject.addComponent(loadObjectMesh);
+                this._loadingEntitys[i] = loadObject;
+            }
+        };
+        /**
+         * returns the procentage of the models loaded
+         * @returns loading progress
+         */
+        SystemMeshRender.prototype.LoadingProgress = function () {
+            var progress = 0;
+            var meshCount = this._meshDataList.length;
+            var loadedMeshCount = 0;
+            for (var i = 0; i < this._meshDataList.length; i++) {
+                if (this._meshDataList[i].meshLoaded) {
+                    loadedMeshCount++;
+                }
+            }
+            progress = loadedMeshCount / meshCount;
+            return progress;
+        };
+        /**
+         * removes objects used for loading
+         */
+        SystemMeshRender.prototype.RemoveLoadingObjects = function () {
+            for (var i = 0; i < this._loadingEntitys.length; i++) {
+                this._loadingEntitys[i].destroy();
+            }
+        };
+        /**
          * updates this system
          * @param entities entitys updated
          */

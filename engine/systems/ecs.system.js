@@ -1,12 +1,23 @@
 var ECS;
 (function (ECS) {
     /**
-     * System
+     * Base class for an engine system
      */
     var System = (function () {
         function System() {
             this.neededComponents = [];
         }
+        Object.defineProperty(System.prototype, "parentEngine", {
+            /**
+             * set the parent engine
+             * @param parentEngine systems parent engine
+             */
+            set: function (parentEngine) {
+                this._engine = parentEngine;
+            },
+            enumerable: true,
+            configurable: true
+        });
         /**
          * function that exists to ensure generic constarain work
          * because generic constrains only checks if the methodes and fields are the same not the actual type

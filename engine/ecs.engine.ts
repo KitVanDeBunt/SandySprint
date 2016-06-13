@@ -21,6 +21,7 @@ namespace ECS {
         addSystem(newSystem: System): void {
             // TODO: add check if system exists
             this.systems[this.newSystemID] = newSystem;
+            newSystem.parentEngine = this;
             this.newSystemID++;
         }
 

@@ -9,6 +9,11 @@ namespace ECS {
         // list of meshes that are loading, loaded or need to be loaded
         private _meshDataList: DataMesh[];
 
+        /**
+         * list of entitys used for the loading function
+         */
+        private _loadingEntitys: Entity[];
+
         constructor() {
             super();
 
@@ -25,7 +30,50 @@ namespace ECS {
         initRendering(scene: BABYLON.Scene): void {
             this._scene = scene;
         }
+
+        /**
+         * laods list of models in manualy
+         * @param modelPathList list 
+         */
+        StartLoading(modelPathList: string[], modelNameList: string[]) {
+            this._loadingEntitys = [];
+            for (let i = 0; i < modelPathList.length; i++) {
+                let loadObject: Entity = this._engine.createEntity();
+                let loadObjectTransform: ECS.ComponentTransform = new ECS.ComponentTransform(BABYLON.Vector3.Zero(), new BABYLON.Vector3(1, 1, 1), BABYLON.Quaternion.Identity());
+                loadObject.addComponent(loadObjectTransform);
+                let loadObjectMesh: ECS.ComponentAbstractMesh = new ECS.ComponentAbstractMesh(loadObjectTransform, modelPathList[i], modelNameList[i]);
+                loadObject.addComponent(loadObjectMesh);
+                this._loadingEntitys[i] = loadObject;
+            }
+        }
+
+        /**
+         * returns the procentage of the models loaded
+         * @returns loading progress
+         */
+        LoadingProgress(): number {
+            let progress:number = 0;
+            let meshCount:number = this._meshDataList.length;
+            let loadedMeshCount:number = 0;
+            for (var i = 0; i < this._meshDataList.length; i++) {
+                if(this._meshDataList[i].meshLoaded){
+                    loadedMeshCount++;
+                }
+            }
+            progress = loadedMeshCount/meshCount;
+            return progress;
+        }
         
+        /**
+         * removes objects used for loading
+         */
+        RemoveLoadingObjects(){
+            for (var i = 0; i < this._loadingEntitys.length; i++) {
+                this._loadingEntitys[i].destroy();
+                
+            }
+        }
+
         /**
          * updates this system
          * @param entities entitys updated
@@ -150,7 +198,7 @@ namespace ECS {
             //componentAbstractMesh.babylonMesh.parent.getChildMeshes().isVisible = true;
             componentAbstractMesh.meshState = MeshLoadState.Loaded;
         }
-        
+
         /**
          * returns the type name of this system
          */
@@ -164,7 +212,7 @@ namespace ECS {
         newOfThis(): SystemMeshRender {
             return new SystemMeshRender();
         }
-        
+
         /**
          * checks if ComponentAbstractMesh and DataMesh use the same model file and path
          * @param meshData instande of DataMesh

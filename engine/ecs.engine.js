@@ -17,6 +17,7 @@ var ECS;
         Engine.prototype.addSystem = function (newSystem) {
             // TODO: add check if system exists
             this.systems[this.newSystemID] = newSystem;
+            newSystem.parentEngine = this;
             this.newSystemID++;
         };
         Engine.prototype.createEntity = function () {
