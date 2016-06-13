@@ -375,6 +375,7 @@ class PlayerManager {
                 this.playerT += (0.1 * this.playerSpeed);
                 deltaTime -= 0.1;
                 this.recursions++;
+                this.updateCollision();
                 this.updatePlayerMovment(deltaTime);
             }
             else {
