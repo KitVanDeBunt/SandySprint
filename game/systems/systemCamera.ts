@@ -6,8 +6,10 @@ class SystemCamera extends ECS.System {
 
     private _canvas: HTMLCanvasElement;
     // for debuging
-    private _followPlayer:boolean = true;
-    
+    private _followPlayer: boolean = true;
+
+
+
     constructor(canvas: HTMLCanvasElement) {
         super();
 
@@ -31,8 +33,8 @@ class SystemCamera extends ECS.System {
                         let newCam: BABYLON.FreeCamera = new BABYLON.FreeCamera("Camera", new BABYLON.Vector3(0, 0.5, -1.5), componentCamera.getScene);
                         componentCamera.getScene.activeCameras.push(newCam);
 
-                        
-                        if(!this._followPlayer){
+
+                        if (!this._followPlayer) {
                             // attach the  camera to the canvas
                             newCam.attachControl(this._canvas, false);
                         }
@@ -54,7 +56,7 @@ class SystemCamera extends ECS.System {
 
                         break;
                     case ComponentCameraState.Spawned:
-                        if(this._followPlayer){
+                        if (this._followPlayer) {
                             // update camera position
                             componentCamera.getCamera.position = componentTransform.getPosition.add(new BABYLON.Vector3(0, 0.5, -1.5));
                         }

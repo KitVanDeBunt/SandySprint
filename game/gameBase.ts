@@ -65,6 +65,10 @@ class GameBase {
         return this._gameUI;
     }
 
+    get PlayerCameraManager(): PlayerCameraManager {
+        return this._playerCameraManager;
+    }
+
     constructor() {
         this._canvas = <HTMLCanvasElement>document.getElementById("renderCanvas");
         this._engine = new BABYLON.Engine(this._canvas, true);
@@ -79,6 +83,11 @@ class GameBase {
 
         // prevent manifest file error warning
         this._engine.enableOfflineSupport = false;
+        var gamebase: GameBase = this;
+        // call resize on babylon engine if the windows resizes
+        window.addEventListener("resize", function () {
+            gamebase._engine.resize();
+        });
 
         let scene: BABYLON.Scene = new BABYLON.Scene(this._engine);
 
@@ -175,11 +184,6 @@ class GameBase {
             gameUI.onInputStart(new BABYLON.Vector2(mouseEvt.pageX, mouseEvt.pageY));
         }
 
-        // call resize on babylon engine if the windows resizes
-        window.addEventListener("resize", function () {
-            this.e.resize();
-        });
-
         // add input event listener
         window.addEventListener("keydown", onKeyDown);
         window.addEventListener("touchstart", onTouchStart);
@@ -202,7 +206,7 @@ class GameBase {
             // restart player
             this._playerManager.destroy();
             this._playerManager.setplayerT(0);
-            this._playerManager = new PlayerManager(this._scene, this._ECSengine, this._roadManager, this._audio, this._gameUI);
+            this._playerManager = new PlayerManager(this, this._scene, this._ECSengine, this._roadManager, this._audio, this._gameUI);
             // restart camera
             this._playerCameraManager.getCameraComponent().getCamera.dispose();
             this._playerCameraManager = null;
@@ -214,7 +218,7 @@ class GameBase {
             this._gameUI.openInGame(this._gameUI.inGameUI.tutorialEnabled);
         } else {
             // first start game
-            this._playerManager = new PlayerManager(this._scene, this._ECSengine, this._roadManager, this._audio, this._gameUI);
+            this._playerManager = new PlayerManager(this, this._scene, this._ECSengine, this._roadManager, this._audio, this._gameUI);
             this._playerCameraManager = new PlayerCameraManager(this._ECSengine, this._scene, this._playerManager);
             this._gameUI.restartCamera();
             this._gameUI.setPlayerManager(this._playerManager);

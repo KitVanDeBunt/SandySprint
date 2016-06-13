@@ -3,6 +3,7 @@
  */
 class PlayerManager {
 
+    private _gameBase: GameBase;
     private _player: ECS.Entity;
     private _playerTranslateComponent: ECS.ComponentTransform;
     private _playerMeshComponent: ECS.ComponentAbstractMesh;
@@ -59,7 +60,8 @@ class PlayerManager {
      * @param the games AudioManager
      * @param gameUI the games ui
      */
-    constructor(scene: BABYLON.Scene, ECSengine: ECS.Engine, roadManager: RoadManager, audioManager: audioManager, gameUI: GameUI) {
+    constructor(gameBase: GameBase, scene: BABYLON.Scene, ECSengine: ECS.Engine, roadManager: RoadManager, audioManager: audioManager, gameUI: GameUI) {
+        this._gameBase = gameBase;
         this._roadManager = roadManager;
         this._gameUI = gameUI;
         this._scene = scene;
@@ -404,11 +406,11 @@ class PlayerManager {
 
         // jumping
         if (this._jumpManager.jumping) {
-            if (this._jumpManager.getPointAtT(this._playerT,1.5,deltaTime).y < 0) {
+            if (this._jumpManager.getPointAtT(this._playerT, 1.5, deltaTime).y < 0) {
                 this._jumpManager.jumping = false;
                 this._audio.playSound(Sounds.JumpLand);
-            }else{
-                pos = pos.add(this._jumpManager.getPointAtT(this._playerT,1.5,deltaTime));
+            } else {
+                pos = pos.add(this._jumpManager.getPointAtT(this._playerT, 1.5, deltaTime));
             }
         }
 
@@ -431,6 +433,7 @@ class PlayerManager {
                                         this._audio.playSound(Sounds.Stop);
                                         var deathPos = new BABYLON.Vector3(this.getplayerPosition().x, this.getplayerPosition().y, this._roadManager.sceneObjects[i].meshCollider.position.z - 0.2);
                                         this._playerTranslateComponent.setPosition = deathPos;
+                                        this._gameBase.PlayerCameraManager.Shake();
                                         this._playing = false;
                                         this._playerDead = true;
                                         this.updateAnimation();
@@ -455,7 +458,7 @@ class PlayerManager {
     /**
      * destroys the player
      */
-    destroy(){
+    destroy() {
         this._player.destroy();
     }
 }

@@ -157,10 +157,12 @@ var GameUI = (function () {
         var logobox = BABYLON.Mesh.CreatePlane("UIBox", 1, this._scene);
         logobox.scaling = new BABYLON.Vector3(scale.x * 2, scale.y * 2, 0.001);
         logobox.position = new BABYLON.Vector3(position.x, position.y, 1);
-        var logoMaterial = new BABYLON.StandardMaterial("logoMaterial", this._scene);
-        logoMaterial.diffuseTexture = image;
-        logoMaterial.diffuseTexture.hasAlpha = true;
-        logobox.material = logoMaterial;
+        if (image != null) {
+            var logoMaterial = new BABYLON.StandardMaterial("logoMaterial", this._scene);
+            logoMaterial.diffuseTexture = image;
+            logoMaterial.diffuseTexture.hasAlpha = true;
+            logobox.material = logoMaterial;
+        }
         logobox.layerMask = 0x20000000;
         return logobox;
     };
