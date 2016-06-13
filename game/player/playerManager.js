@@ -9,7 +9,7 @@ var PlayerManager = (function () {
      * @param the games AudioManager
      * @param gameUI the games ui
      */
-    function PlayerManager(scene, ECSengine, roadManager, audioManager, gameUI) {
+    function PlayerManager(gameBase, scene, ECSengine, roadManager, audioManager, gameUI) {
         this.playerSpeed = 0.004;
         this.playerT = 0;
         this.animationState = PlayerAnimationState.NotStarted;
@@ -37,6 +37,7 @@ var PlayerManager = (function () {
         //prevent to much recursion
         this.MAX_RECURSIONS = 3;
         this.recursions = 0;
+        this._gameBase = gameBase;
         this.roadManager = roadManager;
         this.gameUI = gameUI;
         this._scene = scene;
@@ -373,6 +374,7 @@ var PlayerManager = (function () {
                                         this.audio.playSound(Sounds.Stop);
                                         var deathPos = new BABYLON.Vector3(this.getplayerPosition().x, this.getplayerPosition().y, this.roadManager.sceneObjects[i].meshCollider.position.z - 0.2);
                                         this.playerTranslateComponent.setPosition = deathPos;
+                                        this._gameBase.PlayerCameraManager.Shake();
                                         this.playing = false;
                                         this.playerDead = true;
                                         this.updateAnimation();

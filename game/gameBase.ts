@@ -65,6 +65,10 @@ class GameBase {
         return this._gameUI;
     }
 
+    get PlayerCameraManager(): PlayerCameraManager {
+        return this._playerCameraManager;
+    }
+
     constructor() {
         this._canvas = <HTMLCanvasElement>document.getElementById("renderCanvas");
         this._engine = new BABYLON.Engine(this._canvas, true);
@@ -79,7 +83,7 @@ class GameBase {
 
         // prevent manifest file error warning
         this._engine.enableOfflineSupport = false;
-            var gamebase:GameBase = this;
+        var gamebase: GameBase = this;
         // call resize on babylon engine if the windows resizes
         window.addEventListener("resize", function () {
             gamebase._engine.resize();
@@ -206,7 +210,7 @@ class GameBase {
             this._playerCameraManager.getCameraComponent().getCamera.dispose();
             this._playerManager = null;
             this._playerCameraManager = null;
-            this._playerManager = new PlayerManager(this._scene, this._ECSengine, this._roadManager, this._audio, this._gameUI);
+            this._playerManager = new PlayerManager(this, this._scene, this._ECSengine, this._roadManager, this._audio, this._gameUI);
             this._playerCameraManager = new PlayerCameraManager(this._ECSengine, this._scene, this._playerManager);
             this._playerManager.setplayerT(playerT);
             this._gameUI.setPlayerTOffset(playerT);
@@ -218,7 +222,7 @@ class GameBase {
             /**
              * first start
              */
-            this._playerManager = new PlayerManager(this._scene, this._ECSengine, this._roadManager, this._audio, this._gameUI);
+            this._playerManager = new PlayerManager(this, this._scene, this._ECSengine, this._roadManager, this._audio, this._gameUI);
             this._playerCameraManager = new PlayerCameraManager(this._ECSengine, this._scene, this._playerManager);
             this._gameUI.restartCamera();
             this._gameUI.setPlayerManager(this._playerManager);

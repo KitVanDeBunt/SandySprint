@@ -15,6 +15,13 @@ var GameBase = (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(GameBase.prototype, "PlayerCameraManager", {
+        get: function () {
+            return this._playerCameraManager;
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * creates the scene into a variable.
      */
@@ -123,7 +130,7 @@ var GameBase = (function () {
             this._playerCameraManager.getCameraComponent().getCamera.dispose();
             this._playerManager = null;
             this._playerCameraManager = null;
-            this._playerManager = new PlayerManager(this._scene, this._ECSengine, this._roadManager, this._audio, this._gameUI);
+            this._playerManager = new PlayerManager(this, this._scene, this._ECSengine, this._roadManager, this._audio, this._gameUI);
             this._playerCameraManager = new PlayerCameraManager(this._ECSengine, this._scene, this._playerManager);
             this._playerManager.setplayerT(playerT);
             this._gameUI.setPlayerTOffset(playerT);
@@ -135,7 +142,7 @@ var GameBase = (function () {
             /**
              * first start
              */
-            this._playerManager = new PlayerManager(this._scene, this._ECSengine, this._roadManager, this._audio, this._gameUI);
+            this._playerManager = new PlayerManager(this, this._scene, this._ECSengine, this._roadManager, this._audio, this._gameUI);
             this._playerCameraManager = new PlayerCameraManager(this._ECSengine, this._scene, this._playerManager);
             this._gameUI.restartCamera();
             this._gameUI.setPlayerManager(this._playerManager);
