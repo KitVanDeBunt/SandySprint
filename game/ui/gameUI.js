@@ -10,13 +10,14 @@ var GameUI = (function () {
      * @param engine the Babylon Engine of the game.
      * @param audioManager the audioManager to play/stop sounds.
      */
-    function GameUI(scene, ecs, canvas, engine, audioManager) {
+    function GameUI(scene, ecs, canvas, engine, audioManager, systemMeshRender) {
         this._playerToffset = 0;
         this._canvas = canvas;
         this._engine = engine;
         this._scene = scene;
         this._ecsEngine = ecs;
         this._audio = audioManager;
+        this._MeshRender = systemMeshRender;
         var UIlight = new BABYLON.DirectionalLight("MainMenuEmit", new BABYLON.Vector3(0, 0, 0), scene);
         UIlight.intensity = 1;
         UIlight.includeOnlyWithLayerMask = 0x20000000;
@@ -95,6 +96,9 @@ var GameUI = (function () {
             case menuState.Start:
                 this._menu.update();
                 break;
+            case menuState.Loading:
+                this._loadingScreen.update();
+                break;
             case menuState.Game:
                 this.inGameUI.update();
                 break;
@@ -122,6 +126,12 @@ var GameUI = (function () {
     GameUI.prototype.openInGame = function (tutorialEnabled) {
         this.inGameUI = new InGameUI(this._canvas, this._engine, this._scene, this, this._playerManager, tutorialEnabled);
         this.inGameUI.tutorialEnabled = tutorialEnabled;
+    };
+    GameUI.prototype.openLoadingScreen = function () {
+        this._loadingScreen = new loadingScreen(this, this._scene, this._MeshRender);
+    };
+    GameUI.prototype.closeLoadingScreen = function () {
+        this._loadingScreen.dispose();
     };
     GameUI.prototype.closeInGame = function () {
         this.inGameUI.Dispose();
@@ -174,7 +184,8 @@ var menuState;
     menuState[menuState["None"] = 0] = "None";
     menuState[menuState["Start"] = 1] = "Start";
     menuState[menuState["Game"] = 2] = "Game";
-    menuState[menuState["Page"] = 3] = "Page";
-    menuState[menuState["End"] = 4] = "End";
+    menuState[menuState["Loading"] = 3] = "Loading";
+    menuState[menuState["Page"] = 4] = "Page";
+    menuState[menuState["End"] = 5] = "End";
 })(menuState || (menuState = {}));
 //# sourceMappingURL=gameUI.js.map
