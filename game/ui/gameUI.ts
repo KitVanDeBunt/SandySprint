@@ -4,7 +4,16 @@
  */
 class GameUI {
 
+    /**
+     * the state that UI is in
+     */
     public menuState: menuState;
+
+    /**
+     * the inGameUI, for enabling/disabling the tutorial.
+     */
+    public inGameUI: InGameUI;
+
     private context2D;
     private _myMaterial_diffuseTexture: BABYLON.DynamicTexture;
     private _box: BABYLON.Mesh;
@@ -14,7 +23,6 @@ class GameUI {
     private _playerManager: PlayerManager;
     private _scene: BABYLON.Scene;
     private _menu: MainMenu;
-    inGameUI: InGameUI;
     private _endScreen: endScreen;
     private _cameraECS: ECS.Entity;
     private _audio: audioManager;
@@ -28,6 +36,7 @@ class GameUI {
      * @param canvas the canvas of the game.
      * @param engine the Babylon Engine of the game.
      * @param audioManager the audioManager to play/stop sounds.
+     * @param systemMeshRender the meshRender that loads all assets.
      */
     constructor(scene: BABYLON.Scene, ecs: ECS.Engine, canvas: HTMLCanvasElement, engine: BABYLON.Engine, audioManager: audioManager, systemMeshRender: ECS.SystemMeshRender) {
         this._canvas = canvas;
@@ -159,16 +168,16 @@ class GameUI {
         this.inGameUI.tutorial = tutorialEnabled;
     }
 
+    closeInGame() {
+        this.inGameUI.Dispose();
+    }
+
     openLoadingScreen() {
         this._loadingScreen = new loadingScreen(this, this._scene, this._MeshRender);
     }
 
     closeLoadingScreen() {
         this._loadingScreen.dispose();
-    }
-
-    closeInGame() {
-        this.inGameUI.Dispose();
     }
 
     openEndScreen() {
@@ -204,18 +213,11 @@ class GameUI {
         logobox.layerMask = 0x20000000;
         return logobox;
     }
-
-    /**
-     * sets playerTOffset for restarting
-     * @param PlayerT the playerT where there player died previous round.
-     */
+    
     setPlayerTOffset(PlayerT: number) {
         this._playerToffset = PlayerT;
     }
 
-    /**
-     * get playerTOffset
-     */
     getPlayerTOffset(): number {
         return this._playerToffset;
     }

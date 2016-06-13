@@ -1,6 +1,7 @@
 
 /**
  * SystemMeshRender
+ * creates and updates componentCameras
  */
 class SystemCamera extends ECS.System {
 
@@ -8,8 +9,9 @@ class SystemCamera extends ECS.System {
     // for debuging
     private _followPlayer: boolean = true;
 
-
-
+    /** 
+     * @param canvas the canvas that the game is being displayed on.
+     */
     constructor(canvas: HTMLCanvasElement) {
         super();
 
@@ -20,6 +22,9 @@ class SystemCamera extends ECS.System {
         this._canvas = canvas;
     }
 
+    /**
+     * Updates every componentCamera.
+     */
     Update<T extends ECS.Entity>(entities: T[]) {
         for (let i = 0; i < entities.length; i++) {
             if (this.checkCompatibleEntity(entities[i])) {
@@ -33,14 +38,14 @@ class SystemCamera extends ECS.System {
                         let newCam: BABYLON.FreeCamera = new BABYLON.FreeCamera("Camera", new BABYLON.Vector3(0, 0.5, -1.5), componentCamera.getScene);
                         componentCamera.getScene.activeCameras.push(newCam);
 
-
+                        // attach control if it does not follow
                         if (!this._followPlayer) {
-                            // attach the  camera to the canvas
                             newCam.attachControl(this._canvas, false);
                         }
 
                         componentCamera.setCamera = newCam;
 
+                        //checks if it is a UI camera or not.
                         if (componentCamera.getLayermask != 0) {
                             newCam.layerMask = 0x20000000;
                             newCam.position = new BABYLON.Vector3(0, 0, -1);

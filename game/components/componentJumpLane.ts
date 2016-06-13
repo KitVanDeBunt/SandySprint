@@ -8,8 +8,7 @@ class ComponentJumpCurve {
     private _startT: number = 0;
     private y:number = 0;
     private yVelocity = 0;
-    /**
-     */
+    
     constructor() {
     }
 

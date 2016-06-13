@@ -5,9 +5,13 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 /**
  * SystemMeshRender
+ * creates and updates componentCameras
  */
 var SystemCamera = (function (_super) {
     __extends(SystemCamera, _super);
+    /**
+     * @param canvas the canvas that the game is being displayed on.
+     */
     function SystemCamera(canvas) {
         _super.call(this);
         // for debuging
@@ -17,6 +21,9 @@ var SystemCamera = (function (_super) {
         this.neededComponents[1] = new ComponentCamera(null, null).componentType();
         this._canvas = canvas;
     }
+    /**
+     * Updates every componentCamera.
+     */
     SystemCamera.prototype.Update = function (entities) {
         for (var i = 0; i < entities.length; i++) {
             if (this.checkCompatibleEntity(entities[i])) {
@@ -28,8 +35,8 @@ var SystemCamera = (function (_super) {
                         // create camera and push it to the scene
                         var newCam = new BABYLON.FreeCamera("Camera", new BABYLON.Vector3(0, 0.5, -1.5), componentCamera.getScene);
                         componentCamera.getScene.activeCameras.push(newCam);
+                        // attach control if it does not follow
                         if (!this._followPlayer) {
-                            // attach the  camera to the canvas
                             newCam.attachControl(this._canvas, false);
                         }
                         componentCamera.setCamera = newCam;
