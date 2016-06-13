@@ -19,6 +19,8 @@ class GameUI {
     private _cameraECS: ECS.Entity;
     private _audio: audioManager;
     private _playerToffset: number = 0;
+    private _MeshRender:ECS.SystemMeshRender;
+    private _loadingScreen:loadingScreen;
 
     /**
      * @param scene the scene of the game.
@@ -27,12 +29,13 @@ class GameUI {
      * @param engine the Babylon Engine of the game.
      * @param audioManager the audioManager to play/stop sounds.
      */
-    constructor(scene: BABYLON.Scene, ecs: ECS.Engine, canvas: HTMLCanvasElement, engine: BABYLON.Engine, audioManager: audioManager) {
+    constructor(scene: BABYLON.Scene, ecs: ECS.Engine, canvas: HTMLCanvasElement, engine: BABYLON.Engine, audioManager: audioManager, systemMeshRender:ECS.SystemMeshRender) {
         this._canvas = canvas;
         this._engine = engine;
         this._scene = scene;
         this._ecsEngine = ecs;
         this._audio = audioManager;
+        this._MeshRender = systemMeshRender;
 
         var UIlight = new BABYLON.DirectionalLight("MainMenuEmit", new BABYLON.Vector3(0, 0, 0), scene);
         UIlight.intensity = 1;
@@ -119,6 +122,9 @@ class GameUI {
             case menuState.Start:
                 this._menu.update();
                 break;
+                case menuState.Loading:
+                this._loadingScreen.update();
+                break;
             case menuState.Game:
                 this.inGameUI.update();
                 break;
@@ -151,6 +157,14 @@ class GameUI {
     openInGame(tutorialEnabled: boolean) {
         this.inGameUI = new InGameUI(this._canvas, this._engine, this._scene, this, this._playerManager, tutorialEnabled);
         this.inGameUI.tutorialEnabled = tutorialEnabled;
+    }
+    
+    openLoadingScreen(){
+        this._loadingScreen = new loadingScreen(this,this._scene,this._MeshRender);
+    }
+    
+    closeLoadingScreen(){
+        this._loadingScreen.dispose();
     }
 
     closeInGame() {
@@ -209,6 +223,7 @@ enum menuState {
     None,
     Start,
     Game,
+    Loading,
     Page,
     End
 }
