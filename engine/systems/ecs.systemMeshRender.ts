@@ -70,7 +70,6 @@ namespace ECS {
         RemoveLoadingObjects(){
             for (var i = 0; i < this._loadingEntitys.length; i++) {
                 this._loadingEntitys[i].destroy();
-                
             }
         }
 

@@ -1,16 +1,8 @@
 /**
- * Class LoadingScreen 
+ * Class LoadingScreen
  * */
-class loadingScreen {
-
-    private _objects: Array<BABYLON.Mesh>;
-    private _scene: BABYLON.Scene;
-    private _gameUI: GameUI;
-    private _meshRender: ECS.SystemMeshRender;
-    private _paths: Array<string>;
-    private _modelNames: Array<string>;
-
-    constructor(gameui: GameUI, scene: BABYLON.Scene, systemMeshRender: ECS.SystemMeshRender) {
+var loadingScreen = (function () {
+    function loadingScreen(gameui, scene, systemMeshRender) {
         this._gameUI = gameui;
         this._scene = scene;
         this._meshRender = systemMeshRender;
@@ -26,26 +18,25 @@ class loadingScreen {
         ];
         this.showLoadingScreen();
     }
-
-    showLoadingScreen() {
-        var loadingImage: BABYLON.Texture = new BABYLON.Texture("assets/textures/ui_textures/LoadingScreen.png", this._scene, true);
+    loadingScreen.prototype.showLoadingScreen = function () {
+        var loadingImage = new BABYLON.Texture("assets/textures/ui_textures/LoadingScreen.png", this._scene, true);
         var loading = this._gameUI.createImage(new BABYLON.Vector2(0, 0), new BABYLON.Vector2(1920 * 0.5, 1080 * 0.5), loadingImage);
         this._objects.push(loading);
         this._meshRender.StartLoading(this._paths, this._modelNames);
-    }
-
-    update() {
+    };
+    loadingScreen.prototype.update = function () {
         if (this._meshRender.LoadingProgress() >= 1) {
             this._meshRender.RemoveLoadingObjects();
             this.dispose();
             this._gameUI.openMainMenu();
             this._gameUI.restartCamera();
         }
-    }
-
-    dispose() {
-        for (var i: number = 0; i < this._objects.length; i++) {
+    };
+    loadingScreen.prototype.dispose = function () {
+        for (var i = 0; i < this._objects.length; i++) {
             this._objects[i].dispose();
         }
-    }
-}
+    };
+    return loadingScreen;
+}());
+//# sourceMappingURL=loadingScreen.js.map

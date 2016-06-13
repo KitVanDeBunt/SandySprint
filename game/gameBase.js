@@ -47,7 +47,7 @@ var GameBase = (function () {
         this._roadManager = new RoadManager(this._ECSengine, scene);
         //starting main menu
         this._gameUI = new GameUI(scene, this._ECSengine, this._canvas, this._engine, this._audio, ECSrenderSystem);
-        this._gameUI.openMainMenu();
+        this._gameUI.openLoadingScreen();
         // create skybox managers
         this._skyboxManager = new SkyBoxManager(scene, this._ECSengine);
         return scene;
@@ -128,12 +128,13 @@ var GameBase = (function () {
             this._gameUI.setPlayerTOffset(playerT);
             this._gameUI.restartCamera();
             this._gameUI.setPlayerManager(this._playerManager);
-            if (this._gameUI.inGameUI.tutorialEnabled) {
+            /*if (this._gameUI.inGameUI.tutorialEnabled) {
                 this._gameUI.openInGame(true);
             }
             else {
                 this._gameUI.openInGame(false);
-            }
+            }*/
+            this._gameUI.openInGame(this._gameUI.inGameUI.tutorialEnabled);
         }
         else {
             /**

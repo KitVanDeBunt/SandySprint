@@ -19,8 +19,8 @@ class GameUI {
     private _cameraECS: ECS.Entity;
     private _audio: audioManager;
     private _playerToffset: number = 0;
-    private _MeshRender:ECS.SystemMeshRender;
-    private _loadingScreen:loadingScreen;
+    private _MeshRender: ECS.SystemMeshRender;
+    private _loadingScreen: loadingScreen;
 
     /**
      * @param scene the scene of the game.
@@ -29,7 +29,7 @@ class GameUI {
      * @param engine the Babylon Engine of the game.
      * @param audioManager the audioManager to play/stop sounds.
      */
-    constructor(scene: BABYLON.Scene, ecs: ECS.Engine, canvas: HTMLCanvasElement, engine: BABYLON.Engine, audioManager: audioManager, systemMeshRender:ECS.SystemMeshRender) {
+    constructor(scene: BABYLON.Scene, ecs: ECS.Engine, canvas: HTMLCanvasElement, engine: BABYLON.Engine, audioManager: audioManager, systemMeshRender: ECS.SystemMeshRender) {
         this._canvas = canvas;
         this._engine = engine;
         this._scene = scene;
@@ -122,7 +122,7 @@ class GameUI {
             case menuState.Start:
                 this._menu.update();
                 break;
-                case menuState.Loading:
+            case menuState.Loading:
                 this._loadingScreen.update();
                 break;
             case menuState.Game:
@@ -158,12 +158,12 @@ class GameUI {
         this.inGameUI = new InGameUI(this._canvas, this._engine, this._scene, this, this._playerManager, tutorialEnabled);
         this.inGameUI.tutorialEnabled = tutorialEnabled;
     }
-    
-    openLoadingScreen(){
-        this._loadingScreen = new loadingScreen(this,this._scene,this._MeshRender);
+
+    openLoadingScreen() {
+        this._loadingScreen = new loadingScreen(this, this._scene, this._MeshRender);
     }
-    
-    closeLoadingScreen(){
+
+    closeLoadingScreen() {
         this._loadingScreen.dispose();
     }
 
