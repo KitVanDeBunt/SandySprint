@@ -124,7 +124,6 @@ class GameBase {
         this._skyboxManager = new SkyBoxManager(scene, this._ECSengine);
 
         return scene;
-
     }
 
     /**
@@ -195,47 +194,35 @@ class GameBase {
 
         let thisGame: GameBase = this;
         if (this._playerManager != null) {
-            /**
-             * get the playerT from where the player died
-             */
-            let playerT = this._playerManager.getplayerT();
+            // restart game
 
-            /**
-             * restart game
-             */
-            this._playerCameraManager.getCameraComponent().getCamera.dispose();
-            this._playerManager = null;
-            this._playerCameraManager = null;
+            // restart road
+            this._roadManager.destroy();
+            this._roadManager = new RoadManager(this._ECSengine, this._scene);
+            // restart player
+            this._playerManager.destroy();
+            this._playerManager.setplayerT(0);
             this._playerManager = new PlayerManager(this._scene, this._ECSengine, this._roadManager, this._audio, this._gameUI);
+            // restart camera
+            this._playerCameraManager.getCameraComponent().getCamera.dispose();
+            this._playerCameraManager = null;
             this._playerCameraManager = new PlayerCameraManager(this._ECSengine, this._scene, this._playerManager);
-            this._playerManager.setplayerT(playerT);
-            this._gameUI.setPlayerTOffset(playerT);
+            // restart ui
+            this._gameUI.setPlayerTOffset(0);
             this._gameUI.restartCamera();
             this._gameUI.setPlayerManager(this._playerManager);
-            /*if (this._gameUI.inGameUI.tutorialEnabled) {
-                this._gameUI.openInGame(true);
-            }
-            else {
-                this._gameUI.openInGame(false);
-            }*/
             this._gameUI.openInGame(this._gameUI.inGameUI.tutorialEnabled);
-        }
-        else {
-            /**
-             * first start
-             */
-
-
+        } else {
+            // first start game
             this._playerManager = new PlayerManager(this._scene, this._ECSengine, this._roadManager, this._audio, this._gameUI);
             this._playerCameraManager = new PlayerCameraManager(this._ECSengine, this._scene, this._playerManager);
             this._gameUI.restartCamera();
             this._gameUI.setPlayerManager(this._playerManager);
             this._gameUI.openInGame(true);
 
+            // game loop
             this._engine.runRenderLoop(function () {
-                /**
-                 * gets deltatime for the playermanagers
-                 */
+                // gets deltatime for the playermanagers
                 let deltaTime: number = thisGame._engine.getDeltaTime();
 
                 // update managers (scripts that handel game logic)
@@ -253,7 +240,6 @@ class GameBase {
             window.addEventListener("touchcancel", onTouchEnd);
             window.addEventListener("touchmove", onTouchMove);
         }
-
 
         /**
          * Event when key gets pressed.
@@ -286,9 +272,5 @@ class GameBase {
         function onTouchMove(touchEvt: TouchEvent) {
             thisGame._playerManager.onTouchMove(touchEvt);
         }
-
-
-
-
     }
 }

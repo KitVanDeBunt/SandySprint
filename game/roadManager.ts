@@ -42,14 +42,14 @@ class RoadManager {
         // initialize scene object factory
         this._sceneObjectFactory = new SceneObjectSpawnTemplateSetFactory(this, engine);
 
-        this.createRaodPart();
-        this.createRaodPart();
+        this.createRaodPart(false);
+        this.createRaodPart(false);
     }
 
     /**
      * spawns a new road section
      */
-    createRaodPart() {
+    createRaodPart(spawnObstacles:boolean = true) {
 
         let roadN: number = this._lanes.length;
 
@@ -95,11 +95,13 @@ class RoadManager {
         road.addComponent(this._lanes[roadN][1]);
         road.addComponent(this._lanes[roadN][2]);
 
-
-        let distanceBrige: number = this._sceneObjectFactory.createRandomRoadObjectTemplateSet(roadN, this._scene, riverRoad);
-
+        let distanceBrige: number = -1;
+        if(spawnObstacles){
+            distanceBrige = this._sceneObjectFactory.createRandomRoadObjectTemplateSet(roadN, this._scene, riverRoad);
+        }
+        
         this._sceneObjectFactory.createRandomSceneObjectTemplateSet(roadN, this._scene, riverRoad, distanceBrige);
-
+        
         this._roadesSpawned++;
     }
 
@@ -145,6 +147,15 @@ class RoadManager {
                     this.sceneObjects.splice(i, 1);
                 }
             }
+        }
+    }
+
+    destroy(){
+        for (var i = 0; i < this._roadMeshes.length; i++) {
+            this._roadMeshes[i].destroy();
+        }
+        for (var i = 0; i < this.sceneObjects.length; i++) {
+            this.sceneObjects[i].entity.destroy();
         }
     }
 }

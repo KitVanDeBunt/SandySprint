@@ -17,8 +17,8 @@ var RoadManager = (function () {
         this._abstractMeshComponetType = new ECS.ComponentAbstractMesh(null, null, null).componentType();
         // initialize scene object factory
         this._sceneObjectFactory = new SceneObjectSpawnTemplateSetFactory(this, engine);
-        this.createRaodPart();
-        this.createRaodPart();
+        this.createRaodPart(false);
+        this.createRaodPart(false);
     }
     Object.defineProperty(RoadManager.prototype, "getLanes", {
         /**
@@ -33,7 +33,8 @@ var RoadManager = (function () {
     /**
      * spawns a new road section
      */
-    RoadManager.prototype.createRaodPart = function () {
+    RoadManager.prototype.createRaodPart = function (spawnObstacles) {
+        if (spawnObstacles === void 0) { spawnObstacles = true; }
         var roadN = this._lanes.length;
         var road = this._engine.createEntity();
         var roadPositionComponent = new ECS.ComponentTransform(new BABYLON.Vector3(0, 0, this._roadesSpawned * 14), new BABYLON.Vector3(1, 1, 1), BABYLON.Quaternion.Identity());
@@ -66,7 +67,10 @@ var RoadManager = (function () {
         road.addComponent(this._lanes[roadN][0]);
         road.addComponent(this._lanes[roadN][1]);
         road.addComponent(this._lanes[roadN][2]);
-        var distanceBrige = this._sceneObjectFactory.createRandomRoadObjectTemplateSet(roadN, this._scene, riverRoad);
+        var distanceBrige = -1;
+        if (spawnObstacles) {
+            distanceBrige = this._sceneObjectFactory.createRandomRoadObjectTemplateSet(roadN, this._scene, riverRoad);
+        }
         this._sceneObjectFactory.createRandomSceneObjectTemplateSet(roadN, this._scene, riverRoad, distanceBrige);
         this._roadesSpawned++;
     };
@@ -113,6 +117,14 @@ var RoadManager = (function () {
                     this.sceneObjects.splice(i, 1);
                 }
             }
+        }
+    };
+    RoadManager.prototype.destroy = function () {
+        for (var i = 0; i < this._roadMeshes.length; i++) {
+            this._roadMeshes[i].destroy();
+        }
+        for (var i = 0; i < this.sceneObjects.length; i++) {
+            this.sceneObjects[i].entity.destroy();
         }
     };
     return RoadManager;

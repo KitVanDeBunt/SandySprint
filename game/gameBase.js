@@ -112,43 +112,34 @@ var GameBase = (function () {
     GameBase.prototype.game = function () {
         var thisGame = this;
         if (this._playerManager != null) {
-            /**
-             * get the playerT from where the player died
-             */
-            var playerT = this._playerManager.getplayerT();
-            /**
-             * restart game
-             */
-            this._playerCameraManager.getCameraComponent().getCamera.dispose();
-            this._playerManager = null;
-            this._playerCameraManager = null;
+            // restart game
+            // restart road
+            this._roadManager.destroy();
+            this._roadManager = new RoadManager(this._ECSengine, this._scene);
+            // restart player
+            this._playerManager.destroy();
+            this._playerManager.setplayerT(0);
             this._playerManager = new PlayerManager(this._scene, this._ECSengine, this._roadManager, this._audio, this._gameUI);
+            // restart camera
+            this._playerCameraManager.getCameraComponent().getCamera.dispose();
+            this._playerCameraManager = null;
             this._playerCameraManager = new PlayerCameraManager(this._ECSengine, this._scene, this._playerManager);
-            this._playerManager.setplayerT(playerT);
-            this._gameUI.setPlayerTOffset(playerT);
+            // restart ui
+            this._gameUI.setPlayerTOffset(0);
             this._gameUI.restartCamera();
             this._gameUI.setPlayerManager(this._playerManager);
-            /*if (this._gameUI.inGameUI.tutorialEnabled) {
-                this._gameUI.openInGame(true);
-            }
-            else {
-                this._gameUI.openInGame(false);
-            }*/
             this._gameUI.openInGame(this._gameUI.inGameUI.tutorialEnabled);
         }
         else {
-            /**
-             * first start
-             */
+            // first start game
             this._playerManager = new PlayerManager(this._scene, this._ECSengine, this._roadManager, this._audio, this._gameUI);
             this._playerCameraManager = new PlayerCameraManager(this._ECSengine, this._scene, this._playerManager);
             this._gameUI.restartCamera();
             this._gameUI.setPlayerManager(this._playerManager);
             this._gameUI.openInGame(true);
+            // game loop
             this._engine.runRenderLoop(function () {
-                /**
-                 * gets deltatime for the playermanagers
-                 */
+                // gets deltatime for the playermanagers
                 var deltaTime = thisGame._engine.getDeltaTime();
                 // update managers (scripts that handel game logic)
                 thisGame._roadManager.update(thisGame._playerManager.getplayerT());
