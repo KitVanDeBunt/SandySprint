@@ -27,7 +27,7 @@ var PlayerManager = (function () {
         this.inLaneTweenLeft = false;
         this.inLaneTweenRight = false;
         this.laneTweenInterpolation = 0;
-        this.laneSwitchSpeed = 0.001;
+        this.laneSwitchSpeed = 0.002;
         // collision
         this.firstFrame = true;
         this._walkSoundRepeatTime = 200;

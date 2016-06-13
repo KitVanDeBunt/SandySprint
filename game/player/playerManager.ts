@@ -34,7 +34,7 @@ class PlayerManager {
     private inLaneTweenLeft: boolean = false;
     private inLaneTweenRight: boolean = false;
     private laneTweenInterpolation: number = 0;
-    private laneSwitchSpeed: number = 0.001;
+    private laneSwitchSpeed: number = 0.002;
 
     // collision
     private firstFrame: boolean = true;
