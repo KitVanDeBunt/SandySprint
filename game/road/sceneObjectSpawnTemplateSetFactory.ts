@@ -32,13 +32,13 @@ class SceneObjectSpawnTemplateSetFactory {
         this.tutorialRoadTemplateSetList = [];
         this.tutorialRoadTemplateSetList[listNum] = new SceneObjectSpawnTemplateSet();
         this.tutorialRoadTemplateSetList[listNum].compatableWithWaterTile = true;
-        this.tutorialRoadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((18 / 28), 1));
+        this.tutorialRoadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((5 / 28), 1));
         listNum++;
         this.tutorialRoadTemplateSetList[listNum] = new SceneObjectSpawnTemplateSet();
         this.tutorialRoadTemplateSetList[listNum].compatableWithWaterTile = true;
-        this.tutorialRoadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((18 / 28), 0));
-        this.tutorialRoadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((18 / 28), 2));
-        this.tutorialRoadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SPIKE]((18 / 28), 1));
+        this.tutorialRoadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((5 / 28), 0));
+        this.tutorialRoadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((5 / 28), 2));
+        this.tutorialRoadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SPIKE]((5 / 28), 1));
         listNum++;
 
         // create road object spawn template sets
@@ -441,7 +441,7 @@ class SceneObjectSpawnTemplateSetFactory {
      */
     private createRoadObjectTemplateSet(roadIndex: number, scene: BABYLON.Scene, riverRoad: boolean, spawnTemplatSet: SceneObjectSpawnTemplateSet) {
         let brigePosition: number = -1;
-
+        let randomFlip: number = Math.random();
         for (var i = 0; i < spawnTemplatSet.templateList.length; i++) {
             if (spawnTemplatSet.templateList[i].brige) {
                 if (riverRoad) {
@@ -451,7 +451,7 @@ class SceneObjectSpawnTemplateSetFactory {
                 }
                 brigePosition = spawnTemplatSet.templateList[i].distOnRoad;
             }
-            this.createSceneObject(spawnTemplatSet.templateList[i], scene, roadIndex);
+            this.createSceneObject(spawnTemplatSet.templateList[i], scene, roadIndex, true, randomFlip);
         }
 
         return brigePosition;
@@ -483,15 +483,24 @@ class SceneObjectSpawnTemplateSetFactory {
         return brigePosition;
     }
 
-    private createSceneObject(sost: SceneObjectSpawnTemplate, scene: BABYLON.Scene, roadIndex: number) {
+    /**
+     * 
+     */
+    private createSceneObject(sost: SceneObjectSpawnTemplate, scene: BABYLON.Scene, roadIndex: number, randomFlipLane: boolean = false, randFlipNum: number = 0) {
 
         let randomNum: number = (Math.random() * 2) - 1;
         let randomNum2: number = Math.random(); //random scale 
         let randomNum3: number = Math.random(); //random rotation 
+        let lane: number = sost.lane;
+        if (randomFlipLane) {
+            if (randFlipNum > 0.5) {
+                lane = 2 - lane;
+            }
+        }
 
         let sceneObjectEntity: ECS.Entity = this.engine.createEntity();
         let sceneObjectTransformComponent: ECS.ComponentTransform = new ECS.ComponentTransform(
-            this.roadManager.getLanes[roadIndex][sost.lane].getPointAtT(sost.distOnRoad)
+            this.roadManager.getLanes[roadIndex][lane].getPointAtT(sost.distOnRoad)
             , sost.scale.add(sost.randomScale.multiplyByFloats(randomNum2, randomNum2, randomNum2))
             , BABYLON.Quaternion.Slerp(sost.rotation, sost.rotationEnd, randomNum3)
         );
@@ -501,7 +510,7 @@ class SceneObjectSpawnTemplateSetFactory {
         sceneObjectEntity.addComponent(sceneObjectMesh);
 
         let arrayPosition: number = this.roadManager.sceneObjects.length;
-        let sceneObject: SceneObject = new SceneObject(sceneObjectEntity, this.roadManager.getLanes[roadIndex][sost.lane].getDistanceAtT(sost.distOnRoad));
+        let sceneObject: SceneObject = new SceneObject(sceneObjectEntity, this.roadManager.getLanes[roadIndex][lane].getDistanceAtT(sost.distOnRoad));
 
         if (sost.hasCollider) {
             sceneObjectMesh.setCollision(BABYLON.Mesh.CreateCylinder("LaneObject Collider", sost.colliderHeight, sost.colliderWidth, sost.colliderWidth, 0, 0, scene));

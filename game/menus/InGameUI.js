@@ -12,6 +12,7 @@ var InGameUI = (function () {
      * @param tutorialEnabled option to enable/disable the tutorial.
      */
     function InGameUI(canvas, engine, scene, gameUI, playerManager, tutorialEnabled) {
+        this._tutorialEnabled = true;
         this._gameUI = gameUI;
         this._canvas = canvas;
         this._playerManager = playerManager;

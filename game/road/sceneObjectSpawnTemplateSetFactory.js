@@ -18,13 +18,13 @@ var SceneObjectSpawnTemplateSetFactory = (function () {
         this.tutorialRoadTemplateSetList = [];
         this.tutorialRoadTemplateSetList[listNum] = new SceneObjectSpawnTemplateSet();
         this.tutorialRoadTemplateSetList[listNum].compatableWithWaterTile = true;
-        this.tutorialRoadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((18 / 28), 1));
+        this.tutorialRoadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((5 / 28), 1));
         listNum++;
         this.tutorialRoadTemplateSetList[listNum] = new SceneObjectSpawnTemplateSet();
         this.tutorialRoadTemplateSetList[listNum].compatableWithWaterTile = true;
-        this.tutorialRoadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((18 / 28), 0));
-        this.tutorialRoadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((18 / 28), 2));
-        this.tutorialRoadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SPIKE]((18 / 28), 1));
+        this.tutorialRoadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((5 / 28), 0));
+        this.tutorialRoadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((5 / 28), 2));
+        this.tutorialRoadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SPIKE]((5 / 28), 1));
         listNum++;
         // create road object spawn template sets
         this.roadTemplateSetList = [];
@@ -261,6 +261,7 @@ var SceneObjectSpawnTemplateSetFactory = (function () {
      */
     SceneObjectSpawnTemplateSetFactory.prototype.createRoadObjectTemplateSet = function (roadIndex, scene, riverRoad, spawnTemplatSet) {
         var brigePosition = -1;
+        var randomFlip = Math.random();
         for (var i = 0; i < spawnTemplatSet.templateList.length; i++) {
             if (spawnTemplatSet.templateList[i].brige) {
                 if (riverRoad) {
@@ -270,7 +271,7 @@ var SceneObjectSpawnTemplateSetFactory = (function () {
                 }
                 brigePosition = spawnTemplatSet.templateList[i].distOnRoad;
             }
-            this.createSceneObject(spawnTemplatSet.templateList[i], scene, roadIndex);
+            this.createSceneObject(spawnTemplatSet.templateList[i], scene, roadIndex, true, randomFlip);
         }
         return brigePosition;
     };
@@ -298,18 +299,29 @@ var SceneObjectSpawnTemplateSetFactory = (function () {
         var brigePosition = this.createRoadObjectTemplateSet(roadIndex, scene, riverRoad, this.tutorialRoadTemplateSetList[tuturialSetIndex]);
         return brigePosition;
     };
-    SceneObjectSpawnTemplateSetFactory.prototype.createSceneObject = function (sost, scene, roadIndex) {
+    /**
+     *
+     */
+    SceneObjectSpawnTemplateSetFactory.prototype.createSceneObject = function (sost, scene, roadIndex, randomFlipLane, randFlipNum) {
+        if (randomFlipLane === void 0) { randomFlipLane = false; }
+        if (randFlipNum === void 0) { randFlipNum = 0; }
         var randomNum = (Math.random() * 2) - 1;
         var randomNum2 = Math.random(); //random scale 
         var randomNum3 = Math.random(); //random rotation 
+        var lane = sost.lane;
+        if (randomFlipLane) {
+            if (randFlipNum > 0.5) {
+                lane = 2 - lane;
+            }
+        }
         var sceneObjectEntity = this.engine.createEntity();
-        var sceneObjectTransformComponent = new ECS.ComponentTransform(this.roadManager.getLanes[roadIndex][sost.lane].getPointAtT(sost.distOnRoad), sost.scale.add(sost.randomScale.multiplyByFloats(randomNum2, randomNum2, randomNum2)), BABYLON.Quaternion.Slerp(sost.rotation, sost.rotationEnd, randomNum3));
+        var sceneObjectTransformComponent = new ECS.ComponentTransform(this.roadManager.getLanes[roadIndex][lane].getPointAtT(sost.distOnRoad), sost.scale.add(sost.randomScale.multiplyByFloats(randomNum2, randomNum2, randomNum2)), BABYLON.Quaternion.Slerp(sost.rotation, sost.rotationEnd, randomNum3));
         sceneObjectTransformComponent.setPosition = sceneObjectTransformComponent.getPosition.add(sost.objectDisplacement.add(sost.randomDisplacement.multiplyByFloats(randomNum, randomNum, randomNum)));
         sceneObjectEntity.addComponent(sceneObjectTransformComponent);
         var sceneObjectMesh = new ECS.ComponentAbstractMesh(sceneObjectTransformComponent, sost.path, sost.file);
         sceneObjectEntity.addComponent(sceneObjectMesh);
         var arrayPosition = this.roadManager.sceneObjects.length;
-        var sceneObject = new SceneObject(sceneObjectEntity, this.roadManager.getLanes[roadIndex][sost.lane].getDistanceAtT(sost.distOnRoad));
+        var sceneObject = new SceneObject(sceneObjectEntity, this.roadManager.getLanes[roadIndex][lane].getDistanceAtT(sost.distOnRoad));
         if (sost.hasCollider) {
             sceneObjectMesh.setCollision(BABYLON.Mesh.CreateCylinder("LaneObject Collider", sost.colliderHeight, sost.colliderWidth, sost.colliderWidth, 0, 0, scene));
             sceneObjectMesh.setColliderOffset = sost.colliderOffset;

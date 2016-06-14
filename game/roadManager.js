@@ -6,7 +6,7 @@ var RoadManager = (function () {
      * @param engine entity component system engine
      * @param scene games scene
      */
-    function RoadManager(engine, scene) {
+    function RoadManager(engine, scene, tutorial) {
         this._clonesCreated = false;
         this._roadesSpawned = 0;
         this._lanes = [];
@@ -18,8 +18,10 @@ var RoadManager = (function () {
         // initialize scene object factory
         this._sceneObjectFactory = new SceneObjectSpawnTemplateSetFactory(this, engine);
         this.createRaodPart(false);
-        this.createRaodPart(false, 0);
-        this.createRaodPart(false, 1);
+        if (tutorial) {
+            this.createRaodPart(false, 0);
+            this.createRaodPart(false, 1);
+        }
     }
     Object.defineProperty(RoadManager.prototype, "getLanes", {
         /**

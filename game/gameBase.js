@@ -56,7 +56,7 @@ var GameBase = (function () {
         this._ECSengine.addSystem(cameraSystem);
         // create managers (scripts that handel game logic) 
         this._audio = new audioManager(scene);
-        this._roadManager = new RoadManager(this._ECSengine, scene);
+        this._roadManager = new RoadManager(this._ECSengine, scene, true);
         //starting main menu
         this._gameUI = new GameUI(scene, this._ECSengine, this._canvas, this._engine, this._audio, ECSrenderSystem);
         this._gameUI.openLoadingScreen();
@@ -123,7 +123,7 @@ var GameBase = (function () {
             // restart game
             // restart road
             this._roadManager.destroy();
-            this._roadManager = new RoadManager(this._ECSengine, this._scene);
+            this._roadManager = new RoadManager(this._ECSengine, this._scene, this._gameUI.inGameUI.GetTutorial);
             // restart player
             this._playerManager.destroy();
             this._playerManager.setplayerT(0);
