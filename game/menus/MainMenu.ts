@@ -64,7 +64,7 @@ class MainMenu {
     private StartScreen() {
         this._gameUI.menuState = menuState.Start;
         var startScreenTex = new BABYLON.Texture("assets/textures/ui_textures/logo-final.png", this._scene, true);
-        var logo = this._gameUI.createImage(new BABYLON.Vector2(0, 380), new BABYLON.Vector2(693 * 0.7, 168 * 0.7), startScreenTex);
+        var logo = this._gameUI.createImage(new BABYLON.Vector2(0, 380), new BABYLON.Vector2(693 * 0.5, 168 * 0.5), startScreenTex);
         this._objects.push(logo);
 
         startScreenTex = new BABYLON.Texture("assets/textures/ui_textures/play-button.png", this._scene, true);

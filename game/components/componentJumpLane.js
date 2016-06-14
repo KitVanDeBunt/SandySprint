@@ -17,7 +17,7 @@ var ComponentJumpCurve = (function () {
         this.jumping = true;
         this._startT = startT;
         this.y = 0;
-        this.yVelocity = 0.013;
+        this.yVelocity = 0.017;
     };
     ComponentJumpCurve.prototype.getStartT = function () {
         return this._startT;

@@ -34,36 +34,122 @@ var SceneObjectSpawnTemplateSetFactory = (function () {
         //pillars
         this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((6 / 28), 0));
         this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((6 / 28), 1));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((20 / 28), 0));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((20 / 28), 1));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.BUILDING_BRIGE_002]((13 / 28), 1));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((13 / 28), 2));
         //scarabs
         this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((6 / 28), 2));
-        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((7 / 28), 2));
         this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((8 / 28), 2));
         this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((9 / 28), 1));
         this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((10 / 28), 1));
         this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((11 / 28), 2));
         this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((12 / 28), 2));
-        //pillars
-        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.BUILDING_BRIGE_002]((13 / 28), 1));
-        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((13 / 28), 2));
-        //scarabs
         this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((13 / 28), 0));
-        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((14 / 28), 0));
         this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((15 / 28), 0));
         this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((16 / 28), 1));
         this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((17 / 28), 1));
         this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((18 / 28), 2));
-        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((19 / 28), 2));
         this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((20 / 28), 2));
-        // pillars
-        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((20 / 28), 0));
+        listNum++;
+        this.roadTemplateSetList[listNum] = new SceneObjectSpawnTemplateSet();
+        this.roadTemplateSetList[listNum].compatableWithWaterTile = true;
+        //pillars
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((6 / 28), 0));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((6 / 28), 1));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.BUILDING_BRIGE_002]((13 / 28), 1));
         this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((20 / 28), 1));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((20 / 28), 2));
+        //spikes
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SPIKE]((6 / 28), 2));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SPIKE]((13 / 28), 2));
+        //scarabs
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((6 / 28), 2));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((9 / 28), 2));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((11 / 28), 0));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((11 / 28), 2));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((13 / 28), 2));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((13 / 28), 0));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((15 / 28), 2));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((17 / 28), 1));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((20 / 28), 0));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((22 / 28), 0));
+        listNum++;
+        this.roadTemplateSetList[listNum] = new SceneObjectSpawnTemplateSet();
+        this.roadTemplateSetList[listNum].compatableWithWaterTile = true;
+        //pillars
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((6 / 28), 1));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((11 / 28), 0));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.BUILDING_BRIGE_002]((13 / 28), 1));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((20 / 28), 1));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((20 / 28), 0));
+        //spikes
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SPIKE]((6 / 28), 2));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SPIKE]((18 / 28), 2));
+        //scarabs
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((6 / 28), 2));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((6 / 28), 0));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((8 / 28), 2));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((11 / 28), 1));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((13 / 28), 0));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((16 / 28), 1));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((18 / 28), 2));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((20 / 28), 2));
+        listNum++;
+        this.roadTemplateSetList[listNum] = new SceneObjectSpawnTemplateSet();
+        this.roadTemplateSetList[listNum].compatableWithWaterTile = true;
+        //pillars
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((6 / 28), 0));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((6 / 28), 1));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((13 / 28), 1));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.BUILDING_BRIGE_002]((13 / 28), 2));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((20 / 28), 2));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((20 / 28), 0));
+        //this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((24 / 28), 1));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((27 / 28), 1));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((27 / 28), 2));
+        //spikes
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SPIKE]((6 / 28), 2));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SPIKE]((20 / 28), 1));
+        //scarabs
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((6 / 28), 2));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((8 / 28), 2));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((11 / 28), 1));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((13 / 28), 0));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((16 / 28), 1));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((18 / 28), 1));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((20 / 28), 1));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((24 / 28), 0));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((24 / 28), 2));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((27 / 28), 1));
+        listNum++;
+        this.roadTemplateSetList[listNum] = new SceneObjectSpawnTemplateSet();
+        this.roadTemplateSetList[listNum].compatableWithWaterTile = true;
+        //pillars
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((6 / 28), 0));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((17 / 28), 0));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.BUILDING_BRIGE_002]((17 / 28), 1));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((23 / 28), 1));
+        //spikes
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SPIKE]((7 / 28), 2));
+        //scarabs
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((7 / 28), 2));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((9 / 28), 2));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((12 / 28), 0));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((14 / 28), 0));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((16 / 28), 0));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((18 / 28), 2));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((20 / 28), 2));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((22 / 28), 2));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((22 / 28), 0));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((23 / 28), 0));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((24 / 28), 0));
         listNum++;
         // ---------------- start
         //this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((27 / 28), 0));
         //this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SPIKE]((27 / 28), 1));
         //this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((27 / 28), 2));
         // ---------------- end
-        //this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[3](0.75, 1));
         /**
          * creation of sceneTemplatesSetListre
          */
