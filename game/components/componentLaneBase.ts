@@ -67,6 +67,7 @@ abstract class ComponentLaneBase extends ECS.Component {
         return this._nextLane;
     }
 
+
     /**
      * Returns the end interpontation(t) of the lane.
      * @returns end interpontation(t) of the lane
