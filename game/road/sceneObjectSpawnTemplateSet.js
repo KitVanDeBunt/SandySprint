@@ -1,5 +1,5 @@
 /**
- * SceneObjectSpawnTemplateSet
+ * set of SceneObjectSpawnTemplates
  */
 var SceneObjectSpawnTemplateSet = (function () {
     function SceneObjectSpawnTemplateSet() {

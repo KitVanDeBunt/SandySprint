@@ -1,5 +1,5 @@
 /**
- * SceneObjectSpawnTemplateSetFactory
+ * Factory that spawns objects in the scene
  */
 class SceneObjectSpawnTemplateSetFactory {
 
@@ -22,7 +22,6 @@ class SceneObjectSpawnTemplateSetFactory {
         this.engine = engine;
 
         // create scene object spawn templates
-
         this.createBuildingTemplates();
         this.createVegitationTemplates();
         this.createRoadObjectTemplates();
@@ -173,11 +172,6 @@ class SceneObjectSpawnTemplateSetFactory {
         this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((23 / 28), 0));
         this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((24 / 28), 0));
         listNum++;
-        // ---------------- start
-        //this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((27 / 28), 0));
-        //this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SPIKE]((27 / 28), 1));
-        //this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((27 / 28), 2));
-        // ---------------- end
 
         /**
          * creation of sceneTemplatesSetListre
@@ -235,7 +229,7 @@ class SceneObjectSpawnTemplateSetFactory {
         this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListBuildings[0](0.15));
         this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListBuildings[1](0.15));
         this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListBuildings[3](0.6));
-        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListBuildings[4](0.6));
+        this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListBuildings[0](0.6));
         //this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListBuildings[6](0.75));
 
         this.sceneTemplatesSetList[listNum].templateList.push(this.templatesListVegitation[0](0.30, new BABYLON.Vector3(-1.7, 0, 0), new BABYLON.Vector3(0.3, 0, 0.2), new BABYLON.Vector3(0.08, 0.08, 0.08)));
@@ -468,47 +462,23 @@ class SceneObjectSpawnTemplateSetFactory {
                 , distanceOnRoad//0.6
             );
         };
-        // TODO : two times house 01
-        // house 01
-        this.templatesListBuildings[4] = function (distanceOnRoad: number) {
-            return new SceneObjectSpawnTemplate(
-                "assets/models/buildings/"
-                , "building_building_001_001_tex01.babylon"
-                , new BABYLON.Vector3(0.02, 0.02, 0.02)
-                , new BABYLON.Vector3(0, 0, 0)
-                , new BABYLON.Quaternion(0.71, 0, 0, 0.71)
-                , new BABYLON.Quaternion(0.71, 0, 0, 0.71)
-                , new BABYLON.Vector3(-2.4, 0, 0)
-                , new BABYLON.Vector3(.5, 0, 0)
-                , 1
-                , distanceOnRoad//0.6
-            );
-        };
-        // TODO : two times house 02
-        // house 02
-        this.templatesListBuildings[5] = function (distanceOnRoad: number) {
-            return new SceneObjectSpawnTemplate(
-                "assets/models/buildings/"
-                , "building_building_002_001_tex01.babylon"
-                , new BABYLON.Vector3(0.02, 0.02, 0.02)
-                , new BABYLON.Vector3(0, 0, 0)
-                , new BABYLON.Quaternion(0.71, 0, 0, 0.71)
-                , new BABYLON.Quaternion(0.71, 0, 0, 0.71)
-                , new BABYLON.Vector3(2.4, 0, 0)
-                , new BABYLON.Vector3(0, 0, 0)
-                , 1
-                , distanceOnRoad//0.75
-            );
-        };
 
     }
 
+    /**
+     * @param list list you want a random number of
+     * @returns random number in the list
+     */
     private randomListNumber(list: any[]): number {
         return Math.floor((Math.random() * list.length));
     }
 
     /**
      * creates a new random set of scene objects to spawn around and on the world
+     * @param roadIndex raod index
+     * @param scene the objects are spawned on
+     * @param riverRoad no objects on river when true
+     * @param distanceBrige distance of a brige thats is spawned on the road -1 when no brige is spawned
      */
     public createRandomSceneObjectTemplateSet(roadIndex: number, scene: BABYLON.Scene, riverRoad: boolean, distanceBrige: number) {
         let random: number = this.randomListNumber(this.sceneTemplatesSetList);
@@ -581,7 +551,12 @@ class SceneObjectSpawnTemplateSetFactory {
     }
 
     /**
-     * 
+     * creates a scene object
+     * @param sost scene object spawn template
+     * @param scene scene objects are spawned in
+     * @param road index objects are spawned on
+     * @param randomFlipLane if true lanes the objects are spawend on are randomly fliped
+     * @param randFlipNum random number used for flipping the lane the objects are spawned on
      */
     private createSceneObject(sost: SceneObjectSpawnTemplate, scene: BABYLON.Scene, roadIndex: number, randomFlipLane: boolean = false, randFlipNum: number = 0) {
 

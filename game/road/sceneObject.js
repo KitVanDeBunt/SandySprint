@@ -1,7 +1,11 @@
 /**
- * SceneObject
+ * Object in the scene
  */
 var SceneObject = (function () {
+    /**
+     * @param entity entity of the scene object
+     * @param distance on the road of the scene object
+     */
     function SceneObject(entity, spawnDistance) {
         this.hasCollider = false;
         this.entity = entity;

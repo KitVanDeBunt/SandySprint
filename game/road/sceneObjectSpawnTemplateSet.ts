@@ -1,5 +1,5 @@
 /**
- * SceneObjectSpawnTemplateSet
+ * set of SceneObjectSpawnTemplates
  */
 class SceneObjectSpawnTemplateSet {
     compatableWithWaterTile:boolean;

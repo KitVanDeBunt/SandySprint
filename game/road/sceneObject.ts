@@ -1,5 +1,5 @@
 /**
- * SceneObject
+ * Object in the scene
  */
 class SceneObject {
 
@@ -11,9 +11,12 @@ class SceneObject {
     meshType: CollisionMeshType;
     hasCollider: boolean = false;
     
-    
     private _meshCollider: BABYLON.Mesh;
 
+    /**
+     * @param entity entity of the scene object
+     * @param distance on the road of the scene object
+     */
     constructor(entity: ECS.Entity, spawnDistance: number) {
         this.entity = entity;
         this.spawnDistance = spawnDistance;
