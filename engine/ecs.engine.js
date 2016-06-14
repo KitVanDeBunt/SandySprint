@@ -1,7 +1,8 @@
 var ECS;
 (function (ECS) {
     /**
-     * Engine
+     * The engine of the entity coponent system
+     * used to update the systems
      */
     var Engine = (function () {
         function Engine() {
@@ -20,13 +21,17 @@ var ECS;
             newSystem.parentEngine = this;
             this.newSystemID++;
         };
+        /**
+         * creates a new entity and adds it to the system
+         * @returns returns the new entity
+         */
         Engine.prototype.createEntity = function () {
             this.entities[this.newEntityID] = new ECS.Entity();
             this.newEntityID++;
             return this.entities[this.newEntityID - 1];
         };
         /**
-         * updates a systems that are contained by this entity
+         * updates the systems of this engine
          */
         Engine.prototype.updateSystems = function () {
             for (var i = 0; i < this.systems.length; i++) {
@@ -40,11 +45,6 @@ var ECS;
         Engine.prototype.deleteObectsReadyToBeDestroyed = function () {
             for (var i = 0; i < this.entities.length; i++) {
                 if (this.entities[i].destroyed()) {
-                    console.log("delete enntity: " + i);
-                    console.log("e count: " + this.entities.length);
-                    //this.entities[i] = null;
-                    //this.entities.splice(i,1);
-                    console.log("e count: " + this.entities.length);
                 }
             }
         };
@@ -54,18 +54,13 @@ var ECS;
          * @returns newSystemOfType system of the requested type
          */
         Engine.prototype.getSystem = function (newSystemOfType) {
-            console.log("systems.length: " + this.systems.length);
             for (var i = 0; i < this.systems.length; i++) {
-                console.log("typeof systems[i]: " + this.systems[i].returnTypeOfSystem());
-                console.log("newSystemOfType.returnTypeOfSystem(): " + newSystemOfType.returnTypeOfSystem());
                 if (this.systems[i].returnTypeOfSystem() == newSystemOfType.returnTypeOfSystem()) {
                     // return system if found
-                    console.log("[Engine]:getSystem():system found and returned");
                     return this.systems[i];
                 }
             }
             // create and return if not found
-            console.log("[Engine]:getSystem():system not found but created");
             var newSystem = newSystemOfType.newOfThis();
             this.addSystem(newSystem);
             return newSystem;

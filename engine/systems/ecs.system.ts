@@ -1,5 +1,4 @@
 namespace ECS {
-
     /**
      * Base class for an engine system
      */
@@ -39,14 +38,21 @@ namespace ECS {
 
         /**
          * returns the type name of this system
+         * @returns the type name of this system
          */
         abstract returnTypeOfSystem(): string;
 
         /**
-         * return a version of this system
+         * returns a new instance of this system
+         * @returns a new instance of this system
          */
         abstract newOfThis(): System;
 
+        /**
+         * checks if an entity is compatible with the system
+         * @param entity entity that needs to be checked
+         * @returns returns if the entity is compatibe or not
+         */
         protected checkCompatibleEntity(entity: Entity): boolean {
             let updateAbleEntity: boolean = true;
             for (let j = 0; j < this.neededComponents.length; j++) {

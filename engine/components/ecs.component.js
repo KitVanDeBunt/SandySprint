@@ -1,7 +1,7 @@
 var ECS;
 (function (ECS) {
     /**
-     * Component
+     * Component abstract base class for components used in the entity component system
      */
     var Component = (function () {
         function Component() {

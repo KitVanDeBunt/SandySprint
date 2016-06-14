@@ -1,3 +1,6 @@
+/**
+ * static util class
+ */
 var Describer = (function () {
     function Describer() {
     }

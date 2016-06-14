@@ -1,6 +1,6 @@
 namespace ECS {
     /**
-     * Entity
+     * Entity used by the entity compopnent system
      */
     export class Entity {
 
@@ -9,8 +9,15 @@ namespace ECS {
         private newComponentID: number = 0;
 
         constructor();
+        
+        /**
+         * @param thisInstNum instance number of this entity
+         */
         constructor(thisInstNum: number);
-
+        
+        /**
+         * @param thisInstNum instance number of this entity
+         */
         constructor(thisInstNum?: number) {
             this.components = [];
             this.componentsTypes = [];
@@ -61,7 +68,8 @@ namespace ECS {
         }
 
         /**
-         * returns types of all the components attached
+         * returns types of all the components attached to this entity
+         * @returns types of all the components attached to this entity
          */
         get getComponentTypes(): string[] {
             return this.componentsTypes;

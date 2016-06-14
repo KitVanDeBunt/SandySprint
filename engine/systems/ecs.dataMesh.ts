@@ -1,7 +1,7 @@
-/**
- * dataMesh contains information about a mesh that has been loaded 
- */
 namespace ECS {
+    /**
+     * dataMesh contains information about a mesh that has been loaded 
+     */
     export class DataMesh {
 
         private _meshLoaded:boolean;
@@ -13,6 +13,10 @@ namespace ECS {
         private _skeleton: BABYLON.Skeleton;
         private _objectPool:MeshPoolObject[];
 
+        /**
+         * @param path path of the mesh fileName
+         * @name name name of the mesh file
+         */
         constructor(path: string, name: string) {
             this._filePath = path;
             this._fileName = name;
@@ -60,26 +64,5 @@ namespace ECS {
             this._skeleton = skeleton;
             this._skeletonLoaded = true;
         }
-    }
-    
-    /**
-     * MeshPoolObject
-     */
-    export class MeshPoolObject {
-        private _inUse:boolean = false;
-        public meshes:BABYLON.AbstractMesh[];
-        public skeleton: BABYLON.Skeleton;
-        
-        constructor(inUse:boolean) {
-            this._inUse = inUse;
-        }
-        
-        get inUse():boolean{
-            return this._inUse;
-        } 
-        
-        set inUse(setInUse:boolean){
-            this._inUse = setInUse;
-        } 
     }
 }

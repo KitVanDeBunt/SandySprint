@@ -1,4 +1,7 @@
 
+/**
+ * static util class
+ */
 class Describer {
     /**
      * returns the type name of a component in a string

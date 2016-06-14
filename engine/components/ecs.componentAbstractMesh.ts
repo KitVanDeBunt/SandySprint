@@ -101,7 +101,7 @@ namespace ECS {
 
         /**
          * set the offset of the collider from the mesh
-         * @param offset
+         * @param offset new offset
          */
         set setColliderOffset(offset: BABYLON.Vector3) {
             this._colliderOffset = offset;
