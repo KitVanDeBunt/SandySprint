@@ -75,7 +75,7 @@ var ECS;
         Object.defineProperty(ComponentAbstractMesh.prototype, "setColliderOffset", {
             /**
              * set the offset of the collider from the mesh
-             * @param offset
+             * @param offset new offset
              */
             set: function (offset) {
                 this._colliderOffset = offset;

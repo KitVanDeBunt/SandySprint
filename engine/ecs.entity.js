@@ -1,9 +1,12 @@
 var ECS;
 (function (ECS) {
     /**
-     * Entity
+     * Entity used by the entity compopnent system
      */
     var Entity = (function () {
+        /**
+         * @param thisInstNum instance number of this entity
+         */
         function Entity(thisInstNum) {
             this.newComponentID = 0;
             this.components = [];
@@ -50,7 +53,8 @@ var ECS;
         };
         Object.defineProperty(Entity.prototype, "getComponentTypes", {
             /**
-             * returns types of all the components attached
+             * returns types of all the components attached to this entity
+             * @returns types of all the components attached to this entity
              */
             get: function () {
                 return this.componentsTypes;

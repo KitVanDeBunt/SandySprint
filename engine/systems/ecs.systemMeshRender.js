@@ -6,7 +6,7 @@ var __extends = (this && this.__extends) || function (d, b) {
 var ECS;
 (function (ECS) {
     /**
-     * SystemMeshRender
+     * this is a system that can be use for rendering
      */
     var SystemMeshRender = (function (_super) {
         __extends(SystemMeshRender, _super);
@@ -19,6 +19,7 @@ var ECS;
         }
         /**
          * initialize the render system
+         * @param scene the scene this system renders on
          */
         SystemMeshRender.prototype.initRendering = function (scene) {
             this._scene = scene;
@@ -70,24 +71,24 @@ var ECS;
             var _loop_1 = function(i) {
                 if (this_1.checkCompatibleEntity(entities[i])) {
                     // update all entitys with a ComponentAbstractMesh and a ComponentTransform
-                    var componentAbstractMesh_1 = entities[i].getComponent(this_1.neededComponents[0]);
+                    var componentAbstractMesh = entities[i].getComponent(this_1.neededComponents[0]);
                     var componentTransform = entities[i].getComponent(this_1.neededComponents[1]);
-                    switch (componentAbstractMesh_1.meshState) {
+                    switch (componentAbstractMesh.meshState) {
                         case MeshLoadState.ReadyToLoad:
                             var meshLoadingOrLoaden = false;
                             if (this_1._meshDataList.length > 0) {
                                 for (var j = 0; j < this_1._meshDataList.length; j++) {
                                     // check if mesh laoded or loading
-                                    if (this_1.checkMeshDataMeshComponent(this_1._meshDataList[j], componentAbstractMesh_1)) {
+                                    if (this_1.checkMeshDataMeshComponent(this_1._meshDataList[j], componentAbstractMesh)) {
                                         //console.log("m c:" + this.checkMeshDataMeshComponent(this._meshDataList[j], componentAbstractMesh));
                                         meshLoadingOrLoaden = true;
                                         // file is in meshDataList(list of meshes that are loading, loaded or need to be loaded)
                                         if (this_1._meshDataList[j].meshLoaded) {
-                                            this_1.cloneLoadedModel(componentAbstractMesh_1, j);
+                                            this_1.cloneLoadedModel(componentAbstractMesh, j);
                                             break;
                                         }
                                         else {
-                                            componentAbstractMesh_1.meshState = MeshLoadState.Loading;
+                                            componentAbstractMesh.meshState = MeshLoadState.Loading;
                                             break;
                                         }
                                     }
@@ -97,34 +98,34 @@ var ECS;
                                 break;
                             }
                             // create mesh data
-                            var dataMesh_1 = new ECS.DataMesh(componentAbstractMesh_1.path, componentAbstractMesh_1.fileName);
+                            var dataMesh_1 = new ECS.DataMesh(componentAbstractMesh.path, componentAbstractMesh.fileName);
                             this_1._meshDataList.push(dataMesh_1);
-                            console.log("start load: " + componentAbstractMesh_1.fileName);
+                            //console.log("start load: " + componentAbstractMesh.fileName);
                             // load mesh
-                            BABYLON.SceneLoader.ImportMesh("", componentAbstractMesh_1.path, componentAbstractMesh_1.fileName, this_1._scene, function (newMeshes, newParticlesystems, newSkeletons) {
-                                console.log("loaded: " + componentAbstractMesh_1.fileName + " s:" + newSkeletons.length);
+                            BABYLON.SceneLoader.ImportMesh("", componentAbstractMesh.path, componentAbstractMesh.fileName, this_1._scene, function (newMeshes, newParticlesystems, newSkeletons) {
+                                //console.log("loaded: " + componentAbstractMesh.fileName + " s:" + newSkeletons.length);
                                 dataMesh_1.meshes = newMeshes;
                                 dataMesh_1.skeleton = newSkeletons[0];
                                 for (var j = 0; j < newMeshes.length; j++) {
                                     newMeshes[j].isVisible = false;
                                 }
                             });
-                            componentAbstractMesh_1.meshState = MeshLoadState.Loading;
+                            componentAbstractMesh.meshState = MeshLoadState.Loading;
                             break;
                         case MeshLoadState.Loading:
                             for (var j = 0; j < this_1._meshDataList.length; j++) {
                                 if (this_1._meshDataList[j].meshLoaded) {
-                                    if (this_1.checkMeshDataMeshComponent(this_1._meshDataList[j], componentAbstractMesh_1)) {
+                                    if (this_1.checkMeshDataMeshComponent(this_1._meshDataList[j], componentAbstractMesh)) {
                                         // if loading complete get mesh set mesh to mesh component
-                                        this_1.cloneLoadedModel(componentAbstractMesh_1, j);
+                                        this_1.cloneLoadedModel(componentAbstractMesh, j);
                                     }
                                 }
                             }
                             break;
                         case MeshLoadState.Loaded:
-                            componentAbstractMesh_1.babylonMesh.setAbsolutePosition(componentTransform.getPosition);
-                            componentAbstractMesh_1.babylonMesh.scaling = componentTransform.getScale;
-                            componentAbstractMesh_1.babylonMesh.rotationQuaternion = componentTransform.getRotationQuaternion;
+                            componentAbstractMesh.babylonMesh.setAbsolutePosition(componentTransform.getPosition);
+                            componentAbstractMesh.babylonMesh.scaling = componentTransform.getScale;
+                            componentAbstractMesh.babylonMesh.rotationQuaternion = componentTransform.getRotationQuaternion;
                             break;
                     }
                 }
@@ -143,33 +144,11 @@ var ECS;
             var parentNode = new BABYLON.Node("node: " + componentAbstractMesh.fileName, this._scene);
             var i = meshDataListIndex;
             var meshFromPool = false;
-            // TODO : object pooling
-            /*
-            // get from pool
-            for (let k = 0; k < this._meshDataList[i].objectPool.length; k++) {
-                if (!this._meshDataList[i].objectPool[k].inUse) {
-                    meshFromPool = true;
-                    this._meshDataList[i].objectPool[k].inUse = true;
-                    if (this._meshDataList[i].objectPool[k].skeleton != null) {
-                        componentAbstractMesh.babylonMesh = this._meshDataList[i].objectPool[k].meshes[1];
-                        componentAbstractMesh.babylonMesh.skeleton = this._meshDataList[i].objectPool[k].skeleton;
-                    } else {
-                        componentAbstractMesh.babylonMesh = this._meshDataList[i].objectPool[k].meshes[0];
-                    }
-                    componentAbstractMesh.meshPoolObject = this._meshDataList[i].objectPool[k];
-                    this._meshDataList[i].objectPool[k].inUse = true;
-                }
-            }
-            */
             if (!meshFromPool) {
-                // create new pool object
-                componentAbstractMesh.meshPoolObject = new ECS.MeshPoolObject(true);
-                componentAbstractMesh.meshPoolObject.meshes = this._meshDataList[i].meshes;
                 // clone new mesh
                 if (this._meshDataList[i].skeleton != null) {
                     componentAbstractMesh.babylonMesh = this._meshDataList[i].meshes[1].clone("mesh clone: " + componentAbstractMesh.fileName, parentNode);
                     componentAbstractMesh.babylonMesh.skeleton = this._meshDataList[i].skeleton;
-                    componentAbstractMesh.meshPoolObject.skeleton = this._meshDataList[i].skeleton;
                 }
                 else {
                     componentAbstractMesh.babylonMesh = this._meshDataList[i].meshes[0].clone("mesh clone: " + componentAbstractMesh.fileName, parentNode);
@@ -179,17 +158,18 @@ var ECS;
             for (var j = 0; j < clonedMehsNodeChilds.length; j++) {
                 clonedMehsNodeChilds[j].isVisible = true;
             }
-            //componentAbstractMesh.babylonMesh.parent.getChildMeshes().isVisible = true;
             componentAbstractMesh.meshState = MeshLoadState.Loaded;
         };
         /**
          * returns the type name of this system
+         * @returns the type name of this system
          */
         SystemMeshRender.prototype.returnTypeOfSystem = function () {
             return "TYPE_SYSTEM_MESH_RENDER";
         };
         /**
          * returns a new instance of this class
+         * @returns a new instance of this class
          */
         SystemMeshRender.prototype.newOfThis = function () {
             return new SystemMeshRender();

@@ -24,6 +24,11 @@ var ECS;
          */
         System.prototype.thisIsASystem = function () {
         };
+        /**
+         * checks if an entity is compatible with the system
+         * @param entity entity that needs to be checked
+         * @returns returns if the entity is compatibe or not
+         */
         System.prototype.checkCompatibleEntity = function (entity) {
             var updateAbleEntity = true;
             for (var j = 0; j < this.neededComponents.length; j++) {

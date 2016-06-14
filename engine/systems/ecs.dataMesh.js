@@ -1,9 +1,13 @@
-/**
- * dataMesh contains information about a mesh that has been loaded
- */
 var ECS;
 (function (ECS) {
+    /**
+     * dataMesh contains information about a mesh that has been loaded
+     */
     var DataMesh = (function () {
+        /**
+         * @param path path of the mesh fileName
+         * @name name name of the mesh file
+         */
         function DataMesh(path, name) {
             this._filePath = path;
             this._fileName = name;
@@ -73,26 +77,5 @@ var ECS;
         return DataMesh;
     }());
     ECS.DataMesh = DataMesh;
-    /**
-     * MeshPoolObject
-     */
-    var MeshPoolObject = (function () {
-        function MeshPoolObject(inUse) {
-            this._inUse = false;
-            this._inUse = inUse;
-        }
-        Object.defineProperty(MeshPoolObject.prototype, "inUse", {
-            get: function () {
-                return this._inUse;
-            },
-            set: function (setInUse) {
-                this._inUse = setInUse;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return MeshPoolObject;
-    }());
-    ECS.MeshPoolObject = MeshPoolObject;
 })(ECS || (ECS = {}));
 //# sourceMappingURL=ecs.dataMesh.js.map

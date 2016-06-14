@@ -1,12 +1,13 @@
 namespace ECS {
     /**
-     * SystemMeshRender
+     * this is a system that can be use for rendering
      */
     export class SystemMeshRender extends System {
 
         private _scene: BABYLON.Scene;
-
-        // list of meshes that are loading, loaded or need to be loaded
+        /**
+         * list of meshes that are loading, loaded or need to be loaded
+         */
         private _meshDataList: DataMesh[];
 
         /**
@@ -26,6 +27,7 @@ namespace ECS {
 
         /**
          * initialize the render system
+         * @param scene the scene this system renders on
          */
         initRendering(scene: BABYLON.Scene): void {
             this._scene = scene;
@@ -112,11 +114,11 @@ namespace ECS {
                             let dataMesh: DataMesh = new DataMesh(componentAbstractMesh.path, componentAbstractMesh.fileName);
                             this._meshDataList.push(dataMesh);
 
-                            console.log("start load: " + componentAbstractMesh.fileName);
+                            //console.log("start load: " + componentAbstractMesh.fileName);
                             // load mesh
                             BABYLON.SceneLoader.ImportMesh("", componentAbstractMesh.path, componentAbstractMesh.fileName, this._scene
                                 , function (newMeshes, newParticlesystems, newSkeletons) {
-                                    console.log("loaded: " + componentAbstractMesh.fileName + " s:" + newSkeletons.length);
+                                    //console.log("loaded: " + componentAbstractMesh.fileName + " s:" + newSkeletons.length);
                                     dataMesh.meshes = newMeshes;
                                     dataMesh.skeleton = newSkeletons[0];
                                     for (var j = 0; j < newMeshes.length; j++) {
@@ -157,49 +159,25 @@ namespace ECS {
             let parentNode: BABYLON.Node = new BABYLON.Node("node: " + componentAbstractMesh.fileName, this._scene);
             let i: number = meshDataListIndex;
             let meshFromPool: boolean = false
-            // TODO : object pooling
-            /*
-            // get from pool
-            for (let k = 0; k < this._meshDataList[i].objectPool.length; k++) {
-                if (!this._meshDataList[i].objectPool[k].inUse) {
-                    meshFromPool = true;
-                    this._meshDataList[i].objectPool[k].inUse = true;
-                    if (this._meshDataList[i].objectPool[k].skeleton != null) {
-                        componentAbstractMesh.babylonMesh = this._meshDataList[i].objectPool[k].meshes[1];
-                        componentAbstractMesh.babylonMesh.skeleton = this._meshDataList[i].objectPool[k].skeleton;
-                    } else {
-                        componentAbstractMesh.babylonMesh = this._meshDataList[i].objectPool[k].meshes[0];
-                    }
-                    componentAbstractMesh.meshPoolObject = this._meshDataList[i].objectPool[k];
-                    this._meshDataList[i].objectPool[k].inUse = true;
-                }
-            }
-            */
             if (!meshFromPool) {
-                // create new pool object
-                componentAbstractMesh.meshPoolObject = new MeshPoolObject(true);
-                componentAbstractMesh.meshPoolObject.meshes = this._meshDataList[i].meshes;
                 // clone new mesh
                 if (this._meshDataList[i].skeleton != null) {
                     componentAbstractMesh.babylonMesh = this._meshDataList[i].meshes[1].clone("mesh clone: " + componentAbstractMesh.fileName, parentNode);
                     componentAbstractMesh.babylonMesh.skeleton = this._meshDataList[i].skeleton;
-                    componentAbstractMesh.meshPoolObject.skeleton = this._meshDataList[i].skeleton;
                 } else {
                     componentAbstractMesh.babylonMesh = this._meshDataList[i].meshes[0].clone("mesh clone: " + componentAbstractMesh.fileName, parentNode);
                 }
-                // add pool object to pool
-                //this._meshDataList[i].objectPool.push(componentAbstractMesh.meshPoolObject);
             }
             let clonedMehsNodeChilds: BABYLON.AbstractMesh[] = componentAbstractMesh.babylonMesh.parent.getChildMeshes();
             for (let j = 0; j < clonedMehsNodeChilds.length; j++) {
                 clonedMehsNodeChilds[j].isVisible = true;
             }
-            //componentAbstractMesh.babylonMesh.parent.getChildMeshes().isVisible = true;
             componentAbstractMesh.meshState = MeshLoadState.Loaded;
         }
 
         /**
          * returns the type name of this system
+         * @returns the type name of this system
          */
         returnTypeOfSystem(): string {
             return "TYPE_SYSTEM_MESH_RENDER";
@@ -207,6 +185,7 @@ namespace ECS {
 
         /**
          * returns a new instance of this class
+         * @returns a new instance of this class
          */
         newOfThis(): SystemMeshRender {
             return new SystemMeshRender();

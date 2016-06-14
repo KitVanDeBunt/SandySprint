@@ -1,6 +1,7 @@
 namespace ECS {
     /**
-     * Engine
+     * The engine of the entity coponent system
+     * used to update the systems
      */
     export class Engine {
 
@@ -25,6 +26,10 @@ namespace ECS {
             this.newSystemID++;
         }
 
+        /**
+         * creates a new entity and adds it to the system
+         * @returns returns the new entity
+         */
         createEntity(): Entity {
             this.entities[this.newEntityID] = new Entity();
             this.newEntityID++;
@@ -32,7 +37,7 @@ namespace ECS {
         }
 
         /**
-         * updates a systems that are contained by this entity
+         * updates the systems of this engine
          */
         updateSystems(): void {
             for (let i = 0; i < this.systems.length; i++) {
@@ -47,11 +52,8 @@ namespace ECS {
         deleteObectsReadyToBeDestroyed() {
             for (var i = 0; i < this.entities.length; i++) {
                 if (this.entities[i].destroyed()) {
-                    console.log("delete enntity: "+i);
-                    console.log("e count: "+this.entities.length);
                     //this.entities[i] = null;
                     //this.entities.splice(i,1);
-                    console.log("e count: "+this.entities.length);
                 }
             }
         }
@@ -62,18 +64,13 @@ namespace ECS {
          * @returns newSystemOfType system of the requested type
          */
         getSystem<T extends System>(newSystemOfType: T): T {
-            console.log("systems.length: " + this.systems.length);
             for (let i = 0; i < this.systems.length; i++) {
-                console.log("typeof systems[i]: " + this.systems[i].returnTypeOfSystem());
-                console.log("newSystemOfType.returnTypeOfSystem(): " + newSystemOfType.returnTypeOfSystem());
                 if (this.systems[i].returnTypeOfSystem() == newSystemOfType.returnTypeOfSystem()) {
                     // return system if found
-                    console.log("[Engine]:getSystem():system found and returned");
                     return <T>this.systems[i];
                 }
             }
             // create and return if not found
-            console.log("[Engine]:getSystem():system not found but created");
             let newSystem: any = newSystemOfType.newOfThis();
             this.addSystem(newSystem);
             return newSystem;

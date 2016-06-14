@@ -1,6 +1,6 @@
 namespace ECS {
     /**
-     * Component
+     * Component abstract base class for components used in the entity component system
      */
     export abstract class Component {
 
