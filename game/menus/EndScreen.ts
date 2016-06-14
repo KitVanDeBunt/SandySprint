@@ -22,6 +22,7 @@ class endScreen {
      * @param gameUI the gameUI that has created this endscreen.
      * @param scene the scene that the game is using.
      */
+    
     constructor(gameUI: GameUI, scene: BABYLON.Scene) {
         this._gameUI = gameUI;
         this._scene = scene;
