@@ -12,7 +12,7 @@ class InGameUI {
     private context2D;
     private _scene: BABYLON.Scene;
     private _playerManager: PlayerManager;
-    private _tutorialEnabled: boolean;
+    private _tutorialEnabled: boolean = true;
     private _tutorial: tutorial;
 
     /**

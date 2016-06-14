@@ -30,7 +30,7 @@ class RoadManager {
      * @param engine entity component system engine
      * @param scene games scene
      */
-    constructor(engine: ECS.Engine, scene: BABYLON.Scene) {
+    constructor(engine: ECS.Engine, scene: BABYLON.Scene, tutorial: boolean) {
         this._lanes = [];
         this._roadMeshes = [];
         this.sceneObjects = [];
@@ -43,8 +43,10 @@ class RoadManager {
         this._sceneObjectFactory = new SceneObjectSpawnTemplateSetFactory(this, engine);
 
         this.createRaodPart(false);
-        this.createRaodPart(false,0);
-        this.createRaodPart(false,1);
+        if (tutorial) {
+            this.createRaodPart(false, 0);
+            this.createRaodPart(false, 1);
+        }
     }
 
     /**
@@ -52,7 +54,7 @@ class RoadManager {
      * @param spawnObstacles false if you dont whant obstacles on the raod
      * @param tutorialPart spawn obstacles for the tutorial if -1 no tutorial
      */
-    createRaodPart(spawnObstacles:boolean = true, tutorialPart:number = -1) {
+    createRaodPart(spawnObstacles: boolean = true, tutorialPart: number = -1) {
 
         let roadN: number = this._lanes.length;
 
@@ -99,16 +101,16 @@ class RoadManager {
         road.addComponent(this._lanes[roadN][2]);
 
         let distanceBrige: number = -1;
-        if(spawnObstacles){
+        if (spawnObstacles) {
             distanceBrige = this._sceneObjectFactory.createRandomRoadObjectTemplateSet(roadN, this._scene, riverRoad);
-        }else if(tutorialPart == 0){
+        } else if (tutorialPart == 0) {
             this._sceneObjectFactory.createTutorialRoadObjectTemplateSet(roadN, this._scene, riverRoad, tutorialPart);
-        }else if(tutorialPart == 1){
+        } else if (tutorialPart == 1) {
             this._sceneObjectFactory.createTutorialRoadObjectTemplateSet(roadN, this._scene, riverRoad, tutorialPart);
         }
-        
+
         this._sceneObjectFactory.createRandomSceneObjectTemplateSet(roadN, this._scene, riverRoad, distanceBrige);
-        
+
         this._roadesSpawned++;
     }
 
@@ -157,7 +159,7 @@ class RoadManager {
         }
     }
 
-    destroy(){
+    destroy() {
         for (var i = 0; i < this._roadMeshes.length; i++) {
             this._roadMeshes[i].destroy();
         }
