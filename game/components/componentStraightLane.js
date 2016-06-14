@@ -4,14 +4,20 @@ var __extends = (this && this.__extends) || function (d, b) {
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 /**
- * ComponentStraightLane
+ * straight road lane
  */
 var ComponentStraightLane = (function (_super) {
     __extends(ComponentStraightLane, _super);
-    function ComponentStraightLane(componentAbstractMesh, startPos, startDirection, scene, startT) {
-        _super.call(this, componentAbstractMesh, startT);
-        this.forwared = new BABYLON.Vector3(0, 0, 1);
-        this.up = new BABYLON.Vector3(0, 1, 0);
+    /**
+     * @param startPos start position of the lane
+     * @param startDirection start direction of the lane
+     * @param scene scene where the game is renderd used for debuging
+     * @param startT the lanes distance in the game
+     */
+    function ComponentStraightLane(startPos, startDirection, scene, startT) {
+        _super.call(this, startT);
+        this._forwared = new BABYLON.Vector3(0, 0, 1);
+        this._up = new BABYLON.Vector3(0, 1, 0);
         this.rotPoints = [
             BABYLON.Quaternion.Identity(),
             BABYLON.Quaternion.Identity(),
@@ -22,24 +28,23 @@ var ComponentStraightLane = (function (_super) {
         this.points = [
             new BABYLON.Vector3(startPos.x, startPos.y, startPos.z),
             new BABYLON.Vector3(startPos.x, startPos.y, startPos.z + ((14 / 3) * 1)),
-            //new BABYLON.Vector3(startPos.x, startPos.y-1, startPos.z+(14 / 3) * 1),
             new BABYLON.Vector3(startPos.x, startPos.y, startPos.z + ((14 / 3) * 2)),
-            //new BABYLON.Vector3(startPos.x, startPos.y+1, startPos.z+((14 / 3) * 2)),
             new BABYLON.Vector3(startPos.x, startPos.y, startPos.z + 14)];
         // draw lane
         var curve = BABYLON.Curve3.CreateCubicBezier(this.points[0], this.points[1], this.points[2], this.points[3], 20);
         var cubicBezierCurve = BABYLON.Mesh.CreateLines("cbezier", curve.getPoints(), scene);
         cubicBezierCurve.color = new BABYLON.Color3(1, 0, .5);
         cubicBezierCurve.isVisible = false;
-        for (var i = 0; i < this.points.length; i++) {
-            var drawPoists = void 0;
-            var drawPoints = [];
-            drawPoints[0] = this.points[i];
-            drawPoints[1] = drawPoints[0].add(new BABYLON.Vector3(0, 4, 0));
-            var cubicBezierCurve_1 = BABYLON.Mesh.CreateLines("up vectors bezier", drawPoints, scene);
-            cubicBezierCurve_1.color = new BABYLON.Color3(0, 1, 1);
-        }
         /*
+        / draw lines for debugging
+        for (let i = 0; i < this.points.length; i++) {
+            let drawPoists:BABYLON.Vector3;
+            let drawPoints:BABYLON.Vector3[] = [];
+            drawPoints[0] = this.points[i];
+            drawPoints[1] = drawPoints[0].add(new BABYLON.Vector3(0,4,0));
+            let cubicBezierCurve: BABYLON.LinesMesh = BABYLON.Mesh.CreateLines("up vectors bezier", drawPoints, scene);
+            cubicBezierCurve.color = new BABYLON.Color3(0, 1, 1);
+        }
         //draw lane up
         for (let i = 0; i < 10; i++) {
             let tLine:number = i*0.1;
@@ -68,9 +73,10 @@ var ComponentStraightLane = (function (_super) {
     }
     /**
      * returns the end distance of the lane
+     * @returns end distance of the lane
      */
     ComponentStraightLane.prototype.getEndT = function () {
-        return this.startT + 14;
+        return this._startT + 14;
     };
     /**
      * returnes a distance at interpolation value(t)
@@ -78,7 +84,7 @@ var ComponentStraightLane = (function (_super) {
      * @returnes distance at interpolation
      */
     ComponentStraightLane.prototype.getDistanceAtT = function (t) {
-        return this.startT + (this.getLaneLength() * t);
+        return this._startT + (this.getLaneLength() * t);
     };
     /**
      * returnes the length of this lane
@@ -111,7 +117,7 @@ var ComponentStraightLane = (function (_super) {
     ComponentStraightLane.prototype.forwaredVector = function (t) {
         var m = new BABYLON.Matrix();
         this.getRotationAtT(t).toRotationMatrix(m);
-        return BABYLON.Vector3.TransformCoordinates(this.forwared, m);
+        return BABYLON.Vector3.TransformCoordinates(this._forwared, m);
     };
     /**
      * returnes a upwards vector at interpolation value(t)
@@ -121,8 +127,13 @@ var ComponentStraightLane = (function (_super) {
     ComponentStraightLane.prototype.upVector = function (t) {
         var m = new BABYLON.Matrix();
         this.getRotationAtT(t).toRotationMatrix(m);
-        return BABYLON.Vector3.TransformCoordinates(this.up, m);
+        return BABYLON.Vector3.TransformCoordinates(this._up, m);
     };
+    /**
+     * returnes a rotation matrix at interpolation value(t)
+     * @param t interpolation value
+     * @returnes rotation matrix at interpolation
+     */
     ComponentStraightLane.prototype.vectorToLineRotationMatrix = function (t, v) {
         var m = new BABYLON.Matrix();
         this.getRotationAtT(t).toRotationMatrix(m);

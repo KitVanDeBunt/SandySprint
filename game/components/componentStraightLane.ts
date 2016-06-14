@@ -1,10 +1,10 @@
 /**
- * ComponentStraightLane
+ * straight road lane
  */
 class ComponentStraightLane extends ComponentLaneBase {
 
-    private forwared: BABYLON.Vector3 = new BABYLON.Vector3(0, 0, 1);
-    private up: BABYLON.Vector3 = new BABYLON.Vector3(0, 1, 0);
+    private _forwared: BABYLON.Vector3 = new BABYLON.Vector3(0, 0, 1);
+    private _up: BABYLON.Vector3 = new BABYLON.Vector3(0, 1, 0);
 
     points: BABYLON.Vector3[];
 
@@ -15,16 +15,20 @@ class ComponentStraightLane extends ComponentLaneBase {
         //new BABYLON.Quaternion(0.92,0.38,0.0,0.0),  // (45,0,0)
         BABYLON.Quaternion.Identity()];
 
-    constructor(componentAbstractMesh: ECS.ComponentAbstractMesh, startPos: BABYLON.Vector3, startDirection: BABYLON.Vector3, scene:BABYLON.Scene, startT:number) {
-        super(componentAbstractMesh,startT);
+    /**
+     * @param startPos start position of the lane
+     * @param startDirection start direction of the lane
+     * @param scene scene where the game is renderd used for debuging
+     * @param startT the lanes distance in the game
+     */
+    constructor(startPos: BABYLON.Vector3, startDirection: BABYLON.Vector3, scene:BABYLON.Scene, startT:number) {
+        super(startT);
         
         // set bezier points
         this.points = [
         new BABYLON.Vector3(startPos.x, startPos.y, startPos.z),
         new BABYLON.Vector3(startPos.x, startPos.y, startPos.z+((14 / 3) * 1)),
-        //new BABYLON.Vector3(startPos.x, startPos.y-1, startPos.z+(14 / 3) * 1),
         new BABYLON.Vector3(startPos.x, startPos.y, startPos.z+((14 / 3) * 2)),
-        //new BABYLON.Vector3(startPos.x, startPos.y+1, startPos.z+((14 / 3) * 2)),
         new BABYLON.Vector3(startPos.x, startPos.y, startPos.z+14)];
         
         // draw lane
@@ -33,6 +37,8 @@ class ComponentStraightLane extends ComponentLaneBase {
         cubicBezierCurve.color = new BABYLON.Color3(1, 0, .5);
         cubicBezierCurve.isVisible = false;
         
+        /*
+        / draw lines for debugging
         for (let i = 0; i < this.points.length; i++) {
             let drawPoists:BABYLON.Vector3;
             let drawPoints:BABYLON.Vector3[] = [];
@@ -41,8 +47,6 @@ class ComponentStraightLane extends ComponentLaneBase {
             let cubicBezierCurve: BABYLON.LinesMesh = BABYLON.Mesh.CreateLines("up vectors bezier", drawPoints, scene);
             cubicBezierCurve.color = new BABYLON.Color3(0, 1, 1);
         }
-        
-        /*
         //draw lane up
         for (let i = 0; i < 10; i++) {
             let tLine:number = i*0.1;
@@ -72,9 +76,10 @@ class ComponentStraightLane extends ComponentLaneBase {
     
     /**
      * returns the end distance of the lane
+     * @returns end distance of the lane
      */
     getEndT ():number{
-        return this.startT+14;
+        return this._startT+14;
     }
     
     /**
@@ -83,7 +88,7 @@ class ComponentStraightLane extends ComponentLaneBase {
      * @returnes distance at interpolation
      */
     getDistanceAtT (t:number):number{
-        return this.startT+(this.getLaneLength()*t);
+        return this._startT+(this.getLaneLength()*t);
     }
     
     /**
@@ -120,7 +125,7 @@ class ComponentStraightLane extends ComponentLaneBase {
     forwaredVector(t:number): BABYLON.Vector3 {
         var m = new BABYLON.Matrix();
 	    this.getRotationAtT(t).toRotationMatrix(m);
-        return BABYLON.Vector3.TransformCoordinates(this.forwared,m);
+        return BABYLON.Vector3.TransformCoordinates(this._forwared,m);
     }
 
     /**
@@ -131,9 +136,14 @@ class ComponentStraightLane extends ComponentLaneBase {
     upVector(t:number): BABYLON.Vector3 {
         var m = new BABYLON.Matrix();
 	    this.getRotationAtT(t).toRotationMatrix(m);
-        return BABYLON.Vector3.TransformCoordinates(this.up,m);
+        return BABYLON.Vector3.TransformCoordinates(this._up,m);
     }
     
+    /**
+     * returnes a rotation matrix at interpolation value(t)
+     * @param t interpolation value
+     * @returnes rotation matrix at interpolation
+     */
     vectorToLineRotationMatrix(t:number,v:BABYLON.Vector3){
         var m = new BABYLON.Matrix();
 	    this.getRotationAtT(t).toRotationMatrix(m);

@@ -4,16 +4,19 @@ var __extends = (this && this.__extends) || function (d, b) {
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 /**
- * ComponentLaneBase
+ * Base class of road lanes
  */
 var ComponentLaneBase = (function (_super) {
     __extends(ComponentLaneBase, _super);
-    function ComponentLaneBase(componentAbstractMesh, startT) {
+    /**
+     * @param componentAbstractMesh
+     */
+    function ComponentLaneBase(startT) {
         _super.call(this);
-        this.leftLaneAvalable = false;
-        this.rightLaneAvalable = false;
-        this.nextLaneAvalable = false;
-        this.startT = startT;
+        this._leftLaneAvalable = false;
+        this._rightLaneAvalable = false;
+        this._nextLaneAvalable = false;
+        this._startT = startT;
     }
     Object.defineProperty(ComponentLaneBase.prototype, "getStartT", {
         /**
@@ -21,73 +24,73 @@ var ComponentLaneBase = (function (_super) {
          * @returns start interpontation(t)
          */
         get: function () {
-            return this.startT;
+            return this._startT;
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(ComponentLaneBase.prototype, "getRightLaneAvalable", {
         get: function () {
-            return this.rightLaneAvalable;
+            return this._rightLaneAvalable;
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(ComponentLaneBase.prototype, "getLeftLaneAvalable", {
         get: function () {
-            return this.leftLaneAvalable;
+            return this._leftLaneAvalable;
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(ComponentLaneBase.prototype, "getNextLaneAvalable", {
         get: function () {
-            return this.nextLaneAvalable;
+            return this._nextLaneAvalable;
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(ComponentLaneBase.prototype, "setRightLane", {
         set: function (lane) {
-            this.rightLane = lane;
-            this.rightLaneAvalable = true;
+            this._rightLane = lane;
+            this._rightLaneAvalable = true;
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(ComponentLaneBase.prototype, "getRightLane", {
         get: function () {
-            return this.rightLane;
+            return this._rightLane;
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(ComponentLaneBase.prototype, "setLeftLane", {
         set: function (lane) {
-            this.leftLane = lane;
-            this.leftLaneAvalable = true;
+            this._leftLane = lane;
+            this._leftLaneAvalable = true;
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(ComponentLaneBase.prototype, "getLeftLane", {
         get: function () {
-            return this.leftLane;
+            return this._leftLane;
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(ComponentLaneBase.prototype, "setNextLane", {
         set: function (lane) {
-            this.nextLane = lane;
-            this.nextLaneAvalable = true;
+            this._nextLane = lane;
+            this._nextLaneAvalable = true;
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(ComponentLaneBase.prototype, "getNextLane", {
         get: function () {
-            return this.nextLane;
+            return this._nextLane;
         },
         enumerable: true,
         configurable: true

@@ -54,9 +54,9 @@ var RoadManager = (function () {
         }
         road.addComponent(this._roadMeshes[roadN]);
         this._lanes[roadN] = [
-            new ComponentStraightLane(this._roadMeshes[roadN], new BABYLON.Vector3(-0.25, 0, this._roadesSpawned * 14), BABYLON.Vector3.Zero(), this._scene, this._roadesSpawned * 14),
-            new ComponentStraightLane(this._roadMeshes[roadN], new BABYLON.Vector3(0, 0, this._roadesSpawned * 14), BABYLON.Vector3.Zero(), this._scene, this._roadesSpawned * 14),
-            new ComponentStraightLane(this._roadMeshes[roadN], new BABYLON.Vector3(0.25, 0, this._roadesSpawned * 14), BABYLON.Vector3.Zero(), this._scene, this._roadesSpawned * 14)
+            new ComponentStraightLane(new BABYLON.Vector3(-0.25, 0, this._roadesSpawned * 14), BABYLON.Vector3.Zero(), this._scene, this._roadesSpawned * 14),
+            new ComponentStraightLane(new BABYLON.Vector3(0, 0, this._roadesSpawned * 14), BABYLON.Vector3.Zero(), this._scene, this._roadesSpawned * 14),
+            new ComponentStraightLane(new BABYLON.Vector3(0.25, 0, this._roadesSpawned * 14), BABYLON.Vector3.Zero(), this._scene, this._roadesSpawned * 14)
         ];
         // set right en left lanes
         this._lanes[roadN][1].setRightLane = this._lanes[roadN][2];
