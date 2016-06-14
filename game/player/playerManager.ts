@@ -37,6 +37,7 @@ class PlayerManager {
     private _inLaneTweenRight: boolean = false;
     private _laneTweenInterpolation: number = 0;
     private _laneSwitchSpeed: number = 0.002;
+    private _laneTweenAnimationTime: number = 0;
 
     // collision
     private _firstFrame: boolean = true;
@@ -227,21 +228,26 @@ class PlayerManager {
         this.updateAnimation();
         this._laneTweenInterpolation = 0;
         this._audio.playSound(Sounds.LaneSwitch);
-
+        this._laneTweenAnimationTime = this.framesToAnimationTime(10);
     }
-
-    private playerFallbackAnimationTime() {
-        return ((((420 - 360) * this.ftc) / 24) * 1000);
+    
+    /**
+     * convert an amout of frames to the time it takes to play the animation at normals speed
+     * @param frames number of frames you need the playback time of
+     * @returns animation time at normal speed in milliseconds
+     */
+    private framesToAnimationTime(frames:number) :number{
+        return (((frames * this.ftc) / 24) * 1000);
     }
 
     private updateDead(deltaTime: number) {
         this._playerDiedT += deltaTime;
-        if (this._playerDiedT > this.playerFallbackAnimationTime() && !this._playerDiedAnimDone) {
+        if (this._playerDiedT > this.framesToAnimationTime(420 - 360) && !this._playerDiedAnimDone) {
             this._playerDiedAnimDone = true;
             this.updateAnimation();
         }
         // end screen 1.5 second after animation is done
-        if (!this._endScreenOpened && this._playerDiedT > this.playerFallbackAnimationTime() + 1500) {
+        if (!this._endScreenOpened && this._playerDiedT > this.framesToAnimationTime(420 - 360) + 1500) {
             //window.alert("sometext");
             this._gameUI.closeInGame();
             this._endScreenOpened = true;
@@ -300,11 +306,11 @@ class PlayerManager {
                         } else if (this._inLaneTweenLeft) {
                             // play move left animation
                             this._animationState = PlayerAnimationState.LaneSwitchL;
-                            this._scene.beginAnimation(this._playerMeshComponent.babylonMesh.skeleton, 25 * this.ftc, 39 * this.ftc, true, 1.2);
+                            this._scene.beginAnimation(this._playerMeshComponent.babylonMesh.skeleton, 25 * this.ftc, 39 * this.ftc, true, 1);
                         } else if (this._inLaneTweenRight) {
                             // play move right animation
                             this._animationState = PlayerAnimationState.LaneSwitchR;
-                            this._scene.beginAnimation(this._playerMeshComponent.babylonMesh.skeleton, 45 * this.ftc, 57 * this.ftc, true, 1.2);
+                            this._scene.beginAnimation(this._playerMeshComponent.babylonMesh.skeleton, 45 * this.ftc, 57 * this.ftc, true, 1);
                         }
                         break;
                     case PlayerAnimationState.Jumping:
@@ -327,14 +333,14 @@ class PlayerManager {
                         }
                         break;
                     case PlayerAnimationState.LaneSwitchL:
-                        if (!this._inLaneTween) {
+                        if (!this._inLaneTween && this._laneTweenAnimationTime <= 0) {
                             // play run animation
                             this._scene.beginAnimation(this._playerMeshComponent.babylonMesh.skeleton, 0, 21 * this.ftc, true, 1.4);
                             this._animationState = PlayerAnimationState.Running;
                         }
                         break;
                     case PlayerAnimationState.LaneSwitchR:
-                        if (!this._inLaneTween) {
+                        if (!this._inLaneTween && this._laneTweenAnimationTime <= 0) {
                             // play run animation
                             this._scene.beginAnimation(this._playerMeshComponent.babylonMesh.skeleton, 0, 21 * this.ftc, true, 1.4);
                             this._animationState = PlayerAnimationState.Running;
@@ -413,9 +419,11 @@ class PlayerManager {
             let targetLanePosition: BABYLON.Vector3 = pos;
             let previousLanePosition: BABYLON.Vector3 = this._previousLane.getPointAtT(laneInputT);
             pos = BABYLON.Vector3.Lerp(previousLanePosition, targetLanePosition, this._laneTweenInterpolation);
-
         }
-
+        if(this._laneTweenAnimationTime > 0)
+        {
+           this._laneTweenAnimationTime -= deltaTime;
+        }
         // jumping
         if (this._jumpManager.jumping) {
             if (this._jumpManager.getPointAtT(this._playerT, 1.5, deltaTime).y < 0) {
