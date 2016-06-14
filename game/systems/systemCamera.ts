@@ -24,6 +24,7 @@ class SystemCamera extends ECS.System {
 
     /**
      * Updates every componentCamera.
+     * @param entities entitys system updates
      */
     Update<T extends ECS.Entity>(entities: T[]) {
         for (let i = 0; i < entities.length; i++) {

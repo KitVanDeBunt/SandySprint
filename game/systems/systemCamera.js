@@ -23,6 +23,7 @@ var SystemCamera = (function (_super) {
     }
     /**
      * Updates every componentCamera.
+     * @param entities entitys system updates
      */
     SystemCamera.prototype.Update = function (entities) {
         for (var i = 0; i < entities.length; i++) {
