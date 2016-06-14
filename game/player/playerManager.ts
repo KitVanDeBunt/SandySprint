@@ -448,11 +448,11 @@ class PlayerManager {
         }
         // jumping
         if (this._jumpManager.jumping) {
-            if (this._jumpManager.getPointAtT(this._playerT, 1.5, deltaTime).y < 0) {
+            if (this._jumpManager.getPointAtT(deltaTime).y < 0) {
                 this._jumpManager.jumping = false;
                 this._audio.playSound(Sounds.JumpLand);
             } else {
-                pos = pos.add(this._jumpManager.getPointAtT(this._playerT, 1.5, deltaTime));
+                pos = pos.add(this._jumpManager.getPointAtT(deltaTime));
             }
         }
 

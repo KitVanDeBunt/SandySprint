@@ -1,22 +1,23 @@
 /**
- * ComponentLaneBase
+ * Base class of road lanes
  */
 abstract class ComponentLaneBase extends ECS.Component {
 
-    private leftLaneAvalable: boolean = false;
-    private rightLaneAvalable: boolean = false;
-    private nextLaneAvalable: boolean = false;
-    private leftLane: ComponentLaneBase;
-    private rightLane: ComponentLaneBase;
-    private nextLane: ComponentLaneBase;
-    protected startT: number;
-    private endT: number;
+    private _leftLaneAvalable: boolean = false;
+    private _rightLaneAvalable: boolean = false;
+    private _nextLaneAvalable: boolean = false;
+    private _leftLane: ComponentLaneBase;
+    private _rightLane: ComponentLaneBase;
+    private _nextLane: ComponentLaneBase;
+    protected _startT: number;
+    private _endT: number;
 
-    protected componentAbstractMesh: ECS.ComponentAbstractMesh;
-
-    constructor(componentAbstractMesh: ECS.ComponentAbstractMesh, startT: number) {
+    /**
+     * @param componentAbstractMesh 
+     */
+    constructor(startT: number) {
         super();
-        this.startT = startT;
+        this._startT = startT;
     }
 
     /**
@@ -24,46 +25,46 @@ abstract class ComponentLaneBase extends ECS.Component {
      * @returns start interpontation(t)
      */
     get getStartT(): number {
-        return this.startT;
+        return this._startT;
     }
 
     get getRightLaneAvalable(): boolean {
-        return this.rightLaneAvalable;
+        return this._rightLaneAvalable;
     }
 
     get getLeftLaneAvalable(): boolean {
-        return this.leftLaneAvalable;
+        return this._leftLaneAvalable;
     }
 
     get getNextLaneAvalable(): boolean {
-        return this.nextLaneAvalable;
+        return this._nextLaneAvalable;
     }
 
     set setRightLane(lane: ComponentLaneBase) {
-        this.rightLane = lane;
-        this.rightLaneAvalable = true;
+        this._rightLane = lane;
+        this._rightLaneAvalable = true;
     }
 
     get getRightLane(): ComponentLaneBase {
-        return this.rightLane;
+        return this._rightLane;
     }
 
     set setLeftLane(lane: ComponentLaneBase) {
-        this.leftLane = lane;
-        this.leftLaneAvalable = true;
+        this._leftLane = lane;
+        this._leftLaneAvalable = true;
     }
 
     get getLeftLane(): ComponentLaneBase {
-        return this.leftLane;
+        return this._leftLane;
     }
 
     set setNextLane(lane: ComponentLaneBase) {
-        this.nextLane = lane;
-        this.nextLaneAvalable = true;
+        this._nextLane = lane;
+        this._nextLaneAvalable = true;
     }
 
     get getNextLane(): ComponentLaneBase {
-        return this.nextLane;
+        return this._nextLane;
     }
 
     /**
@@ -73,19 +74,44 @@ abstract class ComponentLaneBase extends ECS.Component {
     abstract getEndT(): number;
 
     /**
-     * returns te distance tranvled of the onteroplation value of 't'
+     * returns the distance tranvled of the onteroplation value of 't'
      * @param t interpolation value between 0 and 1
      * @returns distance travled
      */
     abstract getDistanceAtT(t: number): number;
 
+    /**
+     * returns the lanes length
+     * @returns the lanes length
+     */
     abstract getLaneLength(): number;
 
+    /**
+     * returns a point on the curve for a given t
+     * @param t interpolation number
+     * @returns point on the curve
+     */
     abstract getPointAtT(t: number): BABYLON.Vector3;
 
+
+    /**
+     * returns a rotation on the curve for a given t
+     * @param t interpolation number
+     * @returns rotation on the curve
+     */
     abstract getRotationAtT(t: number): BABYLON.Quaternion;
 
+    /**
+     * returns a forwared vector on the curve for a given t
+     * @param t interpolation number
+     * @returns forwared vector on the curve
+     */
     abstract forwaredVector(float): BABYLON.Vector3;
 
+    /**
+     * returns an up vector on the curve for a given t
+     * @param t interpolation number
+     * @returns an up vector on the curve
+     */
     abstract upVector(float): BABYLON.Vector3;
 }

@@ -24,6 +24,7 @@ var PlayerCameraManager = (function () {
     /**
      * check the camera shake.
      * updates the players camera position.
+     * @param deltaTime deltatime
      */
     PlayerCameraManager.prototype.update = function (deltaTime) {
         if (this._shaken) {
@@ -64,6 +65,10 @@ var PlayerCameraManager = (function () {
         enumerable: true,
         configurable: true
     });
+    /**
+     * returns the camera component used in this manager
+     * @returns camera component
+     */
     PlayerCameraManager.prototype.getCameraComponent = function () {
         return this._cameraComponent;
     };

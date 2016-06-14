@@ -36,6 +36,7 @@ class PlayerCameraManager {
     /**
      * check the camera shake.
      * updates the players camera position.
+     * @param deltaTime deltatime
      */
     update(deltaTime: number) {
         if (this._shaken) {
@@ -77,6 +78,10 @@ class PlayerCameraManager {
         return this._cameraTranslateComponent.getPosition;
     }
 
+    /**
+     * returns the camera component used in this manager
+     * @returns camera component
+     */
     getCameraComponent(): ComponentCamera {
         return this._cameraComponent;
     }
