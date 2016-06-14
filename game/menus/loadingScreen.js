@@ -16,11 +16,35 @@ var loadingScreen = (function () {
         this._objects = [];
         this._paths = [
             "assets/models/",
+            "assets/models/",
+            "assets/models/",
+            "assets/models/",
+            "assets/models/",
+            "assets/models/",
+            "assets/models/buildings/",
+            "assets/models/buildings/",
+            "assets/models/",
+            "assets/models/",
+            "assets/models/buildings/",
+            "assets/models/buildings/",
+            "assets/models/buildings/",
             "assets/models/buildings/"
         ];
         this._modelNames = [
             "Explorer_Rig_AllAnimations.babylon",
-            "building_building_001_001_tex01.babylon"
+            "road_river.babylon",
+            "road_plain.babylon",
+            "pillar.babylon",
+            "Obstacle_Spikes.babylon",
+            "pickup_scarab.babylon",
+            "building_building_001_001_tex01.babylon",
+            "building_buildingbridge_002_002_tex01.babylon",
+            "vegitation_palm_001.babylon",
+            "vegitation_plant_001.babylon",
+            "building_building_001_001_tex01.babylon",
+            "building_building_002_001_tex01.babylon",
+            "building_building_003_001_tex01.babylon",
+            "building_building_004_001_tex01.babylon"
         ];
         this.showLoadingScreen();
     }
