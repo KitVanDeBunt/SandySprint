@@ -437,6 +437,7 @@ class PlayerManager {
         this._playerTranslateComponent.setPosition = pos;
     }
 
+
     private updateCollision() {
         this._playerMeshComponent.updateCollision();
         if (!this._firstFrame) {
@@ -460,8 +461,6 @@ class PlayerManager {
                                         break;
                                     case CollisionMeshType.spike:
                                         this._audio.playSound(Sounds.Spike);
-                                        //var deathPos = new BABYLON.Vector3(this.getplayerPosition().x, this.getplayerPosition().y, this._roadManager.sceneObjects[i].meshCollider.position.z - 0.2);
-                                        //this._playerTranslateComponent.setPosition = deathPos;
                                         this._gameBase.PlayerCameraManager.Shake();
                                         this._playing = false;
                                         this._playerDead = true;
