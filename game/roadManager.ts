@@ -43,13 +43,16 @@ class RoadManager {
         this._sceneObjectFactory = new SceneObjectSpawnTemplateSetFactory(this, engine);
 
         this.createRaodPart(false);
-        this.createRaodPart(false);
+        this.createRaodPart(false,0);
+        this.createRaodPart(false,1);
     }
 
     /**
      * spawns a new road section
+     * @param spawnObstacles false if you dont whant obstacles on the raod
+     * @param tutorialPart spawn obstacles for the tutorial if -1 no tutorial
      */
-    createRaodPart(spawnObstacles:boolean = true) {
+    createRaodPart(spawnObstacles:boolean = true, tutorialPart:number = -1) {
 
         let roadN: number = this._lanes.length;
 
@@ -98,6 +101,10 @@ class RoadManager {
         let distanceBrige: number = -1;
         if(spawnObstacles){
             distanceBrige = this._sceneObjectFactory.createRandomRoadObjectTemplateSet(roadN, this._scene, riverRoad);
+        }else if(tutorialPart == 0){
+            this._sceneObjectFactory.createTutorialRoadObjectTemplateSet(roadN, this._scene, riverRoad, tutorialPart);
+        }else if(tutorialPart == 1){
+            this._sceneObjectFactory.createTutorialRoadObjectTemplateSet(roadN, this._scene, riverRoad, tutorialPart);
         }
         
         this._sceneObjectFactory.createRandomSceneObjectTemplateSet(roadN, this._scene, riverRoad, distanceBrige);

@@ -13,59 +13,57 @@ var SceneObjectSpawnTemplateSetFactory = (function () {
         this.createBuildingTemplates();
         this.createVegitationTemplates();
         this.createRoadObjectTemplates();
-        // create scene object spawn template sets
-        this.roadTemplatesSetList = [];
         var listNum = 0;
-        this.roadTemplatesSetList[listNum] = new SceneObjectSpawnTemplateSet();
-        this.roadTemplatesSetList[listNum].compatableWithWaterTile = true;
-        for (var i = 14; i < 24; i++) {
-        }
-        // 0 pillar
-        /*
-                this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((19 / 28), 0));
-                this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((19 / 28), 1));
-        
-        
-                this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.BUILDING_BRIGE_002]((23 / 28), 1));
-                this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((23 / 28), 2));
-        
-        
-                this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((27 / 28), 0));
-                this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((27 / 28), 1));
-                */
-        // 00
-        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((6 / 28), 0));
-        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((6 / 28), 1));
-        //scarabs
-        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((6 / 28), 2));
-        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((7 / 28), 2));
-        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((8 / 28), 2));
-        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((9 / 28), 1));
-        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((10 / 28), 1));
-        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((11 / 28), 2));
-        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((12 / 28), 2));
+        // create road object spawn template sets for the tutorial
+        this.tutorialRoadTemplateSetList = [];
+        this.tutorialRoadTemplateSetList[listNum] = new SceneObjectSpawnTemplateSet();
+        this.tutorialRoadTemplateSetList[listNum].compatableWithWaterTile = true;
+        this.tutorialRoadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((18 / 28), 1));
+        listNum++;
+        this.tutorialRoadTemplateSetList[listNum] = new SceneObjectSpawnTemplateSet();
+        this.tutorialRoadTemplateSetList[listNum].compatableWithWaterTile = true;
+        this.tutorialRoadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((18 / 28), 0));
+        this.tutorialRoadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((18 / 28), 2));
+        this.tutorialRoadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SPIKE]((18 / 28), 1));
+        listNum++;
+        // create road object spawn template sets
+        this.roadTemplateSetList = [];
+        listNum = 0;
+        this.roadTemplateSetList[listNum] = new SceneObjectSpawnTemplateSet();
+        this.roadTemplateSetList[listNum].compatableWithWaterTile = true;
         //pillars
-        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.BUILDING_BRIGE_002]((13 / 28), 1));
-        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((13 / 28), 2));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((6 / 28), 0));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((6 / 28), 1));
         //scarabs
-        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((13 / 28), 0));
-        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((14 / 28), 0));
-        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((15 / 28), 0));
-        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((16 / 28), 1));
-        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((17 / 28), 1));
-        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((18 / 28), 2));
-        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((19 / 28), 2));
-        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((20 / 28), 2));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((6 / 28), 2));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((7 / 28), 2));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((8 / 28), 2));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((9 / 28), 1));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((10 / 28), 1));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((11 / 28), 2));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((12 / 28), 2));
+        //pillars
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.BUILDING_BRIGE_002]((13 / 28), 1));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((13 / 28), 2));
+        //scarabs
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((13 / 28), 0));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((14 / 28), 0));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((15 / 28), 0));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((16 / 28), 1));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((17 / 28), 1));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((18 / 28), 2));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((19 / 28), 2));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SCARAB]((20 / 28), 2));
         // pillars
-        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((20 / 28), 0));
-        this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((20 / 28), 1));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((20 / 28), 0));
+        this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((20 / 28), 1));
         listNum++;
         // ---------------- start
-        //this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((27 / 28), 0));
-        //this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SPIKE]((27 / 28), 1));
-        //this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((27 / 28), 2));
+        //this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((27 / 28), 0));
+        //this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.SPIKE]((27 / 28), 1));
+        //this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[ID.PILLAR]((27 / 28), 2));
         // ---------------- end
-        //this.roadTemplatesSetList[listNum].templateList.push(this.templatesListRoadObjects[3](0.75, 1));
+        //this.roadTemplateSetList[listNum].templateList.push(this.templatesListRoadObjects[3](0.75, 1));
         /**
          * creation of sceneTemplatesSetListre
          */
@@ -254,26 +252,50 @@ var SceneObjectSpawnTemplateSetFactory = (function () {
         }
     };
     /**
-     * Spawn interactable objects on the road
+     * Spawn a set of interactable objects on the road
      * @param roadIndex index of the road where the objects have to be spawned on
      * @param scene games scene
-     * @param riverRoad is the road where the objects are spawned on a river or not
+     * @param riverRoad if the road where the objects are spawned on a river or not
+     * @param spawnTemplatSet set of objects to be spawned
+     * @returns distance of a brige placed on the road if no brige is placed -1 is returned
+     */
+    SceneObjectSpawnTemplateSetFactory.prototype.createRoadObjectTemplateSet = function (roadIndex, scene, riverRoad, spawnTemplatSet) {
+        var brigePosition = -1;
+        for (var i = 0; i < spawnTemplatSet.templateList.length; i++) {
+            if (spawnTemplatSet.templateList[i].brige) {
+                if (riverRoad) {
+                    // create regular pillar instead of brige on river road
+                    this.createSceneObject(this.templatesListRoadObjects[ID.PILLAR](spawnTemplatSet.templateList[i].distOnRoad, 1), scene, roadIndex);
+                    continue;
+                }
+                brigePosition = spawnTemplatSet.templateList[i].distOnRoad;
+            }
+            this.createSceneObject(spawnTemplatSet.templateList[i], scene, roadIndex);
+        }
+        return brigePosition;
+    };
+    /**
+     * Spawn a random set of interactable objects on the road
+     * @param roadIndex index of the road where the objects have to be spawned on
+     * @param scene games scene
+     * @param riverRoad if the road where the objects are spawned on a river or not
      * @returns distance of a brige placed on the road if no brige is placed -1 is returned
      */
     SceneObjectSpawnTemplateSetFactory.prototype.createRandomRoadObjectTemplateSet = function (roadIndex, scene, riverRoad) {
-        var random = this.randomListNumber(this.roadTemplatesSetList);
-        var brigePosition = -1;
-        for (var i = 0; i < this.roadTemplatesSetList[random].templateList.length; i++) {
-            if (this.roadTemplatesSetList[random].templateList[i].brige) {
-                if (riverRoad) {
-                    // create regular pillar instead of brige on river road
-                    this.createSceneObject(this.templatesListRoadObjects[ID.PILLAR](this.roadTemplatesSetList[random].templateList[i].distOnRoad, 1), scene, roadIndex);
-                    continue;
-                }
-                brigePosition = this.roadTemplatesSetList[random].templateList[i].distOnRoad;
-            }
-            this.createSceneObject(this.roadTemplatesSetList[random].templateList[i], scene, roadIndex);
-        }
+        var random = this.randomListNumber(this.roadTemplateSetList);
+        var brigePosition = this.createRoadObjectTemplateSet(roadIndex, scene, riverRoad, this.roadTemplateSetList[random]);
+        return brigePosition;
+    };
+    /**
+     * Spawn a set of interactable objects on the road that are intanded to use with a tutorial
+     * @param roadIndex index of the road where the objects have to be spawned on
+     * @param scene games scene
+     * @param riverRoad if the road where the objects are spawned on a river or not
+     * @param tuturialSetIndex index of the set of objects to be spawned for the tutorial part
+     * @returns distance of a brige placed on the road if no brige is placed -1 is returned
+     */
+    SceneObjectSpawnTemplateSetFactory.prototype.createTutorialRoadObjectTemplateSet = function (roadIndex, scene, riverRoad, tuturialSetIndex) {
+        var brigePosition = this.createRoadObjectTemplateSet(roadIndex, scene, riverRoad, this.tutorialRoadTemplateSetList[tuturialSetIndex]);
         return brigePosition;
     };
     SceneObjectSpawnTemplateSetFactory.prototype.createSceneObject = function (sost, scene, roadIndex) {

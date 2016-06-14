@@ -57,14 +57,14 @@ class tutorial {
         if (this._tutFinished == false) {
             switch (this._tutorialState) {
                 case tutorialState.None:
-                    if (Math.round(this._playermanager.getplayerT() - this._gameUI.getPlayerTOffset()) >= 20) {
+                    if (Math.round(this._playermanager.getplayerT() - this._gameUI.getPlayerTOffset()) >= 21) {
                         this._tutorialState = tutorialState.Move;
                         this._playermanager.setPlaying(false);
                         this.openImage();
                     }
                     break;
                 case tutorialState.WaitForJump:
-                    if (Math.round(this._playermanager.getplayerT() - this._gameUI.getPlayerTOffset()) >= 40) {
+                    if (Math.round(this._playermanager.getplayerT() - this._gameUI.getPlayerTOffset()) >= 36) {
                         this._tutorialState = tutorialState.Jump;
                         this._playermanager.setPlaying(false);
                         this.openImage();

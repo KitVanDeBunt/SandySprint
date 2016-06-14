@@ -18,7 +18,8 @@ var RoadManager = (function () {
         // initialize scene object factory
         this._sceneObjectFactory = new SceneObjectSpawnTemplateSetFactory(this, engine);
         this.createRaodPart(false);
-        this.createRaodPart(false);
+        this.createRaodPart(false, 0);
+        this.createRaodPart(false, 1);
     }
     Object.defineProperty(RoadManager.prototype, "getLanes", {
         /**
@@ -32,9 +33,12 @@ var RoadManager = (function () {
     });
     /**
      * spawns a new road section
+     * @param spawnObstacles false if you dont whant obstacles on the raod
+     * @param tutorialPart spawn obstacles for the tutorial if -1 no tutorial
      */
-    RoadManager.prototype.createRaodPart = function (spawnObstacles) {
+    RoadManager.prototype.createRaodPart = function (spawnObstacles, tutorialPart) {
         if (spawnObstacles === void 0) { spawnObstacles = true; }
+        if (tutorialPart === void 0) { tutorialPart = -1; }
         var roadN = this._lanes.length;
         var road = this._engine.createEntity();
         var roadPositionComponent = new ECS.ComponentTransform(new BABYLON.Vector3(0, 0, this._roadesSpawned * 14), new BABYLON.Vector3(1, 1, 1), BABYLON.Quaternion.Identity());
@@ -70,6 +74,12 @@ var RoadManager = (function () {
         var distanceBrige = -1;
         if (spawnObstacles) {
             distanceBrige = this._sceneObjectFactory.createRandomRoadObjectTemplateSet(roadN, this._scene, riverRoad);
+        }
+        else if (tutorialPart == 0) {
+            this._sceneObjectFactory.createTutorialRoadObjectTemplateSet(roadN, this._scene, riverRoad, tutorialPart);
+        }
+        else if (tutorialPart == 1) {
+            this._sceneObjectFactory.createTutorialRoadObjectTemplateSet(roadN, this._scene, riverRoad, tutorialPart);
         }
         this._sceneObjectFactory.createRandomSceneObjectTemplateSet(roadN, this._scene, riverRoad, distanceBrige);
         this._roadesSpawned++;
