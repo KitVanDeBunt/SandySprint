@@ -20,7 +20,7 @@ class ComponentJumpCurve {
         this.jumping = true;
         this._startT = startT;
         this._y = 0;
-        this._yVelocity = 0.013;
+        this._yVelocity = 0.0095;
     }
 
     getStartT(): number {
@@ -33,8 +33,8 @@ class ComponentJumpCurve {
      * @returns point on curve at t
      */
     getPointAtT(deltaTime:number): BABYLON.Vector3 {
-        this._y += this._yVelocity;
-        this._yVelocity -= deltaTime / 190000;
+        this._yVelocity -= deltaTime*0.000004;
+        this._y += this._yVelocity * (deltaTime/1000) * 50;
         return new BABYLON.Vector3(0,this._y,0);
     }
 
