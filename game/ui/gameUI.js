@@ -9,6 +9,7 @@ var GameUI = (function () {
      * @param canvas the canvas of the game.
      * @param engine the Babylon Engine of the game.
      * @param audioManager the audioManager to play/stop sounds.
+     * @param systemMeshRender the meshRender that loads all assets.
      */
     function GameUI(scene, ecs, canvas, engine, audioManager, systemMeshRender) {
         this._playerToffset = 0;
@@ -127,14 +128,14 @@ var GameUI = (function () {
         this.inGameUI = new InGameUI(this._canvas, this._engine, this._scene, this, this._playerManager, tutorialEnabled);
         this.inGameUI.tutorial = tutorialEnabled;
     };
+    GameUI.prototype.closeInGame = function () {
+        this.inGameUI.Dispose();
+    };
     GameUI.prototype.openLoadingScreen = function () {
         this._loadingScreen = new loadingScreen(this, this._scene, this._MeshRender);
     };
     GameUI.prototype.closeLoadingScreen = function () {
         this._loadingScreen.dispose();
-    };
-    GameUI.prototype.closeInGame = function () {
-        this.inGameUI.Dispose();
     };
     GameUI.prototype.openEndScreen = function () {
         this._endScreen = new endScreen(this, this._scene);
@@ -166,16 +167,9 @@ var GameUI = (function () {
         logobox.layerMask = 0x20000000;
         return logobox;
     };
-    /**
-     * sets playerTOffset for restarting
-     * @param PlayerT the playerT where there player died previous round.
-     */
     GameUI.prototype.setPlayerTOffset = function (PlayerT) {
         this._playerToffset = PlayerT;
     };
-    /**
-     * get playerTOffset
-     */
     GameUI.prototype.getPlayerTOffset = function () {
         return this._playerToffset;
     };

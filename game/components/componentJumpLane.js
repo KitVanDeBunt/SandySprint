@@ -3,8 +3,6 @@
  * Creates an extra curve to make the player jump.
  */
 var ComponentJumpCurve = (function () {
-    /**
-     */
     function ComponentJumpCurve() {
         this.jumping = false;
         this._startT = 0;

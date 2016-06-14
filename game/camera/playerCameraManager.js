@@ -1,29 +1,29 @@
 /**
  * PlayerCameraManager
+ * managers the camera begind the player.
  */
 var PlayerCameraManager = (function () {
+    /**
+     * @param ECSengine the Entity Component System of the game.
+     * @param scene the scene that the game is using.
+     * @playerManager the playerManager of the player that it is following.
+     */
     function PlayerCameraManager(ECSengine, scene, playerManager) {
         this._shaketime = 0;
         this._shaken = false;
-        this.playerManager = playerManager;
+        this._playerManager = playerManager;
         // create camera entity
         var cameraECS = ECSengine.createEntity();
-        this.cameraTranslateComponent = new ECS.ComponentTransform(BABYLON.Vector3.Zero(), new BABYLON.Vector3(0.005, 0.005, 0.005), BABYLON.Quaternion.Identity());
-        this.cameraTranslateComponent.setPosition = this.cameraTranslateComponent.getPosition.add(new BABYLON.Vector3(0, 0, 5));
-        cameraECS.addComponent(this.cameraTranslateComponent);
-        this.cameraComponent = new ComponentCamera(this.cameraTranslateComponent, scene);
-        cameraECS.addComponent(this.cameraComponent);
+        this._cameraTranslateComponent = new ECS.ComponentTransform(BABYLON.Vector3.Zero(), new BABYLON.Vector3(0.005, 0.005, 0.005), BABYLON.Quaternion.Identity());
+        this._cameraTranslateComponent.setPosition = this._cameraTranslateComponent.getPosition.add(new BABYLON.Vector3(0, 0, 5));
+        cameraECS.addComponent(this._cameraTranslateComponent);
+        this._cameraComponent = new ComponentCamera(this._cameraTranslateComponent, scene);
+        cameraECS.addComponent(this._cameraComponent);
         this._shakeOffset = BABYLON.Vector3.Zero();
     }
-    Object.defineProperty(PlayerCameraManager.prototype, "cameraPosition", {
-        get: function () {
-            return this.cameraTranslateComponent.getPosition;
-        },
-        enumerable: true,
-        configurable: true
-    });
     /**
-     * updates the players camera
+     * check the camera shake.
+     * updates the players camera position.
      */
     PlayerCameraManager.prototype.update = function (deltaTime) {
         if (this._shaken) {
@@ -46,16 +46,26 @@ var PlayerCameraManager = (function () {
                 this._shaken = false;
             }
         }
-        this.cameraTranslateComponent.setPosition = this.playerManager.getplayerPosition().add(new BABYLON.Vector3(0, 0.5, 0.0)).add(this._shakeOffset);
+        this._cameraTranslateComponent.setPosition = this._playerManager.getplayerPosition().add(new BABYLON.Vector3(0, 0.5, 0.0)).add(this._shakeOffset);
     };
+    /**
+     * starts the camera shake.
+     */
     PlayerCameraManager.prototype.Shake = function () {
         if (!this._shaken) {
             this._shaketime = 0;
             this._shaken = true;
         }
     };
+    Object.defineProperty(PlayerCameraManager.prototype, "cameraPosition", {
+        get: function () {
+            return this._cameraTranslateComponent.getPosition;
+        },
+        enumerable: true,
+        configurable: true
+    });
     PlayerCameraManager.prototype.getCameraComponent = function () {
-        return this.cameraComponent;
+        return this._cameraComponent;
     };
     return PlayerCameraManager;
 }());
