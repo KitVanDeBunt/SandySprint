@@ -41,12 +41,12 @@ class InGameUI {
         this.checkTutorial();
         //score background
         var scoreBarTex = new BABYLON.Texture("assets/textures/ui_textures/highscore-bar.png", this._scene, true);
-        var scoreBar = this._gameUI.createImage(new BABYLON.Vector2(-440, 400), new BABYLON.Vector2(580 / 2, 51 / 2), scoreBarTex);
+        var scoreBar = this._gameUI.createImage(new BABYLON.Vector2(-340, 320), new BABYLON.Vector2(580 / 2, 51 / 2), scoreBarTex);
         this._objects.push(scoreBar);
 
         //scarabs background
         var treasureBarTex = new BABYLON.Texture("assets/textures/ui_textures/treasure-bar.png", this._scene, true);
-        var treasureBar = this._gameUI.createImage(new BABYLON.Vector2(-440, 342), new BABYLON.Vector2(580 / 2, 51 / 2), treasureBarTex);
+        var treasureBar = this._gameUI.createImage(new BABYLON.Vector2(-340, 262), new BABYLON.Vector2(580 / 2, 51 / 2), treasureBarTex);
         this._objects.push(treasureBar);
 
         //score material
@@ -85,8 +85,8 @@ class InGameUI {
      */
     update() {
         this.context2D.clearRect(0, 0, 512, 512);
-        this._myMaterial_diffuseTexture.drawText("" + Math.round(this._playerManager.getplayerT() - this._gameUI.getPlayerTOffset()), 0, 58, "25px Cooper Std Black", "black", "transparent");
-        this._myMaterial_diffuseTexture.drawText("" + this._playerManager.getPickupsCollected(), 0, 88, "25px Cooper Std Black", "black", "transparent");
+        this._myMaterial_diffuseTexture.drawText("" + Math.round(this._playerManager.getplayerT() - this._gameUI.getPlayerTOffset()), 50, 99, "25px Cooper Std Black", "black", "transparent");
+        this._myMaterial_diffuseTexture.drawText("" + this._playerManager.getPickupsCollected(), 50, 128, "25px Cooper Std Black", "black", "transparent");
         if (this._tutorialEnabled) {
             this._tutorial.update();
         }

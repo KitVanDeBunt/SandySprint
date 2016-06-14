@@ -55,6 +55,16 @@ var ComponentCamera = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(ComponentCamera.prototype, "state", {
+        get: function () {
+            return this._state;
+        },
+        set: function (state) {
+            this._state = state;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return ComponentCamera;
 }(ECS.Component));
 var ComponentCameraState;

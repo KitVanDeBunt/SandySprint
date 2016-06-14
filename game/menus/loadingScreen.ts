@@ -40,7 +40,7 @@ class loadingScreen {
      */
     showLoadingScreen() {
         var loadingImage: BABYLON.Texture = new BABYLON.Texture("assets/textures/ui_textures/LoadingScreen.png", this._scene, true);
-        var loading = this._gameUI.createImage(new BABYLON.Vector2(0, 0), new BABYLON.Vector2(1920 * 0.5, 1080 * 0.5), loadingImage);
+        var loading = this._gameUI.createImage(new BABYLON.Vector2(0, 0), new BABYLON.Vector2(1920 * 0.6, 1080 * 0.6), loadingImage);
         this._objects.push(loading);
 
         var loadingPerc = this._gameUI.createImage(new BABYLON.Vector2(0, -200), new BABYLON.Vector2(300, 300), null);

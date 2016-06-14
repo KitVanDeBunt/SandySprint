@@ -5,7 +5,7 @@
  */
 class ComponentCamera extends ECS.Component {
 
-    state: ComponentCameraState;
+    private _state: ComponentCameraState;
     private _camera: BABYLON.FreeCamera;
     private _scene: BABYLON.Scene;
     private _layer: number = 0;
@@ -38,6 +38,14 @@ class ComponentCamera extends ECS.Component {
     
     public set setLayermask(layer: number) {
         this._layer = layer;   
+    }
+    
+    public get state():ComponentCameraState{
+        return this._state;
+    }
+    
+    public set state(state:ComponentCameraState){
+        this._state = state;
     }
 }
 

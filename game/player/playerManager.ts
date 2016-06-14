@@ -1,5 +1,6 @@
 /**
  * PlayerManager
+ * Managers the player position, animation, and collision.
  */
 class PlayerManager {
 
@@ -56,10 +57,11 @@ class PlayerManager {
     private ftc: number = 0.8;
 
     /**
+     * @param gameBase the gameBase that has created this manager.
      * @param scene the scene which contains the player
-     * @param the games entity component system
-     * @param the games RoadManager
-     * @param the games AudioManager
+     * @param ECSengine the games entity component system
+     * @param roadManager the games RoadManager
+     * @param audioManager the games AudioManager
      * @param gameUI the games ui
      */
     constructor(gameBase: GameBase, scene: BABYLON.Scene, ECSengine: ECS.Engine, roadManager: RoadManager, audioManager: audioManager, gameUI: GameUI) {
@@ -82,11 +84,6 @@ class PlayerManager {
 
         this._jumpManager = new ComponentJumpCurve();
 
-
-        //playerTranslateComponent.setScale = new BABYLON.Vector3(0.1, 0.1, 0.1);
-        console.log(this._playerTranslateComponent.getPosition);
-        console.log("componentPosition instance type:" + this._playerTranslateComponent.componentType());
-
         this._currentLane = this._roadManager.getStartLane;
         this._previousLane = this._roadManager.getStartLane;
 
@@ -94,8 +91,8 @@ class PlayerManager {
     }
 
     /**
-     * Sets the players speed
-     * @param playerSpeed the new speed of the player.
+     * Sets the players play state
+     * @param state the state that the game will be set in.
      */
     setPlaying(state: boolean) {
         this._playing = state;
@@ -135,18 +132,23 @@ class PlayerManager {
 
     /**
      * get touch start position
+     * @param touchEvt data about the touchevent.
      */
     onTouchStart(touchEvt: TouchEvent) {
         this._playerMovedCurrentTouch = false;
         this._touchStart = new BABYLON.Vector2(touchEvt.touches[0].screenX, touchEvt.touches[0].screenY);
     }
 
+    /**
+     * get touch end position
+     * @param touchEvt data about the touchevent.
+     */
     onTouchEnd(touchEvt: TouchEvent) {
-
     }
 
     /**
-     * check for swipe
+     * get touch position when touch gets moved.
+     * @param touchEvt data about the moved touchevent.
      */
     onTouchMove(touchEvt: TouchEvent) {
         this._touchEnd = new BABYLON.Vector2(touchEvt.touches[0].screenX, touchEvt.touches[0].screenY);
@@ -189,12 +191,13 @@ class PlayerManager {
                     this._jumpManager.jump(this._playerT);
                     this._audio.playSound(Sounds.Jump);
                 }
-                //case 82:
-                //throw 0;
                 break;
         }
     }
 
+    /**
+     * Checks if the player can move left, and starts it.
+     */
     private movePlayerLeft() {
         if (this._currentLane.getLeftLaneAvalable && this._playing) {
             if (!this._inLaneTween) {
@@ -209,6 +212,9 @@ class PlayerManager {
         }
     }
 
+    /**
+      * Checks if the player can move right, and starts it.
+      */
     private movePlayerRight() {
         if (this._currentLane.getRightLaneAvalable && this._playing) {
             if (!this._inLaneTween) {
@@ -223,6 +229,9 @@ class PlayerManager {
         }
     }
 
+    /**
+     * moves the player between lanes.
+     */
     private startPlayerLaneTween() {
         this._inLaneTween = true;
         this.updateAnimation();
@@ -230,16 +239,20 @@ class PlayerManager {
         this._audio.playSound(Sounds.LaneSwitch);
         this._laneTweenAnimationTime = this.framesToAnimationTime(10);
     }
-    
+
     /**
      * convert an amout of frames to the time it takes to play the animation at normals speed
      * @param frames number of frames you need the playback time of
      * @returns animation time at normal speed in milliseconds
      */
-    private framesToAnimationTime(frames:number) :number{
+    private framesToAnimationTime(frames: number): number {
         return (((frames * this.ftc) / 24) * 1000);
     }
 
+    /**
+     * plays the death animation when death, and calls the endscreen.
+     * @param deltaTime the deltaTime between this and last update.
+     */
     private updateDead(deltaTime: number) {
         this._playerDiedT += deltaTime;
         if (this._playerDiedT > this.framesToAnimationTime(420 - 360) && !this._playerDiedAnimDone) {
@@ -257,6 +270,7 @@ class PlayerManager {
 
     /**
      * updates the player
+     * @param deltaTime the deltaTime between this and last update.
      */
     update(deltaTime: number): void {
         if (this._playing) {
@@ -274,8 +288,10 @@ class PlayerManager {
         }
     }
 
+    /**
+     * Checks if an animation needs to be played, and does that if needed.
+     */
     private updateAnimation() {
-
         if (this._playerMeshComponent.meshState == ECS.MeshLoadState.Loaded) {
             if (this._playerDead && !this._playerDiedAnimStarted) {
                 if (this._fallingBack) {
@@ -355,6 +371,10 @@ class PlayerManager {
         }
     }
 
+    /**
+     * plays the walking sound
+     * @param deltaTime the deltaTime between this and last update.
+     */
     private updateAudio(deltaTime: number) {
         this._walkSoundRepeatTimer += deltaTime;
         if (this._walkSoundRepeatTimer > this._walkSoundRepeatTime && this._jumpManager.jumping == false) {
@@ -363,6 +383,9 @@ class PlayerManager {
         }
     }
 
+    /**
+     * Checks if new roadparts need to be created.
+     */
     private updateRoadLane() {
         // set next lane if at end of current lane
         if (this._playerT > this._currentLane.getEndT()) {
@@ -377,7 +400,7 @@ class PlayerManager {
 
     /**
      * updats the movement of the player
-     * @param deltaTime time delta this update and previous update
+     * @param deltaTime the deltaTime between this and last update.
      */
     private updatePlayerMovment(deltaTime: number) {
         if (!this._inLaneTween) {
@@ -420,9 +443,8 @@ class PlayerManager {
             let previousLanePosition: BABYLON.Vector3 = this._previousLane.getPointAtT(laneInputT);
             pos = BABYLON.Vector3.Lerp(previousLanePosition, targetLanePosition, this._laneTweenInterpolation);
         }
-        if(this._laneTweenAnimationTime > 0)
-        {
-           this._laneTweenAnimationTime -= deltaTime;
+        if (this._laneTweenAnimationTime > 0) {
+            this._laneTweenAnimationTime -= deltaTime;
         }
         // jumping
         if (this._jumpManager.jumping) {
@@ -437,7 +459,9 @@ class PlayerManager {
         this._playerTranslateComponent.setPosition = pos;
     }
 
-
+    /**
+     * Checks if the player is colliding.
+     */
     private updateCollision() {
         this._playerMeshComponent.updateCollision();
         if (!this._firstFrame) {

@@ -24,10 +24,10 @@ var endScreen = (function () {
         this._objects = [];
         this._gameUI.menuState = menuState.End;
         var backgroundTex = new BABYLON.Texture("assets/textures/ui_textures/ui-background.png", this._scene, true);
-        var background = this._gameUI.createImage(new BABYLON.Vector2(0, 0), new BABYLON.Vector2(337, 403), backgroundTex);
+        var background = this._gameUI.createImage(new BABYLON.Vector2(0, 0), new BABYLON.Vector2(337 * 0.7, 403 * 0.7), backgroundTex);
         this._objects.push(background);
         backgroundTex = new BABYLON.Texture("assets/textures/ui_textures/restart-button.png", this._scene, true);
-        var play = this._gameUI.createImage(new BABYLON.Vector2(0, -270), new BABYLON.Vector2(80, 80), backgroundTex);
+        var play = this._gameUI.createImage(new BABYLON.Vector2(0, -270), new BABYLON.Vector2(60, 60), backgroundTex);
         this._objects.push(play);
         var material = new BABYLON.StandardMaterial("textuare1", this._scene);
         material.alpha = 1;
@@ -64,9 +64,9 @@ var endScreen = (function () {
             }
         }
         this.context2D.clearRect(0, 0, 512, 512);
-        this._endscreentexture.drawText("Score: " + Math.round(this._scorecount), 150, 260, "30px Cooper Std Black", "black", "transparent");
-        this._endscreentexture.drawText("Scarabs: " + Math.round(this._scarabcount) + "  x 3", 150, 290, "30px Cooper Std Black", "black", "transparent");
-        this._endscreentexture.drawText("Total: " + Math.round(this._scorecount + (this._scarabcount * 3)), 150, 330, "30px Cooper Std Black", "black", "transparent");
+        this._endscreentexture.drawText("Score: " + Math.round(this._scorecount), 150, 260, "20px Cooper Std Black", "black", "transparent");
+        this._endscreentexture.drawText("Scarabs: " + Math.round(this._scarabcount) + "  x 3", 150, 290, "20px Cooper Std Black", "black", "transparent");
+        this._endscreentexture.drawText("Total: " + Math.round(this._scorecount + (this._scarabcount * 3)), 150, 330, "20px Cooper Std Black", "black", "transparent");
     };
     /**
      * restarts game when mousebutton gets pressed, or the screen gets touched.

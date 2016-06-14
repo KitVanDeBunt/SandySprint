@@ -3,8 +3,6 @@
  */
 class RoadManager {
 
-    // TODO : delete spawned objects
-
     private _engine: ECS.Engine;
     private _scene: BABYLON.Scene;
     private _clonesCreated: boolean = false;

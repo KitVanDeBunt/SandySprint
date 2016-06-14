@@ -1,12 +1,14 @@
 /**
  * PlayerManager
+ * Managers the player position, animation, and collision.
  */
 var PlayerManager = (function () {
     /**
+     * @param gameBase the gameBase that has created this manager.
      * @param scene the scene which contains the player
-     * @param the games entity component system
-     * @param the games RoadManager
-     * @param the games AudioManager
+     * @param ECSengine the games entity component system
+     * @param roadManager the games RoadManager
+     * @param audioManager the games AudioManager
      * @param gameUI the games ui
      */
     function PlayerManager(gameBase, scene, ECSengine, roadManager, audioManager, gameUI) {
@@ -55,16 +57,13 @@ var PlayerManager = (function () {
         this._playerMeshComponent.setColliderOffset = new BABYLON.Vector3(0, 0.25, 0);
         this._playerMeshComponent.setCollision(mesh);
         this._jumpManager = new ComponentJumpCurve();
-        //playerTranslateComponent.setScale = new BABYLON.Vector3(0.1, 0.1, 0.1);
-        console.log(this._playerTranslateComponent.getPosition);
-        console.log("componentPosition instance type:" + this._playerTranslateComponent.componentType());
         this._currentLane = this._roadManager.getStartLane;
         this._previousLane = this._roadManager.getStartLane;
         this._abstractMeshComponetType = new ECS.ComponentAbstractMesh(null, null, null).componentType();
     }
     /**
-     * Sets the players speed
-     * @param playerSpeed the new speed of the player.
+     * Sets the players play state
+     * @param state the state that the game will be set in.
      */
     PlayerManager.prototype.setPlaying = function (state) {
         this._playing = state;
@@ -99,15 +98,21 @@ var PlayerManager = (function () {
     };
     /**
      * get touch start position
+     * @param touchEvt data about the touchevent.
      */
     PlayerManager.prototype.onTouchStart = function (touchEvt) {
         this._playerMovedCurrentTouch = false;
         this._touchStart = new BABYLON.Vector2(touchEvt.touches[0].screenX, touchEvt.touches[0].screenY);
     };
+    /**
+     * get touch end position
+     * @param touchEvt data about the touchevent.
+     */
     PlayerManager.prototype.onTouchEnd = function (touchEvt) {
     };
     /**
-     * check for swipe
+     * get touch position when touch gets moved.
+     * @param touchEvt data about the moved touchevent.
      */
     PlayerManager.prototype.onTouchMove = function (touchEvt) {
         this._touchEnd = new BABYLON.Vector2(touchEvt.touches[0].screenX, touchEvt.touches[0].screenY);
@@ -148,11 +153,12 @@ var PlayerManager = (function () {
                     this._jumpManager.jump(this._playerT);
                     this._audio.playSound(Sounds.Jump);
                 }
-                //case 82:
-                //throw 0;
                 break;
         }
     };
+    /**
+     * Checks if the player can move left, and starts it.
+     */
     PlayerManager.prototype.movePlayerLeft = function () {
         if (this._currentLane.getLeftLaneAvalable && this._playing) {
             if (!this._inLaneTween) {
@@ -167,6 +173,9 @@ var PlayerManager = (function () {
             }
         }
     };
+    /**
+      * Checks if the player can move right, and starts it.
+      */
     PlayerManager.prototype.movePlayerRight = function () {
         if (this._currentLane.getRightLaneAvalable && this._playing) {
             if (!this._inLaneTween) {
@@ -181,6 +190,9 @@ var PlayerManager = (function () {
             }
         }
     };
+    /**
+     * moves the player between lanes.
+     */
     PlayerManager.prototype.startPlayerLaneTween = function () {
         this._inLaneTween = true;
         this.updateAnimation();
@@ -196,6 +208,10 @@ var PlayerManager = (function () {
     PlayerManager.prototype.framesToAnimationTime = function (frames) {
         return (((frames * this.ftc) / 24) * 1000);
     };
+    /**
+     * plays the death animation when death, and calls the endscreen.
+     * @param deltaTime the deltaTime between this and last update.
+     */
     PlayerManager.prototype.updateDead = function (deltaTime) {
         this._playerDiedT += deltaTime;
         if (this._playerDiedT > this.framesToAnimationTime(420 - 360) && !this._playerDiedAnimDone) {
@@ -212,6 +228,7 @@ var PlayerManager = (function () {
     };
     /**
      * updates the player
+     * @param deltaTime the deltaTime between this and last update.
      */
     PlayerManager.prototype.update = function (deltaTime) {
         if (this._playing) {
@@ -228,6 +245,9 @@ var PlayerManager = (function () {
             this.updateDead(deltaTime);
         }
     };
+    /**
+     * Checks if an animation needs to be played, and does that if needed.
+     */
     PlayerManager.prototype.updateAnimation = function () {
         if (this._playerMeshComponent.meshState == ECS.MeshLoadState.Loaded) {
             if (this._playerDead && !this._playerDiedAnimStarted) {
@@ -309,6 +329,10 @@ var PlayerManager = (function () {
             }
         }
     };
+    /**
+     * plays the walking sound
+     * @param deltaTime the deltaTime between this and last update.
+     */
     PlayerManager.prototype.updateAudio = function (deltaTime) {
         this._walkSoundRepeatTimer += deltaTime;
         if (this._walkSoundRepeatTimer > this._walkSoundRepeatTime && this._jumpManager.jumping == false) {
@@ -316,6 +340,9 @@ var PlayerManager = (function () {
             this._audio.playSound(Sounds.Walk);
         }
     };
+    /**
+     * Checks if new roadparts need to be created.
+     */
     PlayerManager.prototype.updateRoadLane = function () {
         // set next lane if at end of current lane
         if (this._playerT > this._currentLane.getEndT()) {
@@ -325,7 +352,7 @@ var PlayerManager = (function () {
     };
     /**
      * updats the movement of the player
-     * @param deltaTime time delta this update and previous update
+     * @param deltaTime the deltaTime between this and last update.
      */
     PlayerManager.prototype.updatePlayerMovment = function (deltaTime) {
         if (!this._inLaneTween) {
@@ -381,6 +408,9 @@ var PlayerManager = (function () {
         }
         this._playerTranslateComponent.setPosition = pos;
     };
+    /**
+     * Checks if the player is colliding.
+     */
     PlayerManager.prototype.updateCollision = function () {
         this._playerMeshComponent.updateCollision();
         if (!this._firstFrame) {
