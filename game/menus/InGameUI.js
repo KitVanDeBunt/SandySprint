@@ -103,6 +103,13 @@ var InGameUI = (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(InGameUI.prototype, "GetTutorial", {
+        get: function () {
+            return this._tutorialEnabled;
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * Deletes all objects
      */

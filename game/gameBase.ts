@@ -215,7 +215,7 @@ class GameBase {
             this._gameUI.setPlayerTOffset(0);
             this._gameUI.restartCamera();
             this._gameUI.setPlayerManager(this._playerManager);
-            this._gameUI.openInGame(this._gameUI.inGameUI.tutorialEnabled);
+            this._gameUI.openInGame(this._gameUI.inGameUI.GetTutorial);
         } else {
             // first start game
             this._playerManager = new PlayerManager(this, this._scene, this._ECSengine, this._roadManager, this._audio, this._gameUI);

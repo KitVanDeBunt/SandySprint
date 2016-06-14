@@ -125,6 +125,10 @@ class InGameUI {
     set tutorial(state: boolean) {
         this._tutorialEnabled = state;
     }
+    
+    get GetTutorial() {
+        return this._tutorialEnabled;
+    }
 
     /**
      * Deletes all objects

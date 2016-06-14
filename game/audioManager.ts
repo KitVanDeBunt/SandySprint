@@ -32,7 +32,7 @@ class audioManager {
         this._jumpSound = this.addSound("Jumpsound", "../assets/sounds/jump.wav", false, 0.3, 1);
         this._jumpLandSound = this.addSound("JumpLandSound", "../assets/sounds/jumpland.mp3", false, 0.9, 1);
         this._startSound = this.addSound("StartSound", "../assets/sounds/start.wav", false, 2, 0.6);
-        this._stopSound = this.addSound("StopSound", "../assets/sounds/stop.mp3", false, 1.6, 1);
+        this._stopSound = this.addSound("StopSound", "../assets/sounds/stop.mp3", false, 1, 1);
         this._laneSwitchSound = this.addSound("SwitchSound", "../assets/sounds/swipe.wav", false, 0.1, 1);
         this._walkSoundL = this.addSound("WalkSoundL", "../assets/sounds/Walk1.mp3", false, 0.1, 0.8);
         this._walkSoundR = this.addSound("WalkSoundR", "../assets/sounds/Walk2.mp3", false, 0.1, 0.8);

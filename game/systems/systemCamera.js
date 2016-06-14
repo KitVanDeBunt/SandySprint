@@ -40,6 +40,7 @@ var SystemCamera = (function (_super) {
                             newCam.attachControl(this._canvas, false);
                         }
                         componentCamera.setCamera = newCam;
+                        //checks if it is a UI camera or not.
                         if (componentCamera.getLayermask != 0) {
                             newCam.layerMask = 0x20000000;
                             newCam.position = new BABYLON.Vector3(0, 0, -1);
