@@ -6,7 +6,7 @@ class audioManager {
 
     menuBackgroundSound: BABYLON.Sound;
     state: Sounds;
-    
+
     private _scene: BABYLON.Scene;
     private _pickUpSound: BABYLON.Sound;
     private _inGameSound: BABYLON.Sound;
@@ -14,6 +14,7 @@ class audioManager {
     private _jumpLandSound: BABYLON.Sound;
     private _startSound: BABYLON.Sound;
     private _stopSound: BABYLON.Sound;
+    private _spikeSound: BABYLON.Sound;
     private _laneSwitchSound: BABYLON.Sound;
     private _walkSoundL: BABYLON.Sound;
     private _walkSoundR: BABYLON.Sound;
@@ -33,6 +34,7 @@ class audioManager {
         this._jumpLandSound = this.addSound("JumpLandSound", "../assets/sounds/jumpland.mp3", false, 0.9, 1);
         this._startSound = this.addSound("StartSound", "../assets/sounds/start.wav", false, 2, 0.6);
         this._stopSound = this.addSound("StopSound", "../assets/sounds/stop.mp3", false, 1, 1);
+        this._spikeSound = this.addSound("SpikeSound", "../assets/sounds/Sword.mp3", false, 1, 1);
         this._laneSwitchSound = this.addSound("SwitchSound", "../assets/sounds/swipe.wav", false, 0.1, 1);
         this._walkSoundL = this.addSound("WalkSoundL", "../assets/sounds/Walk1.mp3", false, 0.1, 0.8);
         this._walkSoundR = this.addSound("WalkSoundR", "../assets/sounds/Walk2.mp3", false, 0.1, 0.8);
@@ -80,6 +82,9 @@ class audioManager {
             case Sounds.Stop:
                 this._stopSound.play();
                 break;
+            case Sounds.Spike:
+                this._spikeSound.play();
+                break;
             case Sounds.LaneSwitch:
                 this._laneSwitchSound.play();
                 break;
@@ -124,6 +129,9 @@ class audioManager {
             case Sounds.Stop:
                 this._stopSound.stop();
                 break;
+            case Sounds.Spike:
+                this._spikeSound.stop();
+                break;
             case Sounds.LaneSwitch:
                 this._laneSwitchSound.stop();
                 break;
@@ -145,6 +153,7 @@ enum Sounds {
     JumpLand,
     Start,
     Stop,
+    Spike,
     LaneSwitch,
     Walk
 }

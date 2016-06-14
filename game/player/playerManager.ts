@@ -23,6 +23,7 @@ class PlayerManager {
     private _playerDiedAnimStarted: boolean = false;
     private _playerDiedAnimDone: boolean = false;
     private _playerDiedT: number = 0;
+    private _fallingBack: boolean = true;
     private _endScreenOpened = false;
 
     // lane
@@ -271,10 +272,18 @@ class PlayerManager {
 
         if (this._playerMeshComponent.meshState == ECS.MeshLoadState.Loaded) {
             if (this._playerDead && !this._playerDiedAnimStarted) {
-                // play fall back animation
-                this._animationState = PlayerAnimationState.FallingBack;
-                this._playerDiedAnimStarted = true;
-                this._scene.beginAnimation(this._playerMeshComponent.babylonMesh.skeleton, 360 * this.ftc, 420 * this.ftc, true, 1);
+                if (this._fallingBack) {
+                    // play fall back animation
+                    this._animationState = PlayerAnimationState.FallingBack;
+                    this._playerDiedAnimStarted = true;
+                    this._scene.beginAnimation(this._playerMeshComponent.babylonMesh.skeleton, 360 * this.ftc, 420 * this.ftc, true, 1);
+                }
+                else {
+                    // play fall back animation
+                    this._animationState = PlayerAnimationState.FallingForward;
+                    this._playerDiedAnimStarted = true;
+                    this._scene.beginAnimation(this._playerMeshComponent.babylonMesh.skeleton, 280 * this.ftc, 350 * this.ftc, true, 1);
+                }
             } else {
                 switch (this._animationState) {
 
@@ -311,8 +320,11 @@ class PlayerManager {
                             this._scene.beginAnimation(this._playerMeshComponent.babylonMesh.skeleton, 419 * this.ftc, 420 * this.ftc, true, 1);
                         }
                         break;
-                    case PlayerAnimationState.FallingBackDone:
-
+                    case PlayerAnimationState.FallingForward:
+                        if (this._playerDiedAnimDone) {
+                            // loop end of deat animation
+                            this._scene.beginAnimation(this._playerMeshComponent.babylonMesh.skeleton, 349 * this.ftc, 350 * this.ftc, true, 1);
+                        }
                         break;
                     case PlayerAnimationState.LaneSwitchL:
                         if (!this._inLaneTween) {
@@ -429,13 +441,23 @@ class PlayerManager {
                             if (coll) {
                                 switch (this._roadManager.sceneObjects[i].meshType) {
                                     case CollisionMeshType.pillar:
-                                    case CollisionMeshType.spike:
                                         this._audio.playSound(Sounds.Stop);
                                         var deathPos = new BABYLON.Vector3(this.getplayerPosition().x, this.getplayerPosition().y, this._roadManager.sceneObjects[i].meshCollider.position.z - 0.2);
                                         this._playerTranslateComponent.setPosition = deathPos;
                                         this._gameBase.PlayerCameraManager.Shake();
                                         this._playing = false;
                                         this._playerDead = true;
+                                        this._fallingBack = true;
+                                        this.updateAnimation();
+                                        break;
+                                    case CollisionMeshType.spike:
+                                        this._audio.playSound(Sounds.Spike);
+                                        //var deathPos = new BABYLON.Vector3(this.getplayerPosition().x, this.getplayerPosition().y, this._roadManager.sceneObjects[i].meshCollider.position.z - 0.2);
+                                        //this._playerTranslateComponent.setPosition = deathPos;
+                                        this._gameBase.PlayerCameraManager.Shake();
+                                        this._playing = false;
+                                        this._playerDead = true;
+                                        this._fallingBack = false;
                                         this.updateAnimation();
                                         break;
                                     case CollisionMeshType.scarab:
